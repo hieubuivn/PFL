@@ -25,6 +25,17 @@ import * as RAYCAST_MODULE from './projectScripts/raycast/addRaycaster.js';
 import * as B64_STRINGS from './projectScripts/utils/base64Strings.js';
 import { BoneTracker } from './projectScripts/interactions/boneTracker.js';
 
+// VITE BUNDLED LIBS
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { Observer } from 'gsap/observer';
+import './projectScripts/utils/uiUtils.js';
+
+gsap.registerPlugin(ScrollTrigger, Observer);
+window.gsap = gsap;
+window.ScrollTrigger = ScrollTrigger;
+window.Observer = Observer;
+
 // Expose to window for global access
 window.RAYCAST = RAYCAST_MODULE;
 window.B64 = B64_STRINGS;
