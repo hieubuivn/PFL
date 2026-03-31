@@ -993,7 +993,61 @@
     border-bottom-color: rgba(220, 208, 186, 0.3) !important;
 }
 
-/* --- COMPANY REVEAL SYSTEM --- */
+/* --- ROLE COLLAPSE HINTS --- */
+.role-collapse-hint {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-tech);
+    font-size: 0.65rem;
+    font-weight: 800;
+    color: var(--c-cyan);
+    letter-spacing: 1.5px;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none; /* Let clicks pass to role-block */
+    user-select: none;
+    text-transform: uppercase;
+}
+
+.role-block:hover .role-collapse-hint {
+    opacity: 0.6;
+    visibility: visible;
+    text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+}
+
+.chevron-icon {
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.role-block.collapsed .chevron-icon {
+    transform: rotate(-90deg);
+}
+
+/* Tooltip Context Styling */
+.company-context {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 1.4;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border-left: 2px solid var(--c-cyan);
+    padding-left: 12px;
+    margin-left: 0;
+}
+
+/* Show tooltip when block is hovered OR when specifically triggered */
+.role-header:hover + .company-context,
+.role-block.collapsed:hover .company-context {
+    max-height: 100px;
+    opacity: 1;
+    margin-top: 6px;
+    margin-bottom: 12px;
+}
+
 .company-wrapper {
     display: flex;
     align-items: center;
@@ -1004,39 +1058,12 @@
     display: flex;
     align-items: center;
     cursor: pointer;
-    color: rgba(255, 255, 255, 0.2);
-    transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-    margin-bottom: -1px;
+    color: rgba(0, 243, 255, 0.3);
+    transition: all 0.3s ease;
 }
 
-.role-header:hover .company-info-trigger {
+.role-block:hover .company-info-trigger {
     color: var(--c-cyan);
-    transform: scale(1.1);
-}
-
-.company-context {
-    max-height: 0;
-    opacity: 0;
-    overflow: hidden;
-    font-family: var(--font-body);
-    font-size: 0.85rem;
-    color: rgba(220, 208, 186, 0.6); /* Archival Gold hint */
-    font-style: italic;
-    letter-spacing: 0.5px;
-    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
-                opacity 0.4s ease, 
-                margin 0.4s ease;
-    margin-top: 0;
-    pointer-events: none;
-    width: 100%;
-}
-
-.role-header:hover .company-context,
-.exp-lite-block:hover .company-context {
-    max-height: 80px; /* Large enough for description lines */
-    opacity: 1;
-    margin-top: 6px;
-    margin-bottom: 8px;
 }
 
 .info-icon {
@@ -1433,78 +1460,4 @@
 .mobile-mode img {
     max-width: 100%;
     height: auto;
-}
-
-/* --- COLLAPSIBLE ROLE BLOCKS --- */
-.role-block.expandable-role {
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-    border-left: 2px solid transparent;
-}
-
-.role-block.expandable-role:hover {
-    background: rgba(0, 240, 255, 0.03);
-    border-left: 2px solid rgba(0, 240, 255, 0.5);
-}
-
-.role-details {
-    overflow: hidden;
-    max-height: 0;
-    opacity: 0;
-    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    margin: 0;
-    padding-top: 0;
-    padding-bottom: 0;
-}
-
-.role-expanded .role-details {
-    max-height: 800px;
-    opacity: 1;
-    margin-top: 15px;
-}
-
-.role-collapse-hint {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 11px;
-    letter-spacing: 1.5px;
-    font-weight: 700;
-    color: var(--c-cyan);
-    opacity: 0.5;
-    transition: opacity 0.3s ease;
-    text-transform: uppercase;
-    margin-top: 0;
-}
-
-/* CSS-Driven Text for Desktop vs Mobile */
-.role-collapse-hint .hint-label::before {
-    content: "CLICK TO EXPAND";
-}
-.mobile-mode .role-collapse-hint .hint-label::before {
-    content: "TAP TO EXPAND";
-}
-
-.role-expanded .role-collapse-hint .hint-label::before {
-    content: "CLICK TO COLLAPSE";
-}
-.mobile-mode .role-expanded .role-collapse-hint .hint-label::before {
-    content: "TAP TO COLLAPSE";
-}
-
-.role-block.expandable-role:hover .role-collapse-hint {
-    opacity: 1;
-}
-
-.role-collapse-hint .hint-icon {
-    display: inline-block;
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    font-family: 'Fira Code', monospace;
-    font-size: 14px;
-}
-
-.role-expanded .hint-icon {
-    transform: rotate(90deg);
 }

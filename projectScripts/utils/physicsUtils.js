@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import TWEEN from 'tween';
-import RAPIER from '@dimforge/rapier3d-compat';
+import RAPIER from 'rapier-compat';
 
 const apexWatchers = new Set();
 let isApexWatcherRunning = false;

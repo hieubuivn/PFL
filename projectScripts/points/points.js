@@ -274,6 +274,7 @@ export default class Points {
             uStickRect: { value: new THREE.Vector4(0, 0, 0, 0) },
             uStickStrength: { value: 0.0 }
         };
+        console.log("[Points] shaderUniforms initialized with uTitleMaskRectBase, uTitleMaskScale, uTitleMaskEdgeJitter, uKnowhereGravityMultiplier and uIsGardenHovering");
         this.bigDipper = bigDipper;
 
         this.currentPulseIndex = 0;

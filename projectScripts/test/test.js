@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import TWEEN from 'tween';
-import RAPIER from '@dimforge/rapier3d-compat';
+import RAPIER from 'rapier-compat';
 import { updateStory } from '../utils/status.js';
 import { fetchTop10Cryptos } from '../utils/fetchCryptoData.js';
 import { getCountryAndBooks } from '../utils/fetchBooks.js';

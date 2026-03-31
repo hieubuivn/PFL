@@ -1556,13 +1556,21 @@ body.cv-collapsed .icon-lines span:nth-child(4) {
 }
 
 #cv-content .role-block.collapsed {
-    margin-bottom: 15px;
-    /* Tighter spacing when collapsed */
-    border-color: transparent;
+    margin-bottom: 25px;
+    border-left-color: var(--cv-border);
+}
+
+#cv-content .role-block.collapsed ul {
+    max-height: 0 !important;
+    opacity: 0 !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    pointer-events: none;
 }
 
 #cv-content .role-block:hover {
     border-left-color: var(--cv-accent-cyan);
+    background: rgba(0, 243, 255, 0.02); /* Very subtle hover fill */
 }
 
 #cv-content .role-block:hover::before {
@@ -1610,8 +1618,15 @@ body.cv-collapsed .icon-lines span:nth-child(4) {
 }
 
 #cv-content ul {
-    margin-top: 10px;
+    margin-top: 15px;
     padding-left: 15px;
+    overflow: hidden;
+    max-height: 1000px;
+    opacity: 1;
+    transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), 
+                opacity 0.4s ease, 
+                margin 0.4s ease,
+                padding 0.4s ease;
 }
 
 #cv-content li {

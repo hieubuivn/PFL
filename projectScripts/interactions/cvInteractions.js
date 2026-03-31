@@ -5,6 +5,7 @@
 
 document.addEventListener('DOMContentLoaded', () => {
     initCollapsibles();
+    initRoleToggles();
     initScrollToTop();
 });
 
@@ -70,3 +71,28 @@ function initCollapsibles() {
     });
 }
 
+/**
+ * 2. Job Role Toggles
+ * Handles specific company blocks inside the experience section.
+ */
+function initRoleToggles() {
+    const roleBlocks = document.querySelectorAll('.role-block');
+    roleBlocks.forEach(block => {
+        if (block.dataset.roleBound) return;
+        block.dataset.roleBound = 'true';
+
+        block.addEventListener('click', (e) => {
+            // Prevent interference if user clicks a link inside (strong tags/bullets)
+            if (e.target.tagName === 'A' || e.target.closest('a')) return;
+            e.stopPropagation();
+
+            const isCollapsed = block.classList.toggle('collapsed');
+            const hintText = block.querySelector('.hint-text');
+
+            // Update Header Hints
+            if (hintText) {
+                hintText.textContent = isCollapsed ? 'CLICK TO EXPAND' : 'CLICK TO COLLAPSE';
+            }
+        });
+    });
+}

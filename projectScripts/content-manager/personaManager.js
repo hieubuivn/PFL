@@ -768,7 +768,7 @@ class PersonaManager {
 
         if (this.elements.experience) {
             this.elements.experience.innerHTML = data.experience.map(job => `
-                <div class="role-block expandable-role role-expanded">
+                <div class="role-block">
                     <div class="role-header">
                         <div class="company-wrapper">
                             <span class="company">${job.company}</span>
@@ -783,16 +783,18 @@ class PersonaManager {
                             ` : ''}
                         </div>
                         <div class="role-collapse-hint">
-                            <span class="hint-label"></span>
-                            <span class="hint-icon">&gt;</span>
+                            <span class="hint-text">CLICK TO COLLAPSE</span>
+                            <svg class="chevron-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
                         </div>
-                        ${job.companyDesc ? `<div class="company-context">${job.companyDesc}</div>` : ''}
                     </div>
+                    ${job.companyDesc ? `<div class="company-context">${job.companyDesc}</div>` : ''}
                     <div class="title-row">
                         <span class="job-title">${job.title}</span>
                         <span class="date">${job.date}</span>
                     </div>
-                    <ul class="role-details">
+                    <ul>
                         ${job.points.map(p => `<li>${p}</li>`).join('')}
                     </ul>
                 </div>
@@ -886,19 +888,26 @@ class PersonaManager {
     }
 
     rebindCollapsibles() {
-        const blocks = this.elements.experience.querySelectorAll('.role-block.expandable-role');
-        blocks.forEach(block => {
+        const roleBlocks = this.elements.experience.querySelectorAll('.role-block');
+        roleBlocks.forEach(block => {
+            if (block.dataset.roleBound) return;
+            block.dataset.roleBound = 'true';
+
             block.addEventListener('click', (e) => {
-                // Ignore clicks on external icon/links if any
-                if(e.target.closest('.company-info-trigger') || e.target.tagName === 'A') return;
-                
-                block.classList.toggle('role-expanded');
-                
-                // Recalculate ScrollSpy offsets
-                // Timeout allows CSS transition to start/finish before parsing offsets
-                setTimeout(() => {
-                    this.cacheScrollSections();
-                }, 400); 
+                // Prevent interference if user clicks a link inside
+                if (e.target.tagName === 'A' || e.target.closest('a')) return;
+                e.stopPropagation();
+
+                const isCollapsed = block.classList.toggle('collapsed');
+                const hintText = block.querySelector('.hint-text');
+
+                // Update Header Hints
+                if (hintText) {
+                    hintText.textContent = isCollapsed ? 'CLICK TO EXPAND' : 'CLICK TO COLLAPSE';
+                }
+
+                // Recalculate offsets after UI changes
+                this.cacheScrollSections();
             });
         });
     }

@@ -1,8 +1,7 @@
 import * as THREE from 'three';
 import { BasicGeometries } from '../../configs/setupGeometries.js'; // Basic geometries for the scene
 import * as CONSTANTS from '../utils/constant.js';
-// import RAPIER from 'https://cdn.skypack.dev/@dimforge/rapier3d-compat';
-import RAPIER from '@dimforge/rapier3d-compat';
+import RAPIER from 'rapier-compat';
 import { bindBodyObject } from '../rapierPhysics/addRapierWorld.js';
 import * as RAYCAST from '../raycast/addRaycaster.js';
 import { openDragonEye, closeDragonEye } from '../raycast/loadedModelRaycast.js';
@@ -261,7 +260,7 @@ export function addDragonBalls(scene) {
         mesh.rotation.y = Math.PI / 2
 
         mesh.position.x = getRandomFloat(2, 7)
-        mesh.position.y = getRandomFloat(0.4, 2)
+        mesh.position.y = getRandomFloat(0.7, 2)
         mesh.position.z = getRandomFloat(-2, 0)
 
         bindBodyObject(scene, mesh, mesh.rapierBody, mesh.rapierShape)

@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import * as RAYCAST from './addRaycaster.js';
-import RAPIER from '@dimforge/rapier3d-compat';
+import RAPIER from 'rapier-compat';
 import { bindBodyObject, getFreeFormBodyShapeFromMesh } from '../rapierPhysics/addRapierWorld.js';
 import TWEEN from 'tween';
 import * as CONSTANTS from '../utils/constant.js';

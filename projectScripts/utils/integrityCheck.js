@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import RAPIER from '@dimforge/rapier3d-compat';
+import RAPIER from 'rapier-compat';
 import TWEEN from 'tween';
 import { playOneShotAnimation } from './animationManager.js';
 import { updateStory } from './status.js';

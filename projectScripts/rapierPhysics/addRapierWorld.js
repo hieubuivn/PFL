@@ -1,8 +1,6 @@
 import * as THREE from 'three';
 // import * as CONSTANTS from './constant.js';
-// import RAPIER from 'https://cdn.skypack.dev/@dimforge/rapier3d-compat';
-import * as RAPIER from '@dimforge/rapier3d-compat';
-// import RAPIER from 'https://cdn.jsdelivr.net/npm/@dimforge/rapier3d-compat@0.18.0/rapier_wasm3d.min.js'
+import * as RAPIER from 'rapier-compat';
 let initialized = false;
 export async function initializeRapier() {
     if (initialized) return;
@@ -257,11 +255,11 @@ export class RAPIERWORLD {
 
             // Skinned Mesh Sync (Visual-to-Kinematic Physics)
             // OPTIMIZATION: Throttle to 30Hz (isHighPriorityFrame) as animations are also throttled
-            const isHighPriority = this.scene.isHighPriorityFrame !== false; 
+            const isHighPriority = this.scene.isHighPriorityFrame !== false;
             if (isHighPriority && this.scene.skinnedMeshBodies && this.scene.skinnedMeshBodies.length > 0) {
                 // Optimization: Update parent matrices once if we have many bones tracking
                 // Targeted update: Only update the Hero character, not the whole room!
-                const character = this.scene.getObjectByName('a-char') || this.scene.room; 
+                const character = this.scene.getObjectByName('a-char') || this.scene.room;
                 if (character) character.updateMatrixWorld(true);
 
                 this.scene.skinnedMeshBodies.forEach(body => {

@@ -205,21 +205,6 @@
     }
   </style>
 
-  <script type="importmap">
-    {
-      "imports": {
-        "tween": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/tween.module.min.js",
-        "@dimforge/rapier3d-compat": "https://cdn.skypack.dev/@dimforge/rapier3d-compat",
-        "three": "https://esm.sh/three@0.170.0",
-        "three/addons/": "https://esm.sh/three@0.170.0/examples/jsm/",
-        "three/addons/postprocessing/UnrealBloomPass-transparentBg.js": "./projectScripts/libs/UnrealBloomPass-transparentBg.js",
-        "three/webgpu": "https://esm.sh/three@0.170.0/build/three.webgpu.min.js",
-        "three/tsl": "https://esm.sh/three@0.170.0/build/three.tsl.min.js",
-        "postprocessing-extra/" : "https://esm.sh/three@0.170.0/examples/jsm/postprocessing-extra/",
-        "postprocessing/" : "https://esm.sh/three@0.170.0/examples/jsm/postprocessing/"
-      }
-    }
-  </script>
   <!-- PERFORMANCE: Start parsing logic while assets download -->
   <link rel="modulepreload" href="office.js">
 </head>
@@ -507,21 +492,33 @@
           <h2 id="cv-work-header" class="collapsible-header">Work Experience</h2>
           <div id="cv-experience" class="collapsible-content">
 
-            <div class="role-block expandable-role role-expanded">
+            <div class="role-block">
               <div class="role-header">
                 <div class="company-wrapper">
                   <span class="company">Arkreen Network</span>
+                  <div class="company-info-trigger">
+                    <svg class="info-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                      stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <line x1="12" y1="16" x2="12" y2="12"></line>
+                      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                    </svg>
+                  </div>
                 </div>
                 <div class="role-collapse-hint">
-                  <span class="hint-label"></span>
-                  <span class="hint-icon">&gt;</span>
+                  <span class="hint-text">CLICK TO COLLAPSE</span>
+                  <svg class="chevron-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
                 </div>
               </div>
+              <div class="company-context">A decentralized energy network (DePIN) leveraging Digital Twin technology for green energy assets.</div>
               <div class="title-row">
                 <span class="job-title">Technical Product Consultant (Independent)</span>
                 <span class="date">May 2025 – Present</span>
               </div>
-              <ul class="role-details">
+              <ul>
                 <li><strong>Strategic Prototyping:</strong> Co-developed high-fidelity interactive 3D dashboards (WebGL)
                   to visualize real-time IoT data for investor pitching and stakeholder buy-in.</li>
                 <li><strong>Technical De-risking:</strong> Validated requirement scalability using GLSL/Shaders to
@@ -532,21 +529,33 @@
               </ul>
             </div>
 
-            <div class="role-block expandable-role role-expanded">
+            <div class="role-block">
               <div class="role-header">
                 <div class="company-wrapper">
                   <span class="company">VinFast - Vingroup</span>
+                  <div class="company-info-trigger">
+                    <svg class="info-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                      stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <line x1="12" y1="16" x2="12" y2="12"></line>
+                      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                    </svg>
+                  </div>
                 </div>
                 <div class="role-collapse-hint">
-                  <span class="hint-label"></span>
-                  <span class="hint-icon">&gt;</span>
+                  <span class="hint-text">CLICK TO COLLAPSE</span>
+                  <svg class="chevron-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
                 </div>
               </div>
+              <div class="company-context">Vietnam's global EV manufacturer building an integrated digital mobility ecosystem.</div>
               <div class="title-row">
                 <span class="job-title">Senior ITBA / Product Owner (IoT & Smart Systems)</span>
                 <span class="date">Oct 2021 – May 2025</span>
               </div>
-              <ul class="role-details">
+              <ul>
                 <li><strong>Digital Transformation (VCA & Reliability Audit):</strong> Digitized manual quality control
                   workflows, improving <strong>Mean Time to Detect (MTTD) by 25%</strong> through real-time telemetry
                   and automated alerting.</li>
@@ -563,21 +572,33 @@
               </ul>
             </div>
 
-            <div class="role-block expandable-role role-expanded">
+            <div class="role-block">
               <div class="role-header">
                 <div class="company-wrapper">
                   <span class="company">Gapo Social Network</span>
+                  <div class="company-info-trigger">
+                    <svg class="info-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                      stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <line x1="12" y1="16" x2="12" y2="12"></line>
+                      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                    </svg>
+                  </div>
                 </div>
                 <div class="role-collapse-hint">
-                  <span class="hint-label"></span>
-                  <span class="hint-icon">&gt;</span>
+                  <span class="hint-text">CLICK TO COLLAPSE</span>
+                  <svg class="chevron-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
                 </div>
               </div>
+              <div class="company-context">A Vietnamese social network and communication platform for enterprises (GapoWork).</div>
               <div class="title-row">
                 <span class="job-title">Senior IT Business Analyst</span>
                 <span class="date">Oct 2019 – Apr 2021</span>
               </div>
-              <ul class="role-details">
+              <ul>
                 <li><strong>Data-Driven Retention:</strong> Utilized <strong>RICE scoring</strong> to prioritize
                   technically feasible fixes for user drop-off issues identified via Firebase, boosting retention.</li>
                 <li><strong>Quality Assurance:</strong> Led the UAT process personally, reducing post-launch bugs
@@ -586,21 +607,33 @@
               </ul>
             </div>
 
-            <div class="role-block expandable-role role-expanded">
+            <div class="role-block">
               <div class="role-header">
                 <div class="company-wrapper">
                   <span class="company">Five9 Vietnam</span>
+                  <div class="company-info-trigger">
+                    <svg class="info-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                      stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <line x1="12" y1="16" x2="12" y2="12"></line>
+                      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                    </svg>
+                  </div>
                 </div>
                 <div class="role-collapse-hint">
-                  <span class="hint-label"></span>
-                  <span class="hint-icon">&gt;</span>
+                  <span class="hint-text">CLICK TO COLLAPSE</span>
+                  <svg class="chevron-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
                 </div>
               </div>
+              <div class="company-context">A technical solution provider specializing in fintech, telecom, and big data systems.</div>
               <div class="title-row">
                 <span class="job-title">BA Team Lead / Product Owner</span>
                 <span class="date">May 2018 – Oct 2019</span>
               </div>
-              <ul class="role-details">
+              <ul>
                 <li><strong>Product Ownership:</strong> Managed the "Mony" P2P platform from concept to launch; used
                   <strong>MoSCoW</strong> to define MVP scope and manage stakeholder requests.
                 </li>
@@ -609,21 +642,33 @@
               </ul>
             </div>
 
-            <div class="role-block expandable-role role-expanded">
+            <div class="role-block">
               <div class="role-header">
                 <div class="company-wrapper">
                   <span class="company">Centech Interactive</span>
+                  <div class="company-info-trigger">
+                    <svg class="info-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                      stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <line x1="12" y1="16" x2="12" y2="12"></line>
+                      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                    </svg>
+                  </div>
                 </div>
                 <div class="role-collapse-hint">
-                  <span class="hint-label"></span>
-                  <span class="hint-icon">&gt;</span>
+                  <span class="hint-text">CLICK TO COLLAPSE</span>
+                  <svg class="chevron-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
                 </div>
               </div>
+              <div class="company-context">A full-service mobile marketing and interactive technology agency in the VAS sector.</div>
               <div class="title-row">
                 <span class="job-title">IT Business Analyst</span>
                 <span class="date">Nov 2016 – Apr 2018</span>
               </div>
-              <ul class="role-details">
+              <ul>
                 <li>Managed project backlogs and prioritized deliverables using <strong>MoSCoW</strong> for aggressive
                   timelines.</li>
                 <li>Elicited and documented business requirements for various Mobile VAS and Digital Content projects.
@@ -631,42 +676,66 @@
               </ul>
             </div>
 
-            <div class="role-block expandable-role role-expanded">
+            <div class="role-block">
               <div class="role-header">
                 <div class="company-wrapper">
                   <span class="company">ECPay (EVN)</span>
+                  <div class="company-info-trigger">
+                    <svg class="info-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                      stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <line x1="12" y1="16" x2="12" y2="12"></line>
+                      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                    </svg>
+                  </div>
                 </div>
                 <div class="role-collapse-hint">
-                  <span class="hint-label"></span>
-                  <span class="hint-icon">&gt;</span>
+                  <span class="hint-text">CLICK TO COLLAPSE</span>
+                  <svg class="chevron-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
                 </div>
               </div>
+              <div class="company-context">The centralized electronic payment gateway for Vietnam Electricity (EVN).</div>
               <div class="title-row">
                 <span class="job-title">IT Business Analyst</span>
                 <span class="date">Jun 2015 – Oct 2016</span>
               </div>
-              <ul class="role-details">
+              <ul>
                 <li>Supported e-wallet system development; applied <strong>MoSCoW</strong> to manage feature rollouts.
                 </li>
                 <li>Analyzed transaction data to improve system performance and user experience.</li>
               </ul>
             </div>
 
-            <div class="role-block expandable-role role-expanded">
+            <div class="role-block">
               <div class="role-header">
                 <div class="company-wrapper">
                   <span class="company">Bao Kim (VNP Group)</span>
+                  <div class="company-info-trigger">
+                    <svg class="info-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                      stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <line x1="12" y1="16" x2="12" y2="12"></line>
+                      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                    </svg>
+                  </div>
                 </div>
                 <div class="role-collapse-hint">
-                  <span class="hint-label"></span>
-                  <span class="hint-icon">&gt;</span>
+                  <span class="hint-text">CLICK TO COLLAPSE</span>
+                  <svg class="chevron-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
                 </div>
               </div>
+              <div class="company-context">One of Vietnam's leading electronic payment gateways and e-wallets.</div>
               <div class="title-row">
                 <span class="job-title">Business Analyst</span>
                 <span class="date">Aug 2014 – May 2015</span>
               </div>
-              <ul class="role-details">
+              <ul>
                 <li>Collaborated with Dev team for early-stage fintech releases using structured prioritization.</li>
                 <li>Conducted market research and gathered user requirements for new payment features and integrations.
                 </li>
