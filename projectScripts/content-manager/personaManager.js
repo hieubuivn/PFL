@@ -768,7 +768,7 @@ class PersonaManager {
 
         if (this.elements.experience) {
             this.elements.experience.innerHTML = data.experience.map(job => `
-                <div class="role-block">
+                <div class="role-block expandable-role role-expanded">
                     <div class="role-header">
                         <div class="company-wrapper">
                             <span class="company">${job.company}</span>
@@ -782,14 +782,17 @@ class PersonaManager {
                                 </div>
                             ` : ''}
                         </div>
+                        <div class="role-collapse-hint">
+                            <span class="hint-label"></span>
+                            <span class="hint-icon">&gt;</span>
+                        </div>
                         ${job.companyDesc ? `<div class="company-context">${job.companyDesc}</div>` : ''}
-                        <span class="tap-hint" style="display:none;">[ TAP TO REVEAL DETAILS ]</span>
                     </div>
                     <div class="title-row">
                         <span class="job-title">${job.title}</span>
                         <span class="date">${job.date}</span>
                     </div>
-                    <ul>
+                    <ul class="role-details">
                         ${job.points.map(p => `<li>${p}</li>`).join('')}
                     </ul>
                 </div>
@@ -883,22 +886,19 @@ class PersonaManager {
     }
 
     rebindCollapsibles() {
-        const roleHeaders = this.elements.experience.querySelectorAll('.role-header');
-        roleHeaders.forEach(roleHeader => {
-            roleHeader.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const block = roleHeader.closest('.role-block');
-                const list = block.querySelector('ul');
-                const titleRow = block.querySelector('.title-row');
-                const companyCtx = block.querySelector('.company-context');
-                const tapHint = block.querySelector('.tap-hint');
-                const isCollapsed = block.classList.toggle('collapsed');
-                if (list) list.style.display = isCollapsed ? 'none' : 'block';
-                if (titleRow) titleRow.style.display = isCollapsed ? 'none' : '';
-                if (companyCtx) companyCtx.style.display = isCollapsed ? 'none' : '';
-                if (tapHint) tapHint.style.display = isCollapsed ? 'inline-block' : 'none';
-                // Recalculate offsets after UI changes
-                this.cacheScrollSections();
+        const blocks = this.elements.experience.querySelectorAll('.role-block.expandable-role');
+        blocks.forEach(block => {
+            block.addEventListener('click', (e) => {
+                // Ignore clicks on external icon/links if any
+                if(e.target.closest('.company-info-trigger') || e.target.tagName === 'A') return;
+                
+                block.classList.toggle('role-expanded');
+                
+                // Recalculate ScrollSpy offsets
+                // Timeout allows CSS transition to start/finish before parsing offsets
+                setTimeout(() => {
+                    this.cacheScrollSections();
+                }, 400); 
             });
         });
     }

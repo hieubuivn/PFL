@@ -5,7 +5,6 @@
 
 document.addEventListener('DOMContentLoaded', () => {
     initCollapsibles();
-    initRoleToggles();
     initScrollToTop();
 });
 
@@ -71,27 +70,3 @@ function initCollapsibles() {
     });
 }
 
-/**
- * 2. Job Role Toggles
- * Handles specific company blocks inside the experience section.
- */
-function initRoleToggles() {
-    const roleHeaders = document.querySelectorAll('.role-header');
-    roleHeaders.forEach(roleHeader => {
-        roleHeader.addEventListener('click', (e) => {
-            e.stopPropagation();
-
-            const block = roleHeader.closest('.role-block');
-            const list = block.querySelector('ul');
-            const titleRow = block.querySelector('.title-row');
-            const companyCtx = block.querySelector('.company-context');
-            const tapHint = block.querySelector('.tap-hint');
-
-            const isCollapsed = block.classList.toggle('collapsed');
-            if (list) list.style.display = isCollapsed ? 'none' : 'block';
-            if (titleRow) titleRow.style.display = isCollapsed ? 'none' : '';
-            if (companyCtx) companyCtx.style.display = isCollapsed ? 'none' : '';
-            if (tapHint) tapHint.style.display = isCollapsed ? 'inline-block' : 'none';
-        });
-    });
-}

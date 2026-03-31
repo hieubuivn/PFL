@@ -1434,3 +1434,77 @@
     max-width: 100%;
     height: auto;
 }
+
+/* --- COLLAPSIBLE ROLE BLOCKS --- */
+.role-block.expandable-role {
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    border-left: 2px solid transparent;
+}
+
+.role-block.expandable-role:hover {
+    background: rgba(0, 240, 255, 0.03);
+    border-left: 2px solid rgba(0, 240, 255, 0.5);
+}
+
+.role-details {
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    margin: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.role-expanded .role-details {
+    max-height: 800px;
+    opacity: 1;
+    margin-top: 15px;
+}
+
+.role-collapse-hint {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    font-weight: 700;
+    color: var(--c-cyan);
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
+    text-transform: uppercase;
+    margin-top: 0;
+}
+
+/* CSS-Driven Text for Desktop vs Mobile */
+.role-collapse-hint .hint-label::before {
+    content: "CLICK TO EXPAND";
+}
+.mobile-mode .role-collapse-hint .hint-label::before {
+    content: "TAP TO EXPAND";
+}
+
+.role-expanded .role-collapse-hint .hint-label::before {
+    content: "CLICK TO COLLAPSE";
+}
+.mobile-mode .role-expanded .role-collapse-hint .hint-label::before {
+    content: "TAP TO COLLAPSE";
+}
+
+.role-block.expandable-role:hover .role-collapse-hint {
+    opacity: 1;
+}
+
+.role-collapse-hint .hint-icon {
+    display: inline-block;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-family: 'Fira Code', monospace;
+    font-size: 14px;
+}
+
+.role-expanded .hint-icon {
+    transform: rotate(90deg);
+}
