@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import * as CONSTANTS from '../utils/constant.js';
 import { resources } from './loadResources.js';
 import { GLOBAL_COLORS } from '../configs/sceneConfig.js';
-import TWEEN from 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/tween.module.min.js';
+import TWEEN from 'tween';
 import { BACK_IN_OUT_DEFAULT, getBackInOut } from '../utils/customTween.js';
 import { EVENTS } from '../configs/events.js';
 

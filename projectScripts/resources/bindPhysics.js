@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import * as ARAP from '../rapierPhysics/addRapierWorld.js';
-import RAPIER from '../rapierPhysics/rapier3d-compat.js'; // FIX: Direct Import
+import RAPIER from '@dimforge/rapier3d-compat'; // FIX: Direct Import
 import { updateTaskProgress, updateProgressUI } from '../../configs/setupLoaders.js';
 import { yieldToBrowser } from '../utils/asyncUtils.js';
 import { getDynamicText } from '../utils/contentUtils.js';

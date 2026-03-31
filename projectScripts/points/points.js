@@ -6,7 +6,7 @@ import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass-transparentBg.js';
-import TWEEN from 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/tween.module.min.js';
+import TWEEN from 'tween';
 import { createUI as createUIFromModule } from './ui.js';
 import { vertexShader, fragmentShader, constellationVertexShader, constellationFragmentShader } from './shaders.js';
 import { getBackInOut, BACK_IN_OUT_DEFAULT, BACK_OUT_DEFAULT } from '../utils/customTween.js';
@@ -274,7 +274,6 @@ export default class Points {
             uStickRect: { value: new THREE.Vector4(0, 0, 0, 0) },
             uStickStrength: { value: 0.0 }
         };
-        console.log("[Points] shaderUniforms initialized with uTitleMaskRectBase, uTitleMaskScale, uTitleMaskEdgeJitter, uKnowhereGravityMultiplier and uIsGardenHovering");
         this.bigDipper = bigDipper;
 
         this.currentPulseIndex = 0;

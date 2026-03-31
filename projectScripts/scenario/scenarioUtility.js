@@ -1,7 +1,7 @@
-import TWEEN from 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/tween.module.min.js';
+import TWEEN from 'tween';
 import * as THREE from 'three';
 import * as ARAP from '../rapierPhysics/addRapierWorld.js';
-import RAPIER from '../rapierPhysics/rapier3d-compat.js';
+import RAPIER from '@dimforge/rapier3d-compat';
 import * as GF from '../raycast/gazeFollower.js'
 import { slideGlassAnimation, openDragonEye, closeDragonEye } from '../raycast/loadedModelRaycast.js';
 import { updateStory, updateSubtitle, clearSubtitle } from '../utils/status.js';

@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { BasicGeometries } from '../../configs/setupGeometries.js'; // Basic geometries for the scene
 import * as CONSTANTS from '../utils/constant.js';
 // import RAPIER from 'https://cdn.skypack.dev/@dimforge/rapier3d-compat';
-import RAPIER from '../rapierPhysics/rapier3d-compat.js';
+import RAPIER from '@dimforge/rapier3d-compat';
 import { bindBodyObject } from '../rapierPhysics/addRapierWorld.js';
 import * as RAYCAST from '../raycast/addRaycaster.js';
 import { openDragonEye, closeDragonEye } from '../raycast/loadedModelRaycast.js';

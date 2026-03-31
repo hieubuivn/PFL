@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 // import * as CONSTANTS from './constant.js';
 // import RAPIER from 'https://cdn.skypack.dev/@dimforge/rapier3d-compat';
-import * as RAPIER from './rapier3d-compat.js';
+import * as RAPIER from '@dimforge/rapier3d-compat';
 // import RAPIER from 'https://cdn.jsdelivr.net/npm/@dimforge/rapier3d-compat@0.18.0/rapier_wasm3d.min.js'
 let initialized = false;
 export async function initializeRapier() {

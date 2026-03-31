@@ -1,7 +1,7 @@
 // Vanilla JS Kinetic Loop for CV panel "Gravity Fall" Easter Egg
 // Strict ESM Module matching the project's technical standards
 
-import TWEEN from 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/tween.module.min.js';
+import TWEEN from 'tween';
 
 export function cvFall() {
     // //console.log('[cvFall] Called. Current state:', window._cvState);

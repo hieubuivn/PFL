@@ -1,6 +1,6 @@
 
 import * as THREE from 'three';
-import RAPIER from './rapier3d-compat.js';
+import RAPIER from '@dimforge/rapier3d-compat';
 
 export class RapierBodyCustomizer {
     constructor(scene) {

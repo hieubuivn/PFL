@@ -1,8 +1,8 @@
 import * as THREE from 'three';
 import * as RAYCAST from './addRaycaster.js';
-import RAPIER from '../rapierPhysics/rapier3d-compat.js';
+import RAPIER from '@dimforge/rapier3d-compat';
 import { bindBodyObject, getFreeFormBodyShapeFromMesh } from '../rapierPhysics/addRapierWorld.js';
-import TWEEN from 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/tween.module.min.js';
+import TWEEN from 'tween';
 import * as CONSTANTS from '../utils/constant.js';
 import * as LIGHT from '../resources/addLightning.js';
 import * as B64 from '../utils/base64Strings.js';

@@ -1,4 +1,4 @@
-import TWEEN from 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/tween.module.min.js';
+import TWEEN from 'tween';
 import { EVENTS } from '../configs/events.js';
 
 export function initGridInteractions(scene) {

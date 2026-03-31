@@ -1,6 +1,6 @@
 import * as THREE from 'three';
-import RAPIER from '../rapierPhysics/rapier3d-compat.js';
-import TWEEN from 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/tween.module.min.js';
+import RAPIER from '@dimforge/rapier3d-compat';
+import TWEEN from 'tween';
 import { playOneShotAnimation } from './animationManager.js';
 import { updateStory } from './status.js';
 import { getDynamicText } from './contentUtils.js';

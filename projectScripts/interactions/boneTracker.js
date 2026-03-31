@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import TWEEN from 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/tween.module.min.js';
+import TWEEN from 'tween';
 import { createHologramBeam, projectDOMToWorld } from '../utils/hologramEffects.js';
 import { updateDroneGaze, triggerDroneHitEffect } from '../scenario/scenarioUtility.js';
 import { updateStory } from '../utils/status.js';

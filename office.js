@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { personaManager } from './projectScripts/content-manager/personaManager.js';
 import { setupSCR } from './configs/setupSCR.js';
-import TWEEN from 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/tween.module.min.js';
+import TWEEN from 'tween';
 import { Helper } from './configs/setupHelper.js';
 import { Customizer } from './configs/setupCustomizer.js';
 import { setupStats } from './configs/setupStats.js';
@@ -382,7 +382,6 @@ async function init() {
             let roomFrustumStates = new Map();
 
             if (roomModel) {
-                console.log("[Warmup] Anchoring Room model for GPU upload...");
                 roomOriginalPos.copy(roomModel.position);
                 roomModel.position.set(0, 0, 0);
                 roomModel.visible = true;
@@ -409,7 +408,6 @@ async function init() {
                 });
 
                 // Phase 1: Progressive Texture Initialization (yield between uploads)
-                console.log(`[Warmup] Initializing ${textures.size} textures progressively...`);
                 for (const tex of textures) {
                     renderer.initTexture(tex);
                     // Yield to browser every texture to keep UI responsive
@@ -451,7 +449,6 @@ async function init() {
 
                 // Phase 2: Segmented Shader Compilation (yield between meshes)
                 // Instead of bulk compileAsync, we compile smaller chunks of the scene.
-                console.log("[Warmup] Segmented Scene Compilation...");
                 const roomMeshes = [];
                 roomModel.traverse(c => { if (c.isMesh) roomMeshes.push(c); });
 
@@ -470,14 +467,12 @@ async function init() {
                 await compileDelay(150); // Settlement window
 
                 // B. GHOST RENDER (Second pass - Points System)
-                console.log("[Warmup] Engaging Points System...");
                 pointsApp.warmup();
                 await compileDelay(150);
 
                 // --- VRAM STATUS REPORT ---
                 const info = renderer.info;
                 const mem = info.memory || {};
-                console.log(`%c[Warmup] System Ready. VRAM Usage: ${((mem.textures * 0 || 0) + (mem.geometries * 0 || 0))} - G: ${mem.geometries || 0}, T: ${mem.textures || 0}`, "color: #00FF00; font-weight: bold;");
             } catch (err) {
                 console.warn("[Warmup] Swallowed non-critical error during GPU priming:", err);
             }
@@ -516,7 +511,6 @@ async function init() {
         updateProgressUI(100);
 
         const totalLoadTime = ((performance.now() - window.bootStartTime) / 1000).toFixed(2);
-        console.log(`%c[SYSTEM] BOOT COMPLETE in ${totalLoadTime}s`, "color: #00F3FF; font-weight: bold;");
 
         // (Moved pointsApp init above)
 
