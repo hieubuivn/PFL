@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bui Quoc Hieu - Senior Technical Product Specialist CV</title>
+    <meta name="description" content="Professional CV of Bui Quoc Hieu, Senior Technical Product Owner and IT Business Analyst with over 10 years of experience.">
+    
+    <!-- Open Graph -->
+    <meta property="og:type" content="profile">
+    <meta property="og:title" content="Bui Quoc Hieu - CV">
+    <meta property="og:description" content="Senior Technical Product Owner & IT Business Analyst.">
+
+    <!-- JSON-LD: Structured Data for Google Indexing -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Bui Quoc Hieu",
+      "jobTitle": "Senior Technical Product Owner & IT Business Analyst",
+      "description": "Senior Technical Product Owner & IT Business Analyst specializing in Product Strategy, IoT, and WebGL solutions.",
+      "url": "https://hieubuivn.github.io",
+      "dateModified": "2026-03-31",
+      "sameAs": [
+        "https://www.linkedin.com/in/buiquochieu/",
+        "https://github.com/hieubuivn"
+      ],
+      "knowsAbout": ["Product Strategy", "IT Business Analysis", "3D WebGL", "IoT", "Fintech", "Agile", "RICE", "MoSCoW"]
+    }
+    </script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2d3436;
+            --secondary: #636e72;
+            --accent: #0984e3;
+            --border: #dfe6e9;
+            --sidebar-bg: #f5f6fa;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: var(--line-height-body, 1.6);
+            color: var(--primary);
+            margin: 0;
+            padding: 0;
+            background: #fff;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            min-height: 100vh;
+            max-width: 1000px;
+            margin: 0 auto;
+            border: 1px solid var(--border);
+        }
+
+        .sidebar {
+            background: var(--sidebar-bg);
+            padding: 40px 30px;
+            border-right: 1px solid var(--border);
+        }
+
+        .name {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 0 0 10px 0;
+            line-height: 1.1;
+            text-transform: uppercase;
+        }
+
+        .title {
+            font-size: 0.9rem;
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 30px;
+            letter-spacing: 1px;
+        }
+
+        .profile-img-container {
+            width: 150px;
+            height: 150px;
+            margin: 10px auto 35px auto;
+            border: 1px solid var(--accent);
+            background: #fff;
+            position: relative;
+        }
+
+        .profile-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: relative;
+            left: -7.5%;
+        }
+
+        .sidebar-section {
+            margin-bottom: 30px;
+        }
+
+        .sidebar-header {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 12px;
+            color: var(--secondary);
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 4px;
+        }
+
+        .contact-item {
+            font-size: 0.82rem;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .contact-item svg {
+            color: var(--accent);
+            flex-shrink: 0;
+            opacity: 0.8;
+        }
+
+        .contact-item:hover {
+            color: var(--accent);
+            text-decoration: underline;
+        }
+
+        @media print {
+            .contact-item {
+                print-color-adjust: exact;
+                -webkit-print-color-adjust: exact;
+                text-decoration: none !important;
+            }
+        }
+
+        .showcase-card {
+            background: #fff;
+            border: 1px solid var(--accent);
+            padding: 12px;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 25px;
+            transition: all 0.2s ease;
+        }
+
+        .showcase-card:hover {
+            background: var(--sidebar-bg);
+            box-shadow: 2px 2px 0 var(--accent);
+            transform: translate(-1px, -1px);
+        }
+
+        .showcase-header {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        .showcase-link {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .showcase-tagline {
+            font-size: 0.7rem;
+            color: var(--secondary);
+            margin-top: 4px;
+            font-style: italic;
+        }
+
+        .skill-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            font-size: 0.8rem;
+        }
+
+        .skill-list li {
+            margin-bottom: 6px;
+        }
+
+        .main {
+            padding: 40px 50px;
+        }
+
+        .summary {
+            font-size: 0.95rem;
+            margin-bottom: 40px;
+            color: var(--secondary);
+        }
+
+        .section-title {
+            font-size: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 5px;
+            margin-bottom: 25px;
+        }
+
+        .experience-item {
+            margin-bottom: 35px;
+        }
+
+        .exp-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 4px;
+        }
+
+        .company {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .date {
+            font-size: 0.85rem;
+            color: var(--secondary);
+            font-weight: 500;
+        }
+
+        .pos {
+            font-style: italic;
+            font-size: 0.9rem;
+            color: var(--accent);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .context {
+            font-size: 0.8rem;
+            color: var(--secondary);
+            margin-bottom: 10px;
+            font-style: italic;
+            padding-left: 10px;
+            border-left: 2px solid var(--border);
+        }
+
+        ul {
+            padding-left: 18px;
+            margin: 0;
+            font-size: 0.88rem;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        @media print {
+            body {
+                background: none;
+            }
+
+            .container {
+                margin: 0;
+                border: none;
+                width: 100%;
+                max-width: none;
+            }
+
+            .main {
+                padding: 30px 40px;
+            }
+
+            .sidebar {
+                padding: 30px 20px;
+            }
+
+            @page {
+                margin: 0.5cm;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <div class="profile-img-container">
+                <img src="profile.png" alt="Bui Quoc Hieu" class="profile-img">
+            </div>
+            <h1 class="name">Bui Quoc Hieu</h1>
+            <div class="title">Senior Product Owner /<br>IT Business Analyst</div>
+
+            <div class="sidebar-section">
+                <h2 class="sidebar-header">Contact</h2>
+                <a href="mailto:hieubui.fsb@gmail.com" class="contact-item">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                    <span>hieubui.fsb@gmail.com</span>
+                </a>
+                <a href="tel:0965292489" class="contact-item">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                    <span>+84 965 292 489</span>
+                </a>
+                <a href="https://linkedin.com/in/buiquochieu" target="_blank" class="contact-item">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                    <span>linkedin.com/in/buiquochieu</span>
+                </a>
+                <div class="contact-item">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                    <span>Hanoi, Vietnam</span>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <h2 class="sidebar-header">Portfolio</h2>
+                <a href="https://hieubuivn.github.io" target="_blank" class="showcase-card">
+                    <div class="showcase-header">Live Interactive Review</div>
+                    <div class="showcase-link">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                        hieubuivn.github.io
+                    </div>
+                    <div class="showcase-tagline">3D Immersive Product Strategy Showcase</div>
+                </a>
+            </div>
+
+            <div class="sidebar-section">
+                <h2 class="sidebar-header">Core Expertise</h2>
+                <ul class="skill-list">
+                    <li><strong>Pi-Shaped:</strong> UX Design + Tech Validation</li>
+                    <li><strong>Validation:</strong> JS/ES6+, WebGL, Python</li>
+                    <li><strong>Execution:</strong> Jira, Figma, SQL, n8n</li>
+                    <li><strong>Logic:</strong> Gherkin AC, RICE, MoSCoW</li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <h2 class="sidebar-header">Education</h2>
+                <div class="contact-item"><strong>Bachelor in Finance & Banking</strong></div>
+                <div class="contact-item">FPT University (2010 – 2014)</div>
+                <div class="contact-item">GPA: 3.6/4.0 | Full Merit Scholarship</div>
+            </div>
+        </div>
+
+        <div class="main">
+            <div class="summary">
+                <strong>Pi-shaped Technical Product Specialist</strong> with 10+ years of experience executing roadmaps
+                across <strong>Fintech, DePIN (IoT & Web3), and EV mobility</strong>. I serve as a Technical Product
+                Partner, bridging
+                the gap between abstract business strategy and deep engineering reality. By integrating <strong>UX
+                    Design with functional prototyping</strong>, I validate complex product logic ensuring
+                requirements are architecturally sound and user-optimized.
+            </div>
+
+            <h2 class="section-title">Experience</h2>
+
+            <div class="experience-item">
+                <div class="exp-header">
+                    <span class="company">Arkreen Network</span>
+                    <span class="date">May 2025 – Present</span>
+                </div>
+                <div class="pos">Technical Product Consultant (Independent)</div>
+                <div class="context">A decentralized energy network (DePIN) leveraging Digital Twin technology for green
+                    energy assets.</div>
+                <ul>
+                    <li><strong>Strategic Prototyping</strong>: Co-developed high-fidelity interactive 3D dashboards
+                        (WebGL) to visualize real-time IoT data, utilized for <strong>investor pitching</strong> and
+                        stakeholder buy-in.</li>
+                    <li><strong>Technical De-risking</strong>: Validated requirement scalability using GLSL/Shaders to
+                        ensure architectural feasibility for complex 3D environments.</li>
+                    <li><strong>Productivity Automation</strong>: Deployed automated product management workflows using
+                        <strong>n8n and AI</strong>, reducing manual project overhead by an estimated
+                        <strong>40%</strong>.
+                    </li>
+                </ul>
+            </div>
+
+            <div class="experience-item">
+                <div class="exp-header">
+                    <span class="company">VinFast - Vingroup</span>
+                    <span class="date">Oct 2021 – May 2025</span>
+                </div>
+                <div class="pos">Senior ITBA / Product Owner (IoT & Smart Systems)</div>
+                <div class="context">Vietnam's global EV manufacturer building an integrated digital mobility ecosystem.
+                </div>
+                <ul>
+                    <li><strong>Digital Transformation (VCA & Reliability Audit)</strong>: Digitized manual quality
+                        control workflows for Vehicle Customer Audit and Reliability, improving <strong>Mean Time to
+                            Detect (MTTD) by 25%</strong> through real-time telemetry and automated alerting.</li>
+                    <li><strong>Factory QA Requirements (SSOT)</strong>: Established a <strong>Single Source of Truth
+                            (SSOT)</strong>, aligning <strong>10,000+ employees</strong> for cloud-based tracking and
+                        interoperability.
+                    </li>
+                    <li><strong>Factory Executive Reporting & Training (FERT)</strong>: Digitized skills
+                        certification and onboarding processes for <strong>10,000+ personnel</strong>, achieving
+                        <strong>10,000+ certified workers</strong> and <strong>100% paperwork reduction</strong> while
+                        providing real-time readiness dashboards to factory leadership.</li>
+                    <li><strong>B2B Energy Management System (EMS)</strong>: Served as Product Owner for the complete
+                        B2B IoT telemetry platform for energy hardware. Designed the admin portal's UX to translate
+                        highly complex grid, battery, and inverter diagnostics into intuitive visual flows for remote
+                        monitoring.</li>
+                    <li><strong>Loyalty & Rewards System</strong>: Contributed as a key team member and Business
+                        Analyst, helping unify disjointed customer data into an interoperable omnichannel user
+                        experience.</li>
+                </ul>
+            </div>
+
+            <div class="experience-item">
+                <div class="exp-header">
+                    <span class="company">Gapo Social Network</span>
+                    <span class="date">Oct 2019 – Apr 2021</span>
+                </div>
+                <div class="pos">Senior IT Business Analyst</div>
+                <div class="context">A Vietnamese social platform focusing on community engagement and core social
+                    features.</div>
+                <ul>
+                    <li><strong>Data-Driven Retention</strong>: Utilized <strong>RICE scoring</strong> to prioritize
+                        technically
+                        feasible fixes for user drop-off issues identified via Firebase, resulting in measurable
+                        retention improvements.</li>
+                    <li><strong>Quality Assurance</strong>: Led the UAT process personally, reducing post-launch bugs
+                        through <strong>Gherkin-style</strong> detailed Acceptance Criteria (AC).</li>
+                    <li>Mentored junior BA team members on requirement engineering and prioritization standards.</li>
+                </ul>
+            </div>
+
+            <div class="experience-item">
+                <div class="exp-header">
+                    <span class="company">Five9 Vietnam</span>
+                    <span class="date">May 2018 – Oct 2019</span>
+                </div>
+                <div class="pos">BA Team Lead / Product Owner</div>
+                <div class="context">Fintech startup building the "Mony" P2P lending platform for SE Asia market.</div>
+                <ul>
+                    <li><strong>Product Ownership</strong>: Managed the "Mony" P2P platform from concept to launch; used
+                        <strong>MoSCoW</strong> to define MVP scope and manage stakeholder change requests.
+                    </li>
+                    <li>Designed real-time dashboards for operational risk assessment and faster decision cycles.</li>
+                    <li>Led technical integrations with VNPay and Bao Kim payment gateways.</li>
+                </ul>
+            </div>
+
+            <div class="experience-item">
+                <div class="exp-header">
+                    <span class="company">Centech Interactive</span>
+                    <span class="date">Nov 2016 – Apr 2018</span>
+                </div>
+                <div class="pos">IT Business Analyst</div>
+                <div class="context">A technology agency specializing in mobile VAS and digital content services.</div>
+                <ul>
+                    <li>Managed project backlogs and prioritized deliverables using <strong>MoSCoW</strong> to meet
+                        aggressive agency timelines.</li>
+                    <li>Elicited and documented business requirements for various Mobile VAS and Digital Content
+                        projects.</li>
+                </ul>
+            </div>
+
+            <div class="experience-item">
+                <div class="exp-header">
+                    <span class="company">ECPay (EVN)</span>
+                    <span class="date">Jun 2015 – Oct 2016</span>
+                </div>
+                <div class="pos">IT Business Analyst</div>
+                <div class="context">Electricity payment gateway under Vietnam Electricity (EVN).</div>
+                <ul>
+                    <li>Supported the development of the e-wallet system; applied <strong>MoSCoW</strong> to manage
+                        feature rollouts for power consumers.</li>
+                    <li>Analyzed transaction data to improve system performance and user experience.</li>
+                </ul>
+            </div>
+
+            <div class="experience-item">
+                <div class="exp-header">
+                    <span class="company">Bao Kim (VNP Group)</span>
+                    <span class="date">Aug 2014 – May 2015</span>
+                </div>
+                <div class="pos">Business Analyst</div>
+                <div class="context">One of Vietnam's pioneering e-payment gateways.</div>
+                <ul>
+                    <li>Collaborated with the Dev team for early-stage fintech product releases using structured
+                        prioritization techniques.</li>
+                    <li>Conducted market research and gathered user requirements for new payment features and partner
+                        integrations.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

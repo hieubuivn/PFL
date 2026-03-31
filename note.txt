@@ -1,0 +1,26 @@
+1. Adjust the breathing effect of the core of the bootloader: when the cube assemble, the core should be resized to be much more smaller to almost invisible, but growing as the pieces flying out.
+2. Suggest effect for the bootLoader shader which are cheap and wont cause fps drop. Actually I feel the current animation is just...boring while I want it to attract enough
+3. The
+
+
+when the hero is dancign (by clicking) if we also trigger a stretch (by hovering over him a while), we would cause a weird reaction: he stop dancing and immediately slide to the sitting position and stretch, but when he rests from stretching, he will sit down at where is dances instead of his right place. Also he wont trigger the integrity reset anymore.
+
+in dance state, when clicking to swap animation, dont trigger the pulse which displace the vertices. Just swap the animation (the color wave is nice tho, u can keep it)
+
+.
+These are the text for the chaos screens. Actually they make a good introduction. But still I want to introduce the concept of Pi shaped into it without changing so much about the content which may destroy the layout
+|
+
+
+
+Add a override content for the tooltip
+Currently hovering a point in root and chaos state will show the tooltip from the tooltip.js, but I want to add some branches:
+- If the hovering point is a dipper star: temporarily do nothing but add a console log as place holder. I will request dedicated behavior later.
+- If u are also hovering over the area of knowhere -> this is tricky, not just the plane just hold the shader of knowhere, but detect by using the screen location of the real radius. => we created a special content for it. The idea is link the concept of know where as room for improvement and self development, but at least keep the concept of KNOWHERE in marvel
+
+
+
+I want to add a console test command window.tS() on called it will
+- make the text of the element board-philo-main update its position and rotation with the real world position of the bone '"mixamorigLeftHand"' on the animation loop. In ur calculation, care the scale of the glb model or the uBase scale uniform
+
+

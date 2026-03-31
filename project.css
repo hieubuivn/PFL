@@ -1,0 +1,1158 @@
+:root {
+    /* --- DESIGN DNA: BIOLOGICAL SIGNALS --- */
+    --c-cyan: #00F3FF;
+    --c-gold: #DCD0BA;
+    --c-crimson: #FF003C;
+    --c-black: #000000;
+    --c-white: #FFFFFF;
+
+    --glow-cyan: 0 0 10px rgba(0, 243, 255, 0.5);
+    --glow-crimson: 0 0 10px rgba(255, 0, 60, 0.5);
+
+    --font-tech: 'Orbitron', monospace;
+    --font-body: 'Rajdhani', sans-serif;
+    --font-code: 'Fira Code', monospace;
+    
+    --line-height-body: 1.6;
+    --line-height-heading: 1.2;
+    
+    --shadow-depth: 0 10px 30px rgba(0, 0, 0, 0.5);
+    --gradient-hero: linear-gradient(135deg, rgba(0, 243, 255, 0.05) 0%, transparent 100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, ::before, ::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+@keyframes informerPulse {
+    0% {
+        scale: 1;
+        opacity: 1;
+        /* Ensure it starts fully visible */
+    }
+
+    15% {
+        scale: 1.25;
+    }
+
+    30% {
+        scale: 1.1;
+    }
+
+    50% {
+        scale: 1;
+    }
+
+    70% {
+        opacity: 1;
+        scale: 1.25;
+    }
+
+    100% {
+        scale: 1;
+        opacity: 0;
+        /* <<< NEW: Fades out completely at the end of the last beat */
+    }
+}
+
+#cursor-informer {
+    /* Position and visibility settings */
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    /* Crucial: Allows mouse events to pass through to the canvas */
+
+    /* Size and initial state */
+    width: 32px;
+    height: 32px;
+    /* transform: translate(-50%, -1900%); Centers the icon on the cursor tip */
+    opacity: 0;
+    /* Starts hidden */
+    transition: opacity 0.1s;
+
+    /* --- NEW STYLING FOR THE INFORMER DIV --- */
+    background-color: #4d5f6e;
+    /* Solid background color for the circle */
+    border: 2px solid white;
+    /* White border */
+    border-radius: 50%;
+    /* Makes the div a circle */
+    z-index: 99999;
+    /* Very big z-index to ensure it's always on top */
+
+    /* Thunder Icon (Base64 SVG - now white) */
+
+    background-size: 80%;
+    /* Adjust size to fit nicely within the circle */
+    background-position: center;
+    /* Center the icon within the div */
+    background-repeat: no-repeat;
+}
+
+#cursor-informer.active {
+    /* Runs 3 times, uses ease-in-out, AND holds the final 100% frame state */
+    animation: informerPulse 1.8s 1 ease-in-out;
+    animation-fill-mode: forwards;
+    /* <<< NEW: Holds the final opacity: 0 state */
+}
+
+#main-ui {
+    position: absolute !important;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    pointer-events: none;
+    display: block !important;
+    opacity: 0;
+    /* Hidden during intro/loading */
+}
+
+/* Hide Debug Customizer by default to clean intro */
+
+#loading-container {
+    position: fixed;
+    display: flex !important;
+    /* Ensure visibility */
+    justify-content: center;
+    align-items: flex-end;
+    /* Align to the bottom of the container */
+    bottom: 15vh;
+    top: auto;
+    left: 50%;
+    transform: translateX(-50%) translateZ(0);
+    width: 100%;
+    height: auto;
+    background: transparent;
+    z-index: 100000;
+    pointer-events: none;
+    text-align: center;
+    transition: opacity 0.8s ease;
+}
+
+.loader-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    transition: opacity 0.6s ease;
+}
+
+#skeleton-lcp {
+    font-family: var(--font-tech);
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--c-cyan);
+    opacity: 0.15;
+    letter-spacing: 12px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100vw;
+    text-align: center;
+    pointer-events: none;
+    z-index: 1000;
+    text-shadow: 0 0 20px rgba(0, 243, 255, 0.3);
+}
+
+.loader-content h1,
+.loader-content h2 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #fff;
+    letter-spacing: 4px;
+    margin: 0;
+    text-transform: uppercase;
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+}
+
+#progress-text {
+    font-family: 'Fira Code', monospace;
+    color: #00F3FF;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 2px;
+}
+
+#persona-headline-main {
+    font-size: 1.8rem;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -1px;
+}
+
+.progress-status {
+    font-size: 0.65rem;
+    opacity: 0.6;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 300;
+}
+
+.progress-value {
+    font-size: 1.8rem;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -1px;
+    opacity: 1;
+    text-shadow: 0 0 15px rgba(0, 243, 255, 0.4);
+}
+
+.progress-bar-container {
+    display: none;
+    /* Replaced by Shader Bar */
+    position: relative;
+    border: 1px solid #333;
+}
+
+#progress-bar {
+    width: 0%;
+    height: 100%;
+    background: var(--c-cyan);
+    /* Cyan */
+    box-shadow: 0 0 10px var(--c-cyan);
+    /* Glow */
+    transition: width 0.2s;
+}
+
+/* Scroll Indicator (Floating Arrow) */
+.scroll-indicator {
+    position: fixed;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 24px;
+    height: 24px;
+    border-right: 2px solid white;
+    border-bottom: 2px solid white;
+    transform: translateX(-50%) rotate(45deg);
+    animation: floatArrow 2s infinite ease-in-out;
+    opacity: 0.8;
+    z-index: 10001;
+    /* High z-index to ensure visibility */
+    pointer-events: none;
+    /* Let clicks pass through */
+}
+
+@keyframes floatArrow {
+    0% {
+        transform: translateX(-50%) rotate(45deg) translate(0, 0);
+        opacity: 0.8;
+    }
+
+    50% {
+        transform: translateX(-50%) rotate(45deg) translate(10px, 10px);
+        opacity: 0.4;
+    }
+
+    100% {
+        transform: translateX(-50%) rotate(45deg) translate(0, 0);
+        opacity: 0.8;
+    }
+}
+
+@import './css/cv-styles.css';
+
+/* Active Secure Connection */
+.secure-icon.active-connection {
+    color: var(--c-cyan);
+    /* Cyan for 'Secure' */
+    text-shadow: 0 0 8px var(--c-cyan);
+    margin-right: 5px;
+    animation: pulse-secure 2s infinite ease-in-out;
+    display: inline-block;
+}
+
+@keyframes pulse-secure {
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.7;
+        transform: scale(1.1);
+    }
+}
+
+#stat-coords {
+    position: absolute;
+    /* Dynamically adjusted via JS syncing with HUD HUD_CONFIG */
+    bottom: 0;
+    height: var(--hud-margin-visible, 2.5vh);
+    left: 1.8vw;
+    display: flex;
+    align-items: center;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.72vh;
+    line-height: normal;
+    color: #FFEEBB; /* Vivid Cyber Gold */
+    opacity: 0.85;
+    pointer-events: none;
+    letter-spacing: 2px;
+    z-index: 20;
+    text-shadow: 0 0 1px rgba(220, 208, 186, 0.1);
+    transition: color 0.4s ease, text-shadow 0.4s ease, opacity 0.4s ease;
+    /* Middle-pivot correction: -50% shifts up by half text height, 
+       --hud-text-nudge allows JS to fine-tune visual font-metric balance */
+    transform: translateY(var(--hud-text-nudge, 0vh));
+}
+
+/* Standalone Status Classes for targeted coloring */
+.stat-optimal {
+    color: var(--c-cyan) !important;
+    text-shadow: 0 0 5px var(--c-cyan);
+    opacity: 1 !important;
+}
+
+.stat-stable {
+    color: var(--c-gold) !important;
+}
+
+.stat-critical {
+    color: var(--c-crimson) !important;
+    text-shadow: 0 0 8px var(--c-crimson);
+    opacity: 1 !important;
+    animation: flash-crit 0.5s infinite alternate;
+}
+
+@keyframes flash-crit {
+    from {
+        opacity: 0.4;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.system-text {
+    font-size: 1rem;
+    opacity: 1.0;
+    color: var(--c-gold);
+    /* Gold/Beige */
+    text-shadow: 0 0 5px rgba(220, 208, 186, 0.5);
+    animation: pulse-ready 2s infinite ease-in-out;
+    letter-spacing: 2px;
+    font-family: 'Orbitron', monospace;
+    white-space: nowrap;
+}
+
+#morph-status-inline {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    width: 100%;
+    transition: opacity 0.5s ease;
+    opacity: 1;
+}
+
+#morph-status-inline.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* FIX 2: opacity-only pulse — removed text-shadow animation (causes repaint) */
+@keyframes pulse-ready {
+
+    0%,
+    100% {
+        opacity: 0.7;
+    }
+
+    50% {
+        opacity: 1.0;
+    }
+}
+
+/* --- HUD Island Labels (JS Injected) --- */
+.hud-island-labels {
+    position: absolute;
+    /* Positioned dynamically by addHUDFrame.js */
+    width: 60px;
+    /* Gutter width increased for padding */
+    z-index: 1001;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    text-align: right;
+    pointer-events: none;
+}
+
+.hud-label-group {
+    display: flex;
+    align-items: center;
+    /* Height and gap managed dynamically by gap property */
+    padding-right: 5px;
+    /* Margin to the bars */
+}
+
+.hud-label-text {
+    font-family: 'Orbitron', monospace;
+    font-size: inherit;
+    /* Dynamically set by JS proportional to bar height */
+    font-weight: 800;
+    color: #fff;
+    opacity: 0.9;
+    letter-spacing: 0.1em;
+    text-shadow: 0 0 5px var(--c-cyan);
+    /* Sci-fi slanted look to match island */
+    transform: skewX(-30deg);
+    white-space: nowrap;
+    text-transform: uppercase;
+
+    /* Overflow protection for small screens */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+}
+
+/* --- HUD Nav labels --- */
+.hud-nav-labels {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1002;
+    pointer-events: none;
+}
+
+.hud-nav-label-group {
+    /* Hit Area container (positioned by JS) */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: auto;
+    cursor: pointer;
+    /* performance containment */
+    contain: layout paint;
+}
+
+.hud-nav-label-content {
+    position: relative;
+    /* Add for absolute pseudo-elements */
+    font-family: 'Fira Code', monospace;
+    font-weight: 700;
+    color: var(--c-cyan);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    /* Hardware Acceleration */
+    transform: translateZ(0);
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+
+    text-shadow: 0 0 5px rgba(0, 243, 255, 0.4);
+    /* Sharper, less expensive */
+    opacity: 0.6; /* Muted by default */
+    white-space: nowrap;
+
+    /* SPECIFIC Transitions only */
+    transition:
+        opacity 0.4s cubic-bezier(0.165, 0.84, 0.44, 1),
+        color 0.4s cubic-bezier(0.165, 0.84, 0.44, 1),
+        background-color 0.4s cubic-bezier(0.165, 0.84, 0.44, 1),
+        text-shadow 0.4s cubic-bezier(0.165, 0.84, 0.44, 1),
+        border-color 0.4s cubic-bezier(0.165, 0.84, 0.44, 1),
+        transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid transparent;
+}
+
+.hud-nav-label-group:hover .hud-nav-label-content {
+    background: rgba(0, 243, 255, 0.12);
+    color: #fff;
+    text-shadow: 0 0 15px rgba(0, 243, 255, 0.8);
+    opacity: 1;
+    border-color: rgba(0, 243, 255, 0.3);
+    /* Subtle pop on hover */
+    transform: scale(1.02) translateZ(0);
+    animation: hudBreathe 2s infinite ease-in-out;
+}
+
+.hud-nav-label-group.active .hud-nav-label-content {
+    /* 1. Background Pattern: Precision Scanlines + Subtile Glow Wash */
+    background: 
+        repeating-linear-gradient(0deg, transparent, transparent 1px, rgba(0, 243, 255, 0.04) 1px, rgba(0, 243, 255, 0.04) 2px),
+        rgba(0, 243, 255, 0.08);
+
+    /* 2. Technical Accent Frame (Sleek Top and Bottom lines) */
+    border-top: 1px solid rgba(0, 243, 255, 0.7);
+    border-bottom: 2px solid rgba(0, 243, 255, 0.2);
+    box-shadow: inset 0 0 10px rgba(0, 243, 255, 0.1);
+
+    color: #fff;
+    text-shadow: 0 0 12px rgba(0, 243, 255, 1);
+    opacity: 1;
+
+    /* 3. Balanced Layout (Centered) */
+    padding: 0;
+    justify-content: center;
+    position: relative;
+    overflow: visible;
+}
+
+/* SLEEK VERTICAL NODES: High-intensity markers on left/right edges */
+.hud-nav-label-group.active .hud-nav-label-content::before,
+.hud-nav-label-group.active .hud-nav-label-content::after {
+    content: '';
+    position: absolute;
+    width: 2px;
+    height: 12px;
+    top: calc(50% - 6px);
+    background: var(--c-cyan);
+    box-shadow: 0 0 10px var(--c-cyan), 0 0 18px rgba(0, 243, 255, 0.6);
+    animation: activeNodePulse 1.5s infinite alternate ease-in-out;
+}
+
+.hud-nav-label-group.active .hud-nav-label-content::before {
+    left: 0;
+}
+
+.hud-nav-label-group.active .hud-nav-label-content::after {
+    right: 0;
+}
+
+@keyframes activeNodePulse {
+    from { opacity: 0.8; transform: scaleY(0.8); }
+    to { opacity: 1; transform: scaleY(1.2); }
+}
+
+@keyframes activeDiamondPulse {
+    from { opacity: 0.5; transform: rotate(45deg) scale(0.8); }
+    to { opacity: 1; transform: rotate(45deg) scale(1.2); }
+}
+
+@keyframes hudNavActiveSnap {
+    0% { transform: scale(0.95); opacity: 0.5; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* Remove unused pseudo-elements from previous design */
+.hud-nav-label-group.active .hud-nav-label-content::after,
+.hud-nav-label-group.active .hud-nav-label-content::before {
+    display: none;
+}
+
+/* --- HUD Narrative Subtitles --- */
+#stat-subtitle {
+    position: absolute;
+    bottom: 12vh;
+    left: 50%;
+    transform: translateX(-50%) translateZ(0);
+    /* DNA Hardware Acceleration */
+    width: fit-content;
+    min-width: 280px;
+    max-width: 85vw;
+    padding: 18px 60px;
+    text-align: center;
+    font-family: var(--font-body);
+    /* Rajdhani */
+    font-size: 1.05rem;
+    font-weight: 500;
+    color: var(--c-cyan);
+    text-shadow: var(--glow-cyan);
+    /* BRUTALIST NOIR SHIELD: High performance patterned overlay */
+    background:
+        repeating-linear-gradient(0deg,
+            transparent,
+            transparent 1px,
+            rgba(0, 243, 255, 0.02) 1px,
+            rgba(0, 243, 255, 0.02) 2px),
+        linear-gradient(90deg,
+            transparent 0%,
+            rgba(0, 0, 0, 0.95) 30px,
+            rgba(0, 0, 0, 0.95) calc(100% - 30px),
+            transparent 100%);
+    border-top: 1px solid rgba(0, 243, 255, 0.2);
+    border-bottom: 1px solid rgba(0, 243, 255, 0.2);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 1000;
+    letter-spacing: 0.06em;
+    transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    white-space: pre-wrap;
+    will-change: opacity, transform;
+    contain: layout paint;
+
+    /* Multi-line Centering */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    /* PERFORMANCE: Hard-Culling when inactive */
+    display: none;
+}
+
+#stat-subtitle.active {
+    display: flex;
+    opacity: 1;
+    pointer-events: none;
+    /* Subtitle now allows raycasts to pass through to 3D elements behind it */
+}
+
+/* Close Icon - Stylized HUD Button */
+.subtitle-close {
+    pointer-events: auto;
+    position: absolute;
+    top: 8px;
+    right: 15px;
+    font-family: var(--font-tech);
+    color: var(--c-cyan);
+    cursor: pointer;
+    font-size: 0.9rem;
+    opacity: 0.5;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    user-select: none;
+    padding: 2px 10px;
+    background: rgba(0, 243, 255, 0.03);
+    border: 1px solid rgba(0, 243, 255, 0.15);
+    border-radius: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.subtitle-close::before {
+    content: '';
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    width: 8px;
+    height: 8px;
+    border-top: 1.5px solid var(--c-cyan);
+    border-right: 1.5px solid var(--c-cyan);
+    opacity: 0.6;
+    transition: all 0.2s ease;
+}
+
+.subtitle-close:hover {
+    opacity: 1;
+    background: rgba(0, 243, 255, 0.08);
+    /* Slightly more intense on hover */
+    border-color: rgba(0, 243, 255, 0.5);
+    box-shadow: 0 0 15px rgba(0, 240, 255, 0.15);
+}
+
+.subtitle-close:hover::before {
+    opacity: 1;
+    top: -5px;
+    right: -5px;
+}
+
+/* Cybernetic Brackets */
+#stat-subtitle::before,
+#stat-subtitle::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--c-white);
+    box-shadow: 0 0 10px var(--c-cyan);
+    transition: transform 0.6s ease;
+}
+
+#stat-subtitle::before {
+    left: 4px;
+    border-left: 2px solid var(--c-cyan);
+}
+
+#stat-subtitle::after {
+    right: 4px;
+    border-right: 2px solid var(--c-cyan);
+}
+
+/* --- Aurora Scanner Sweep Effect --- */
+#stat-subtitle .subtitle-text {
+    display: block;
+    position: relative;
+    clip-path: inset(0 100% 0 0);
+    /* Start hidden */
+}
+
+#stat-subtitle.active .subtitle-text {
+    animation: scannerReveal var(--reveal-dur, 2s) cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+#cursor-informer-text,
+#cursor-informer-box {
+    background-color: rgba(4, 8, 12, 0.9);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+    pointer-events: none;
+    z-index: 99999;
+    border: none;
+    border-radius: 0;
+}
+
+#cursor-informer-text {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    color: white;
+    padding: 8px 16px;
+    font-size: 11px;
+    font-family: var(--font-body);
+    text-align: center;
+    max-width: 260px;
+    white-space: pre;
+    opacity: 0;
+    margin-bottom: 18px;
+    letter-spacing: 1.5px;
+}
+
+/* UI-Mode Improvements: Clearer gap for header icons */
+#cursor-informer-main-wrapper.ui-mode #cursor-informer-text {
+    margin-bottom: 42px; /* Increased to prevent hiding header icons */
+    margin-top: 42px;    /* Applied when flipped to the bottom */
+}
+
+/* Corner Accents for Informer Text & Box */
+#cursor-informer-text::before,
+#cursor-informer-text::after,
+#cursor-informer-box::before,
+#cursor-informer-box::after {
+    content: '';
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border: 1.5px solid var(--c-cyan);
+    pointer-events: none;
+    z-index: 2;
+}
+
+#cursor-informer-text::before,
+#cursor-informer-box::before {
+    top: 0;
+    left: 0;
+    border-right: none;
+    border-bottom: none;
+}
+
+#cursor-informer-text::after,
+#cursor-informer-box::after {
+    bottom: 0;
+    right: 0;
+    border-left: none;
+    border-top: none;
+}
+
+#cursor-informer-box {
+    position: relative;
+    width: auto;
+    min-width: 34px;
+    height: 34px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    /* Clip the filling progress */
+    padding: 0;
+    transition: background-color 0.2s ease;
+}
+
+#cursor-informer-icon {
+    width: 100%;
+    height: 100%;
+    background-size: 68%;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 1;
+    position: relative;
+    z-index: 2;
+    /* Keep icon above the filling progress */
+}
+
+#cursor-informer-progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 0%;
+    width: 100%;
+    background-color: var(--c-cyan, #00f3ff);
+    opacity: 1;
+    z-index: 1;
+    transition: height 0.1s linear;
+}
+
+#stat-subtitle .scanner-line {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 6px;
+    background: linear-gradient(180deg, var(--c-cyan), var(--c-gold));
+    box-shadow: 0 0 15px var(--c-cyan), 0 0 25px var(--c-gold);
+    z-index: 1002;
+    opacity: 0;
+    border: none;
+    pointer-events: none;
+}
+
+#stat-subtitle.active .scanner-line {
+    animation: scannerLineSweep var(--reveal-dur, 2s) cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+@keyframes scannerReveal {
+    0% {
+        clip-path: inset(0 100% 0 0);
+        /* completely hidden from right */
+    }
+
+    100% {
+        clip-path: inset(0 0% 0 0);
+        /* perfectly revealed */
+    }
+}
+
+@keyframes scannerLineSweep {
+    0% {
+        left: 0%;
+        opacity: 0;
+    }
+
+    10% {
+        opacity: 1;
+        /* Fade in scanner quickly */
+    }
+
+    90% {
+        left: 100%;
+        opacity: 1;
+    }
+
+    100% {
+        left: 100%;
+        opacity: 0;
+        /* Fade out scanner at end */
+    }
+}
+
+@keyframes hudBreathe {
+    0% {
+        transform: scale(1) translateZ(0);
+    }
+
+    50% {
+        transform: scale(1.05) translateZ(0);
+    }
+
+    100% {
+        transform: scale(1) translateZ(0);
+    }
+}
+
+@keyframes hudActivePulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.95;
+    }
+}
+
+@keyframes hudNavActiveSnap {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.02);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* ============================================================================
+   WORK EXPERIENCE MODAL (HUD WORK BUTTON)
+   ============================================================================ */
+
+#work-experience-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 20000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: auto;
+}
+
+#work-experience-modal .modal-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85); /* Deep dark fade */
+    backdrop-filter: blur(10px);
+    cursor: pointer;
+}
+
+#work-experience-modal .modal-window {
+    position: relative;
+    width: 90%;
+    max-width: 600px;
+    height: 80vh;
+    background: #0a0a0a;
+    border: 1px solid rgba(220, 208, 186, 0.2); /* Gold Border */
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+    /* In-point animation: pop-up from center */
+    animation: modal-enter 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+@keyframes modal-enter {
+    from { opacity: 0; transform: translateY(20px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1.0); }
+}
+
+/* Modal Header Refinement */
+.modal-header-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 32px;
+    background: rgba(220, 208, 186, 0.03); /* Faint Gold */
+    border-bottom: 1px solid rgba(220, 208, 186, 0.15); /* Gold Underline */
+}
+
+.header-nav-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.nav-module-title {
+    font-family: var(--font-tech);
+    font-size: 1.1rem;
+    color: var(--c-gold); /* Exact Gold Color */
+    letter-spacing: 3px;
+    font-weight: 700;
+}
+
+/* Modal CTA Button (Gold Variant) */
+.cta-btn-gold {
+    background: rgba(220, 208, 186, 0.05);
+    border: 1px solid rgba(220, 208, 186, 0.3);
+    color: var(--c-gold);
+    font-family: var(--font-code);
+    font-size: 0.65rem;
+    padding: 6px 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.cta-btn-gold:hover {
+    background: rgba(220, 208, 186, 0.15);
+    border-color: var(--c-gold);
+    box-shadow: 0 0 20px rgba(220, 208, 186, 0.2);
+}
+
+#work-experience-modal .modal-narrative {
+    position: relative;
+    padding: 30px 24px;
+    background: #000;
+    overflow: hidden;
+    min-height: 110px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#narrative-shader-canvas {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0.6; /* Balanced visibility */
+}
+
+.console-prefix, .narrative-text {
+    position: relative;
+    z-index: 5;
+}
+
+.console-prefix {
+    font-family: var(--font-code);
+    font-size: 0.7rem;
+    color: var(--c-cyan);
+    opacity: 0.7;
+    margin-bottom: 8px;
+    letter-spacing: 2px;
+}
+
+.narrative-text {
+    font-family: var(--font-body);
+    font-size: 1.15rem;
+    color: #fff;
+    line-height: 1.5;
+    font-style: italic;
+    font-weight: 500;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.modal-divider {
+    height: 1px;
+    width: 100%;
+    background: linear-gradient(90deg, transparent, rgba(220, 208, 186, 0.15), transparent);
+}
+
+.modal-spacer {
+    height: 10px;
+    width: 100%;
+    background: #0a0a0a; /* Matches the modal-window background */
+}
+
+#work-experience-modal .modal-body-scroller {
+    flex: 1;
+    overflow-y: auto;
+    padding: 40px 32px; /* Increased top-padding for the scroll buffer gap */
+    
+    /* Smooth & Snap Logic */
+    scroll-behavior: smooth;
+    scroll-snap-type: y proximity; /* Proximity feels more natural for reading than mandatory */
+    
+    /* Standard Scrollbar */
+    scrollbar-width: thin;
+    scrollbar-color: var(--c-cyan) rgba(255, 255, 255, 0.05);
+}
+
+/* Modal Scrollbar Styling (Chrome/Safari) - HUD PREMIUM THEME */
+.modal-body-scroller::-webkit-scrollbar { 
+    width: 3px; 
+}
+.modal-body-scroller::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.02);
+}
+.modal-body-scroller::-webkit-scrollbar-thumb { 
+    background: var(--c-cyan);
+    box-shadow: 0 0 10px var(--c-cyan);
+    border-radius: 0;
+}
+
+.exp-lite-block {
+    margin-bottom: 40px;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+}
+
+.exp-lite-company {
+    font-family: var(--font-tech);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 1.5px;
+    margin-bottom: 4px;
+}
+
+.exp-lite-title {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    color: var(--c-cyan);
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.exp-lite-date {
+    font-size: 0.85rem;
+    opacity: 0.6;
+    color: var(--c-gold);
+    font-weight: 400;
+}
+
+.exp-lite-bullets {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.exp-lite-bullets li {
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    color: var(--c-gold);
+    opacity: 0.9;
+    margin-bottom: 8px;
+    padding-left: 15px;
+    position: relative;
+    line-height: 1.5;
+}
+
+.exp-lite-bullets li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 10px;
+    width: 4px;
+    height: 4px;
+    background: var(--c-cyan);
+    border-radius: 50%;
+}
+
+#work-experience-modal .modal-footer-lite {
+    padding: 24px;
+    display: flex;
+    justify-content: center;
+    border-top: 1px solid rgba(220, 208, 186, 0.05);
+}
+
+.modal-btn-cyan {
+    background: transparent;
+    border: 1px solid var(--c-cyan);
+    color: var(--c-cyan);
+    padding: 12px 32px;
+    font-family: var(--font-tech);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.modal-btn-cyan:hover {
+    background: var(--c-cyan);
+    color: #000;
+    box-shadow: 0 0 20px rgba(0, 243, 255, 0.4);
+    transform: translateY(-2px);
+}

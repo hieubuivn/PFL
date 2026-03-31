@@ -1,0 +1,10 @@
+@keyframes hudBreathe {
+    0% { transform: scale(1) translateZ(0); }
+    50% { transform: scale(1.05) translateZ(0); }
+    100% { transform: scale(1) translateZ(0); }
+}
+
+@keyframes hudActivePulse {
+    0%, 100% { opacity: 1; background-color: rgba(0, 243, 255, 0.15); }
+    50% { opacity: 0.85; background-color: rgba(0, 243, 255, 0.08); }
+}
