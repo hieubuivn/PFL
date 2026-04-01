@@ -127,23 +127,16 @@
     href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap">
 
   <link rel="canonical" href="https://hieubuivn.github.io/">
-  <link rel="icon" href="./textures/favicon.svg" type="image/svg+xml" />
-
-  <link href="./css/source.css" rel="stylesheet" type="text/css" />
-  <link href="./css/room.css" rel="stylesheet" type="text/css" />
-  <link href="./project.css" rel="stylesheet" type="text/css" />
-  <!-- NEW LAYOUT STYLES -->
-  <link href="./css/layout.css" rel="stylesheet" type="text/css" />
-  <link href="./css/cv-styles.css" rel="stylesheet" type="text/css" />
-  <link href="./css/textBoard.css" rel="stylesheet" type="text/css" />
-  <link href="./css/loader-patch.css" rel="stylesheet" type="text/css" />
+  <link rel="icon" href="/assets/favicon-CTify2Ac.svg" type="image/svg+xml" />
+
+  <!-- NEW LAYOUT STYLES -->
 
   <!-- FONTS ALREADY PRELOADED IN HEAD -->
 
   <!-- CRITICAL ASSET PRELOAD -->
-  <link rel="preload" href="./models/points.glb" as="fetch" crossorigin="anonymous" fetchpriority="high">
-  <link rel="preload" href="./textures/ktx2/spriteSheet-etc.ktx2" as="fetch" crossorigin="anonymous">
-  <link rel="preload" href="./textures/spriteSheet.webp" as="image" crossorigin>
+  <link rel="preload" href="/assets/points-CiBOLUv_.glb" as="fetch" crossorigin="anonymous" fetchpriority="high">
+  <link rel="preload" href="/assets/spriteSheet-etc-BWy5Lfyi.ktx2" as="fetch" crossorigin="anonymous">
+  <link rel="preload" href="/assets/spriteSheet-BVx0gy26.webp" as="image" crossorigin>
 
   <style id="critical-path-css">
     :root {
@@ -205,20 +198,36 @@
     }
   </style>
 
+
   <!-- PERFORMANCE: Start parsing logic while assets download -->
-  <link rel="modulepreload" href="office.js">
+  <link rel="modulepreload" href="/assets/office-B4ovQhP2.js">
+  <script type="importmap">
+    {
+      "imports": {
+        "tween": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/tween.module.min.js",
+        "three": "https://esm.sh/three@0.170.0",
+        "three/addons/": "https://esm.sh/three@0.170.0/examples/jsm/",
+        "three/addons/postprocessing/UnrealBloomPass-transparentBg.js": "./projectScripts/libs/UnrealBloomPass-transparentBg.js",
+        "three/webgpu": "https://esm.sh/three@0.170.0/build/three.webgpu.min.js",
+        "three/tsl": "https://esm.sh/three@0.170.0/build/three.tsl.min.js",
+        "postprocessing-extra/" : "https://esm.sh/three@0.170.0/examples/jsm/postprocessing-extra/",
+        "rapier-compat": "https://esm.sh/@dimforge/rapier3d-compat@0.17.3",
+        "postprocessing/" : "https://esm.sh/three@0.170.0/examples/jsm/postprocessing/"
+      }
+    }
+  </script>
+  <script type="module" crossorigin src="/assets/main-TVfX594X.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/main-BgoKUSTh.css">
 </head>
 
 <body>
-  <!-- 0. INSTANT BOOTLOADER: Starts the cinematic worker while modules parse -->
-  <script type="module">
-    import { BootLoader } from './projectScripts/resources/bootLoader.js';
-    window.bootLoader = new BootLoader();
-  </script>
+  <!-- 0. INSTANT BOOTLOADER: Starts the cinematic worker while modules parse -->
 
-
-  <!-- GSAP and UI Utilities are now bundled in office.js -->
-
+  <!-- GSAP Libraries (UMD) -->
+  <script src="./projectScripts/libs/gsap.min.js"></script>
+  <script src="./projectScripts/libs/Observer.min.js"></script>
+  <script src="./projectScripts/libs/ScrollTrigger.min.js"></script>
+  <script src="./projectScripts/utils/uiUtils.js"></script>
 
 
   <!-- APP CONTAINER (Split Layout) -->
@@ -349,11 +358,7 @@
         <div class="scroll-text">SCROLL TO EXPLORE</div>
       </div>
 
-      <!-- DYNAMIC TEXT EQUATION SCRIPT -->
-      <script type="module">
-        import { initBoardAutoFit } from './projectScripts/content-manager/textBoard.js';
-        initBoardAutoFit();
-      </script>
+      <!-- DYNAMIC TEXT EQUATION SCRIPT -->
 
     </div> <!-- END experience-container -->
 
@@ -449,16 +454,16 @@
                       <!-- Front face will hold current avatar -->
                       <div class="avatar-face avatar-front">
                         <picture>
-                          <source srcset="./textures/cv-poba-nobg.webp" type="image/webp">
-                          <img src="./textures/cv-poba-nobg.png" alt="Bui Quoc Hieu" id="cv-avatar-img-front"
+                          <source srcset="/assets/cv-poba-nobg-DtpM0_uG.webp" type="image/webp">
+                          <img src="/assets/cv-poba-nobg-BlI-Vzrq.png" alt="Bui Quoc Hieu" id="cv-avatar-img-front"
                             loading="lazy" decoding="async">
                         </picture>
                       </div>
                       <!-- Back face will hold incoming avatar -->
                       <div class="avatar-face avatar-back">
                         <picture>
-                          <source srcset="./textures/cv-poba-nobg.webp" type="image/webp">
-                          <img src="./textures/cv-poba-nobg.png" alt="Bui Quoc Hieu" id="cv-avatar-img-back"
+                          <source srcset="/assets/cv-poba-nobg-DtpM0_uG.webp" type="image/webp">
+                          <img src="/assets/cv-poba-nobg-BlI-Vzrq.png" alt="Bui Quoc Hieu" id="cv-avatar-img-back"
                             loading="lazy" decoding="async">
                         </picture>
                       </div>
@@ -1093,14 +1098,10 @@
   </div>
 
   <!-- SCRIPTS -->
-  <!-- STRUCTURAL & PERFORMANCE LOGIC -->
-  <script type="module" src="./projectScripts/utils/layoutManager.js"></script>
+  <!-- STRUCTURAL & PERFORMANCE LOGIC -->
 
-  <!-- UI & INTERACTION LOGIC -->
-  <script type="module" src="./projectScripts/interactions/cvInteractions.js"></script>
-  <script type="module" src="office.js"></script>
-  <script src="./projectScripts/interactions/scroll-experience.js"></script>
-  <script type="module" src="./projectScripts/interactions/cvFall.js"></script>
+  <!-- UI & INTERACTION LOGIC -->
+  <script src="./projectScripts/interactions/scroll-experience.js"></script>
 
 </body>
 
