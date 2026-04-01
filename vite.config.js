@@ -1,6 +1,9 @@
 import { defineConfig } from 'vite';
 
 export default defineConfig({
+  // GitHub Pages hosting sub-path
+  base: '/PFL/',
+  
   // Project Root (where index.html is located)
   root: './',
   
