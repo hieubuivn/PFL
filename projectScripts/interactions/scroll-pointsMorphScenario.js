@@ -408,7 +408,7 @@ export function initScrollMorph(scene, pointsInstance, TWEEN) {
                     }
                     if (uniforms.uLightSizeBoost)
                         uniforms.uLightSizeBoost.value = startUniLightBoost + (targetUniLightBoost - startUniLightBoost) * alpha;
-                    
+
                     if (uniforms.uPixelRatio)
                         uniforms.uPixelRatio.value = startUniPixelRatio + (targetUniPixelRatio - startUniPixelRatio) * alpha;
                     if (uniforms.uModelPointSizeFactor)
@@ -428,7 +428,7 @@ export function initScrollMorph(scene, pointsInstance, TWEEN) {
                             if (boardEl) {
                                 if (points.boardPosTween) points.boardPosTween.stop();
                                 if (points.boardScaleTween) points.boardScaleTween.stop();
-                                
+
                                 window.gsap.to(boardEl, {
                                     opacity: 0,
                                     duration: 0.8,
@@ -472,7 +472,7 @@ export function initScrollMorph(scene, pointsInstance, TWEEN) {
         const walkSitTypeDuration = sitDuration + typeTransitionDuration / typeScale + walkTime * 1000;
 
         points.playAnimation('walking', transitionTime, true, walkTimeScale);
-        
+
         // --- EXPOSURE HANDOFF ---
         // Start fading the high points exposure down to a neutral range (0.4) 
         // throughout the walking duration. This prepares the eyes for the room assembly.
@@ -501,7 +501,7 @@ export function initScrollMorph(scene, pointsInstance, TWEEN) {
             // [DEEP_ANALYSIS] STAGGER_BUILD:
             // Give the Pilot 1.125s to comfortably begin the "Sit" animation 
             // before dumping the Room Assembly load.
-            await SU.delay(1125); 
+            await SU.delay(1125);
 
             // PERFORMANCE SIGNAL: Mark the build as active (used for mixer throttling)
             if (scene) scene.isHeavyBuilding = true;
@@ -648,13 +648,11 @@ export function initScrollMorph(scene, pointsInstance, TWEEN) {
                 const runDanceCycle = () => {
                     if (pointsInstance.getCurrentStep() !== 2) return; // Safety: Stop if state changed
 
-                    points.playAnimation('breakDance', 0.8, false, 1.0, () => {
-                        points.playAnimation('breakDance', 0.8, false, 1.0, () => {
+                    points.playAnimation('breakDance', 0.8, 'pingpong', 1.1, () => {
+                        if (pointsInstance.getCurrentStep() !== 2) return;
+                        points.playAnimation('robotDance', 0.8, false, 1.1, () => {
                             if (pointsInstance.getCurrentStep() !== 2) return;
-                            points.playAnimation('robotDance', 0.8, false, 1.0, () => {
-                                if (pointsInstance.getCurrentStep() !== 2) return;
-                                points.playAnimation('gangnam', 0.8, false, 1.0, runDanceCycle);
-                            });
+                            points.playAnimation('gangnam', 0.8, false, 1.25, runDanceCycle);
                         });
                     })
 
@@ -728,7 +726,7 @@ export function initScrollMorph(scene, pointsInstance, TWEEN) {
 
                 if (scene) {
                     scene.isTransitioning = true;
-                    
+
                     // --- STAGGERED QUALITY DROP (Avoiding the "Hard Snap") ---
                     // We drop the resolution in 3 discrete steps during the walk to reduce visual shock
                     // while still reaching the 0.25x performance floor before the build starts.

@@ -1244,13 +1244,24 @@ export default class Points {
         newAction.reset();
         newAction.setEffectiveWeight(1);
 
-        if (!loop) {
+        // [FIX] Support Reverse Playback (Ping-Pong of the first)
+        // If timeScale is negative, we must start at the end of the clip.
+        if (timeScale < 0) {
+            newAction.time = clip.duration;
+            newAction.paused = false;
+        }
+
+        if (loop === 'pingpong') {
+            // loopPingPong 1 full cycle = 1 forward (iter 0) and 1 reverse (iter 1)
+            newAction.setLoop(THREE.LoopPingPong, 2);
+            newAction.clampWhenFinished = true;
+        } else if (!loop) {
             newAction.setLoop(THREE.LoopOnce);
             newAction.clampWhenFinished = true; // Crucial: don't snap back to start
         } else {
             newAction.setLoop(THREE.LoopRepeat);
-
         }
+
         newAction.timeScale = timeScale;
         newAction.fadeIn(duration);
         newAction.play();

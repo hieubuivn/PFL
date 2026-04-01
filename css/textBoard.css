@@ -1,0 +1,230 @@
+/* textBoard.css - Testing Board Layout */
+
+:root {
+  --main-font-tech: 'Orbitron', sans-serif;
+  --sub-font-tech: 'Rajdhani', sans-serif;
+  --gap-island: 6vh;
+}
+
+#board {
+  position: absolute;
+  left: 0;
+  bottom: calc(var(--gap-island) * 2);
+  /* top: 16vh; */
+
+  margin-left: calc(var(--gap-island) + 2vh);
+  width: 45%;
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--gap-island) * 0.7);
+
+  /* PORTFOLIO TITLE SYNC STYLE */
+  color: var(--c-black) !important;
+  -webkit-text-fill-color: var(--c-black) !important;
+  -webkit-text-stroke: 1px var(--c-gold) !important;
+  text-shadow: 3px 3px 0px rgba(0, 0, 0, 0.5);
+
+  /* FLAT CONTAINER: No z-index or perspective here allows children to compete globally with canvas */
+  pointer-events: none;
+}
+
+.board-item {
+  position: relative;
+  width: 100%;
+  min-height: 50px;
+  
+  /* 3D TILT SUPPORT: Applied per-item to allow independent Z-depths while maintaining flex order */
+  transform-style: preserve-3d;
+  perspective: 1200px;
+  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+#board-intro,
+#board-feat {
+    z-index: 2; /* BETWEEN Backdrop (1) and Canvas (3) */
+}
+
+#board-philo {
+    z-index: 4; /* ABOVE Canvas (3) */
+}
+
+
+/* --- BOARD INTRO TYPOGRAPHY --- */
+#board-intro {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--gap-island) * 0.3);
+}
+
+.intro-main {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--gap-island) * 0.125);
+  ;
+  width: 100%;
+}
+
+.intro-main-name1,
+.intro-main-name2 {
+  font-family: var(--main-font-tech);
+  font-weight: 700;
+  line-height: 0.85;
+  margin: 0;
+  padding: 0;
+  white-space: nowrap;
+  width: max-content;
+
+  /* Black fill + Gold stroke style */
+  color: var(--c-black) !important;
+  -webkit-text-fill-color: var(--c-black) !important;
+  -webkit-text-stroke: 1px var(--c-gold) !important;
+  text-shadow: 3px 3px 0px rgba(0, 0, 0, 0.5);
+}
+
+.intro-sub {
+  font-family: var(--main-font-tech);
+  font-weight: 700;
+  line-height: 0.85;
+  margin: 0;
+  padding: 0;
+  white-space: nowrap;
+  width: max-content;
+
+  /* Gold style with high-contrast outline */
+  color: var(--c-gold) !important;
+  -webkit-text-fill-color: var(--c-gold) !important;
+  -webkit-text-stroke: 0;
+  text-shadow:
+    -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+    1px 1px 0 #000,
+    0 0 10px rgba(220, 208, 186, 0.4);
+}
+
+/* --- BOARD PHILO TYPOGRAPHY --- */
+#board-philo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75vh;
+}
+
+.board-philo-sub,
+.board-philo-main {
+  font-family: var(--sub-font-tech);
+  font-weight: 800;
+  line-height: 0.85;
+  margin: 0;
+  padding: 0;
+  white-space: nowrap;
+  width: max-content;
+
+  /* Cyan HUD style */
+  color: var(--c-cyan) !important;
+  -webkit-text-fill-color: var(--c-cyan) !important;
+  -webkit-text-stroke: 1px #003344 !important;
+  text-shadow:
+    0 0 10px rgba(0, 0, 0, 0.8),
+    0 0 5px rgba(0, 243, 255, 0.4) !important;
+}
+
+#board-feat-1,
+#board-feat-2 {
+  font-family: var(--sub-font-tech);
+  font-weight: 700;
+  line-height: 0.85;
+  margin: 0;
+  padding: 0;
+  white-space: nowrap;
+  width: max-content;
+
+  /* Gold Credibility Style */
+  color: var(--c-gold) !important;
+  -webkit-text-fill-color: var(--c-gold) !important;
+  -webkit-text-stroke: 0;
+  text-shadow:
+    -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+    1px 1px 0 #000,
+    0 0 10px rgba(220, 208, 186, 0.4);
+}
+
+
+
+#board-feat {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5vh;
+}
+
+#board-feat::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 0.5px;
+  background: rgba(220, 208, 186, 0.2);
+  transform-origin: left center;
+  transform: scaleX(var(--feat-border-scale, 1));
+}
+
+/* --- SCROLL INDICATOR SYNC --- */
+.scroll-indicator {
+  position: absolute !important;
+  bottom: 0 !important;
+  right: 0 !important;
+  /* Use a variable to control the margin directly, as requested by the user */
+  margin-bottom: var(--scroll-indicator-margin, 16vh) !important;
+  margin-right: 16vh !important;
+  left: auto !important;
+  
+  /* Remove transform: none !important to allow for GSAP/TWEEN animations if needed */
+  /* But we primarily use margin-bottom now as requested */
+  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px; /* Doubled from 15px */
+
+  /* Z-INDEX: Set between three-js-backdrop (1) and experience-container canvas (3) */
+  z-index: 2 !important;
+  transition: opacity 0.5s ease;
+}
+
+/* --- SONIC WAKE INTERACTION --- */
+@keyframes sonic-shake {
+  0% { transform: translate(0, 0) scale(1.0); }
+  25% { transform: translate(-2px, 1px) scale(1.02); }
+  50% { transform: translate(2px, -1px) scale(0.98); }
+  75% { transform: translate(-1px, -1px) scale(1.01); }
+  100% { transform: translate(0, 0) scale(1.0); }
+}
+
+.active-wake {
+  animation: sonic-shake 0.15s infinite alternate;
+  filter: drop-shadow(0 0 15px var(--c-cyan));
+  transition: filter 0.2s ease, transform 0.3s ease;
+}
+
+/* --- METALLIC SHINE (3D OBJECT FEEL) --- */
+.board-item::after {
+  content: '';
+  position: absolute;
+  top: -50%; left: -50%; width: 200%; height: 200%;
+  background: linear-gradient(
+    var(--shine-angle, 120deg),
+    transparent 30%,
+    rgba(0, 243, 255, 0) var(--shine-pos, -20%),
+    rgba(255, 255, 255, 0.6) calc(var(--shine-pos, -20%) + 5%),
+    rgba(255, 255, 255, 0) calc(var(--shine-pos, -20%) + 10%),
+    transparent 70%
+  );
+  pointer-events: none;
+  mix-blend-mode: overlay;
+  opacity: var(--shine-opacity, 0);
+  transition: opacity 0.3s ease;
+}
+

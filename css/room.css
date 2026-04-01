@@ -1,0 +1,296 @@
+/* Ensure the parent allows positioning */
+.frame {
+    position: relative;
+    /* or fixed/absolute depending on your layout */
+    width: 100%;
+    /* Ensure parent has width */
+    height: 100vh;
+    /* Ensure parent has height */
+}
+
+/* The new content div */
+#content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -10;
+    /* Adjust this: Lower than frame_box if you want borders on top */
+    overflow: auto;
+    /* Allows scrolling inside if content is long */
+    will-change: transform;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+}
+
+@keyframes informerPulse {
+    0% {
+        scale: 1;
+        opacity: 1;
+        /* Ensure it starts fully visible */
+    }
+
+    15% {
+        scale: 1.25;
+    }
+
+    30% {
+        scale: 1.1;
+    }
+
+    50% {
+        scale: 1;
+    }
+
+    70% {
+        opacity: 1;
+        scale: 1.25;
+    }
+
+    100% {
+        scale: 1;
+        opacity: 0;
+        /* <<< NEW: Fades out completely at the end of the last beat */
+    }
+}
+
+#cursor-informer-box {
+    /* Position and visibility settings */
+    position: relative;
+    pointer-events: none;
+
+    /* Size */
+    width: 32px;
+    height: 32px;
+
+    /* display: none;  <-- Logic handled in JS now (flex/none) */
+
+    /* Styling */
+    background-color: #4d5f6e;
+    border: 2px solid white;
+    /* border-radius: 50%; */
+    z-index: 99999;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#cursor-informer-icon {
+    /* The inner icon handling the image and rotation */
+    width: 100%;
+    height: 100%;
+
+    background-size: 80%;
+    background-position: center;
+    background-repeat: no-repeat;
+    /* No border or BG color here */
+}
+
+#cursor-informer-text {
+    position: absolute;
+    bottom: 100%;
+    /* Place above the wrapper */
+    left: 50%;
+    transform: translateX(-50%);
+    /* Center horizontally */
+    pointer-events: none;
+    color: white;
+    /* Match icon style */
+    background-color: #000000;
+    border: 2px solid white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    /* Slight radius for text box looks better, or 0 if strict match */
+
+    font-size: 11px;
+    font-family: 'Orbitron', monospace;
+    text-align: center;
+
+    /* Layout constraints */
+    max-width: 160px;
+    /* approx 5x icon size (32px * 5) */
+    white-space: normal;
+    /* Allow wrapping */
+    word-wrap: break-word;
+    /* Ensure long words break */
+
+    z-index: 99999;
+    opacity: 0;
+    /* Default hidden, toggled by JS or class */
+    margin-bottom: 8px;
+    /* Space between text and icon */
+}
+
+#cursor-informer-icon.active {
+    /* Runs 3 times, uses ease-in-out, AND holds the final 100% frame state */
+    animation: informerPulse 1.8s 1 ease-in-out;
+    animation-fill-mode: forwards;
+    /* <<< NEW: Holds the final opacity: 0 state */
+}
+
+
+
+#loading-container {
+    display: none;
+    /* Logic moved to project.css */
+}
+
+.loader-content {
+    display: none;
+    /* Logic moved to project.css */
+}
+
+.progress-bar-container {
+    display: none;
+    /* Hide old bar, use shader! */
+}
+
+#enter-button {
+    display: none;
+    /* Hidden by default */
+}
+
+#enter-button:hover {
+    background: #dcd0ba;
+    color: #000000;
+    /* Black text on hover */
+    box-shadow: 0 0 15px #dcd0ba;
+    /* Glow effect */
+}
+
+/* --- Act Buttons Container --- */
+#act-controls {
+    position: fixed;
+    top: 100px;
+    left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 10000;
+    /* display: none; */
+
+    /* Panel Styling */
+    background: rgba(0, 0, 0, 0.85);
+    /* More opaque, no blur needed */
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid rgba(220, 208, 186, 0.3);
+    /* Subtle gold border */
+}
+
+.act-row {
+    display: flex;
+    gap: 10px;
+}
+
+/* --- Shared Button Styles --- */
+/* --- Shared Button Styles --- */
+#act-controls button {
+    padding: 6px 15px;
+    /* Halved from 12px 30px */
+    font-size: 0.8rem;
+    /* Reduced from 1.2rem */
+    font-weight: bold;
+    color: #dcd0ba;
+    /* Gold text */
+    background: transparent;
+    border: 1px solid #dcd0ba;
+    /* Reduced to 1px */
+    /* Gold border */
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    /* Reduced from 2px */
+    transition: all 0.3s ease;
+}
+
+#act-controls button:hover {
+    background: #dcd0ba;
+    color: #000000;
+    /* Black text on hover */
+    box-shadow: 0 0 15px #dcd0ba;
+    /* Glow effect */
+}
+
+/* =========================================
+   9. SITE HEADER
+   ========================================= */
+#site-header {
+    position: fixed;
+    top: 5vh;
+    left: 5vw;
+    z-index: 10000;
+    font-family: 'Orbitron', sans-serif;
+    pointer-events: none;
+    /* Let clicks pass through to 3D */
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.header-name {
+    font-size: 2rem;
+    font-weight: 900;
+    color: #ffffff;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    line-height: 1;
+}
+
+.header-title {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #dcd0ba;
+    /* Match Gold Accents */
+    text-transform: uppercase;
+    letter-spacing: 4px;
+}
+
+
+/* =========================================
+   10. POINTS CSS
+   ========================================= */
+
+/* Portfolio Title */
+/* Portfolio Title */
+/* MOVED TO layout.css */
+/* #portfolio-title { ... } */
+
+/* .title-line { ... } */
+/* .title-line:nth-child(1) { ... } */
+/* .title-line:nth-child(2) { ... } */
+/* Second Line: Darker Middle Curve */
+.title-line:nth-child(2) {
+    margin-left: 1.25em;
+    /* Indent the second line */
+    opacity: 0.9;
+    background: linear-gradient(to right,
+            rgba(140, 140, 140, 1) 0%,
+            /* 1 - dark start */
+            rgba(160, 160, 160, 0.9) 10%,
+            /* 2 - dark */
+            rgba(180, 180, 180, 0.85) 28%,
+            /* 3 - HARSH jump (lighter) */
+            rgba(200, 200, 200, 0.85) 45%,
+            /* 4 - lighter mid */
+            rgba(220, 220, 220, 0.88) 60%,
+            /* 5 - soft light gray */
+            rgba(235, 235, 235, 0.9) 80%,
+            /* 6 - brighter gray */
+            rgba(250, 250, 250, 0.92) 90%,
+            /* 7 - near-white */
+            rgba(255, 255, 255, 0.95) 100%
+            /* 8 - final white end */
+        );
+
+
+
+
+
+
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
