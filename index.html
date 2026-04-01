@@ -127,16 +127,23 @@
     href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap">
 
   <link rel="canonical" href="https://hieubuivn.github.io/">
-  <link rel="icon" href="/PFL/assets/favicon-CTify2Ac.svg" type="image/svg+xml" />
-
-  <!-- NEW LAYOUT STYLES -->
+  <link rel="icon" href="/PFL/textures/favicon.svg" type="image/svg+xml" />
+
+  <link href="/PFL/css/source.css" rel="stylesheet" type="text/css" />
+  <link href="/PFL/css/room.css" rel="stylesheet" type="text/css" />
+  <link href="/PFL/project.css" rel="stylesheet" type="text/css" />
+  <!-- NEW LAYOUT STYLES -->
+  <link href="/PFL/css/layout.css" rel="stylesheet" type="text/css" />
+  <link href="/PFL/css/cv-styles.css" rel="stylesheet" type="text/css" />
+  <link href="/PFL/css/textBoard.css" rel="stylesheet" type="text/css" />
+  <link href="/PFL/css/loader-patch.css" rel="stylesheet" type="text/css" />
 
   <!-- FONTS ALREADY PRELOADED IN HEAD -->
 
   <!-- CRITICAL ASSET PRELOAD -->
-  <link rel="preload" href="/PFL/assets/points-CiBOLUv_.glb" as="fetch" crossorigin="anonymous" fetchpriority="high">
-  <link rel="preload" href="/PFL/assets/spriteSheet-etc-BWy5Lfyi.ktx2" as="fetch" crossorigin="anonymous">
-  <link rel="preload" href="/PFL/assets/spriteSheet-BVx0gy26.webp" as="image" crossorigin>
+  <link rel="preload" href="/PFL/models/points.glb" as="fetch" crossorigin="anonymous" fetchpriority="high">
+  <link rel="preload" href="/PFL/textures/ktx2/spriteSheet-etc.ktx2" as="fetch" crossorigin="anonymous">
+  <link rel="preload" href="/PFL/textures/spriteSheet.webp" as="image" crossorigin>
 
   <style id="critical-path-css">
     :root {
@@ -216,8 +223,7 @@
       }
     }
   </script>
-  <script type="module" crossorigin src="/PFL/assets/main-UmHlrJ3z.js"></script>
-  <link rel="stylesheet" crossorigin href="/PFL/assets/main-BgoKUSTh.css">
+  <script type="module" crossorigin src="/PFL/assets/main-DjL5m6YY.js"></script>
 </head>
 
 <body>
@@ -454,16 +460,16 @@
                       <!-- Front face will hold current avatar -->
                       <div class="avatar-face avatar-front">
                         <picture>
-                          <source srcset="/PFL/assets/cv-poba-nobg-DtpM0_uG.webp" type="image/webp">
-                          <img src="/PFL/assets/cv-poba-nobg-BlI-Vzrq.png" alt="Bui Quoc Hieu" id="cv-avatar-img-front"
+                          <source srcset="/PFL/textures/cv-poba-nobg.webp" type="image/webp">
+                          <img src="/PFL/textures/cv-poba-nobg.png" alt="Bui Quoc Hieu" id="cv-avatar-img-front"
                             loading="lazy" decoding="async">
                         </picture>
                       </div>
                       <!-- Back face will hold incoming avatar -->
                       <div class="avatar-face avatar-back">
                         <picture>
-                          <source srcset="/PFL/assets/cv-poba-nobg-DtpM0_uG.webp" type="image/webp">
-                          <img src="/PFL/assets/cv-poba-nobg-BlI-Vzrq.png" alt="Bui Quoc Hieu" id="cv-avatar-img-back"
+                          <source srcset="/PFL/textures/cv-poba-nobg.webp" type="image/webp">
+                          <img src="/PFL/textures/cv-poba-nobg.png" alt="Bui Quoc Hieu" id="cv-avatar-img-back"
                             loading="lazy" decoding="async">
                         </picture>
                       </div>
