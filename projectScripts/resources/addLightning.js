@@ -136,3 +136,32 @@ function createSpotLight(scene) {
     return windowLight;
 }
 
+export function toggleLamp(scene) {
+    if (!scene.bulb || !scene.bulbLight) return;
+    const bulb = scene.bulb;
+    const bulbLight = scene.bulbLight;
+    const hub = scene.globalUniformsHub;
+
+    const isActive = bulbLight.intensity > 1.0;
+    
+    if (isActive) {
+        bulbLight.intensity = 0.001;
+        if (hub && hub.uniforms.uIsOscillating) hub.uniforms.uIsOscillating.value = 0.0;
+        bulb.material.visible = false;
+        if (bulb.children[0]) bulb.children[0].visible = false;
+    } else {
+        bulbLight.intensity = 50.0;
+        if (hub && hub.uniforms.uIsOscillating) hub.uniforms.uIsOscillating.value = 1.0;
+        bulb.material.visible = true;
+        if (bulb.children[0]) bulb.children[0].visible = true;
+    }
+}
+
+export function screenFlicker(scene, material, duration = 200) {
+    if (!material || !material.uniforms.uBSODState) return;
+    const originalValue = material.uniforms.uBSODState.value;
+    material.uniforms.uBSODState.value = 1.0;
+    setTimeout(() => {
+        material.uniforms.uBSODState.value = originalValue;
+    }, duration);
+}

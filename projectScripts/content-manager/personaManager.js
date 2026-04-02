@@ -4,6 +4,7 @@ import { getDynamicText } from '../utils/contentUtils.js';
 import { updateSubtitle } from '../utils/status.js';
 import { shootDroneBeam } from '../scenario/scenarioUtility.js';
 import { swapPicture } from '../resources/adjustObjects.js';
+import { AvatarShaderEngine } from '../test/avatarShaderEngine.js';
 
 /**
  * PersonaManager
@@ -43,6 +44,10 @@ class PersonaManager {
         this.selectionPromiseResolver = null;
         this.pointsApp = null;
         this.summaryMode = 'scan'; // 'scan' (tags) or 'narrative' (paragraph)
+        
+        // --- 0. START AVATAR ENGINE ---
+        this.avatarEngine = new AvatarShaderEngine('avatar-canvas');
+
         this.init();
     }
 
@@ -424,6 +429,16 @@ class PersonaManager {
                 }
             });
         }
+        
+        // 7. Avatar Container Interaction (NEW: Toggle Persona on Click)
+        const avatarBox = document.getElementById('avatar-container');
+        if (avatarBox) {
+            avatarBox.addEventListener('click', (e) => {
+                e.preventDefault();
+                const nextMode = (this.currentMode === 'dev') ? 'poba' : 'dev';
+                this.setPersona(nextMode);
+            });
+        }
     }
 
     applyMode(mode, instant = false, skipPointsSync = false) {
@@ -464,22 +479,10 @@ class PersonaManager {
         if (instant) {
             this.updateDOM();
         } else {
-            // Trigger 3D Avatar Swap
-            const data = cvData[this.currentMode];
-
-            if (this.elements.avatarCubeWrapper && data && data.cvAvatarURL) {
-                const isFlippedNow = this.elements.avatarCubeWrapper.classList.contains('swapping-avatar');
-
-                // If it's NOT flipped currently, load data into BACK and flip to BACK
-                if (!isFlippedNow) {
-                    this.updatePictureTag(this.elements.avatarImgBack, data.cvAvatarURL);
-                    this.elements.avatarCubeWrapper.classList.add('swapping-avatar');
-                }
-                // If it IS flipped currently, load data into FRONT and flip to FRONT (remove class)
-                else {
-                    this.updatePictureTag(this.elements.avatarImgFront, data.cvAvatarURL);
-                    this.elements.avatarCubeWrapper.classList.remove('swapping-avatar');
-                }
+            // Trigger 3D Avatar Swap (GLSL Edition)
+            if (this.avatarEngine) {
+                const targetVal = this.currentMode === 'dev' ? 1.0 : 0.0;
+                this.avatarEngine.transitionTo(targetVal);
             }
 
 
@@ -748,19 +751,6 @@ class PersonaManager {
 
         if (this.elements.systemTitle && data.systemTitle) {
             this.triggerCyberDecode(this.elements.systemTitle, data.systemTitle, 1000);
-        }
-
-        // Apply Persona-Specific Avatar Positioning
-        const avatarContainer = document.querySelector('.profile-img');
-        if (avatarContainer) {
-            // "dev" is centered, "po/ba" is slightly offset to the left due to image composition
-            avatarContainer.style.left = this.currentMode === 'dev' ? '0%' : '-7.5%';
-        }
-
-        // SYNC AVATAR IMAGES (Fix for initial load mismatch)
-        if (data.cvAvatarURL) {
-            this.updatePictureTag(this.elements.avatarImgFront, data.cvAvatarURL);
-            this.updatePictureTag(this.elements.avatarImgBack, data.cvAvatarURL);
         }
 
         // FADE HEAVY TEXT BLOCKS (Already handled by .swapping css class timing in applyMode)

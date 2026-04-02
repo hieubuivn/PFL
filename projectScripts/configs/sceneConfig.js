@@ -19,6 +19,7 @@ export const PERSONA_IDS = {
 };
 
 export const DEFAULT_PERSONA = PERSONA_IDS.POBA;
+export const ASSET_VERSION = '1.0.0'; // Change this to bust cache after asset updates
 
 export const GLOBAL_COLORS = {
     ELECTRIC_CYAN: new THREE.Color(0.0, 0.95, 1.0),

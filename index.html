@@ -127,23 +127,23 @@
     href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap">
 
   <link rel="canonical" href="https://hieubuivn.github.io/">
-  <link rel="icon" href="./textures/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="/textures/favicon.svg" type="image/svg+xml" />
 
-  <link href="./css/source.css" rel="stylesheet" type="text/css" />
-  <link href="./css/room.css" rel="stylesheet" type="text/css" />
-  <link href="./project.css" rel="stylesheet" type="text/css" />
+  <link href="/css/source.css" rel="stylesheet" type="text/css" />
+  <link href="/css/room.css" rel="stylesheet" type="text/css" />
+  <link href="/project.css" rel="stylesheet" type="text/css" />
   <!-- NEW LAYOUT STYLES -->
-  <link href="./css/layout.css" rel="stylesheet" type="text/css" />
-  <link href="./css/cv-styles.css" rel="stylesheet" type="text/css" />
-  <link href="./css/textBoard.css" rel="stylesheet" type="text/css" />
-  <link href="./css/loader-patch.css" rel="stylesheet" type="text/css" />
+  <link href="/css/layout.css" rel="stylesheet" type="text/css" />
+  <link href="/css/cv-styles.css" rel="stylesheet" type="text/css" />
+  <link href="/css/textBoard.css" rel="stylesheet" type="text/css" />
+  <link href="/css/loader-patch.css" rel="stylesheet" type="text/css" />
 
   <!-- FONTS ALREADY PRELOADED IN HEAD -->
 
   <!-- CRITICAL ASSET PRELOAD -->
-  <link rel="preload" href="./models/points.glb" as="fetch" crossorigin="anonymous" fetchpriority="high">
-  <link rel="preload" href="./textures/ktx2/spriteSheet-etc.ktx2" as="fetch" crossorigin="anonymous">
-  <link rel="preload" href="./textures/spriteSheet.webp" as="image" crossorigin>
+  <link rel="preload" href="/models/points.glb" as="fetch" crossorigin="anonymous" fetchpriority="high">
+  <link rel="preload" href="/textures/ktx2/spriteSheet-etc.ktx2" as="fetch" crossorigin="anonymous">
+  <link rel="preload" href="/textures/spriteSheet.webp" as="image" crossorigin>
 
   <style id="critical-path-css">
     :root {
@@ -208,10 +208,11 @@
   <script type="importmap">
     {
       "imports": {
-        "tween": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/tween.module.min.js",
-        "three": "https://esm.sh/three@0.170.0",
+        "three/addons/postprocessing/UnrealBloomPass-transparentBg.js": "/projectScripts/libs/UnrealBloomPass-transparentBg.js",
         "three/addons/": "https://esm.sh/three@0.170.0/examples/jsm/",
-        "three/addons/postprocessing/UnrealBloomPass-transparentBg.js": "./projectScripts/libs/UnrealBloomPass-transparentBg.js",
+        "three/": "https://esm.sh/three@0.170.0/",
+        "three": "https://esm.sh/three@0.170.0",
+        "tween": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/tween.module.min.js",
         "three/webgpu": "https://esm.sh/three@0.170.0/build/three.webgpu.min.js",
         "three/tsl": "https://esm.sh/three@0.170.0/build/three.tsl.min.js",
         "postprocessing-extra/" : "https://esm.sh/three@0.170.0/examples/jsm/postprocessing-extra/",
@@ -460,27 +461,10 @@
               <!-- Right Column: Avatar Component & Information -->
               <div class="header-right">
 
-                <div class="header-photo" style="margin: 0;">
-                  <div class="avatar-cube-container profile-img">
-                    <div class="avatar-cube" id="cv-avatar-cube">
-                      <!-- Front face will hold current avatar -->
-                      <div class="avatar-face avatar-front">
-                        <picture>
-                          <source srcset="./textures/cv-poba-nobg.webp" type="image/webp">
-                          <img src="./textures/cv-poba-nobg.png" alt="Bui Quoc Hieu" id="cv-avatar-img-front"
-                            loading="lazy" decoding="async">
-                        </picture>
-                      </div>
-                      <!-- Back face will hold incoming avatar -->
-                      <div class="avatar-face avatar-back">
-                        <picture>
-                          <source srcset="./textures/cv-poba-nobg.webp" type="image/webp">
-                          <img src="./textures/cv-poba-nobg.png" alt="Bui Quoc Hieu" id="cv-avatar-img-back"
-                            loading="lazy" decoding="async">
-                        </picture>
-                      </div>
-                    </div>
-                  </div>
+                <div class="header-photo">
+                   <div id="avatar-container" class="profile-img">
+                      <canvas id="avatar-canvas" style="width: 100%; height: 100%; display: block;"></canvas>
+                   </div>
                 </div>
 
                 <!-- Location Data Only -->

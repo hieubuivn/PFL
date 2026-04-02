@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { ASSET_VERSION } from '../configs/sceneConfig.js';
 import { gltfLoader, rgbeLoader, textureLoader, ktx2Loader, dracoLoader, fileLoader, handleProgress, registerFile } from '../../configs/setupLoaders.js';
 import { PerformanceLogger } from '../utils/performanceLogger.js';
 
@@ -42,9 +43,10 @@ const addToLoader = (filename, key, type = 'texture', options = {}) => {
 
     let path = folder;
     if (!path) {
-        path = (type === 'gltf') ? './models/' : './textures/';
+        const BASE = import.meta.env.BASE_URL;
+        path = (type === 'gltf') ? `${BASE}models/` : `${BASE}textures/`;
     }
-    const url = path + filename;
+    const url = `${path}${filename}?v=${ASSET_VERSION}`;
 
     // NOTE: registerFile(filename) is now handled exclusively by preRegisterAllResources()
     // to ensure the total weight is consistent from the first frame.
@@ -177,7 +179,7 @@ export async function loadCoreResources() {
         {
             name: avatarsCelShaded, key: 'avatarsCelShaded', type: 'ktx2',
             options: {
-                folder: './textures/ktx2/',
+                folder: 'textures/ktx2/',
                 onLoaded: (t) => {
                     t.minFilter = THREE.LinearMipMapLinearFilter;
                     t.magFilter = THREE.LinearFilter;
