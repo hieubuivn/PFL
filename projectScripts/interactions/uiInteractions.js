@@ -213,6 +213,16 @@ const UI_REGISTRY = [
             }
         }
     },
+    // 7b. CV View Online Button
+    {
+        selector: '#cv-view-btn',
+        event: 'click',
+        action: (e, scene) => {
+            const base = (import.meta.env && import.meta.env.BASE_URL) || './';
+            const url = `${base}cvs/`.replace('//', '/');
+            window.open(url, '_blank');
+        }
+    },
     // 5f. WORK Modal Backdrop (Close on click outside)
     {
         selector: '#work-experience-modal',
