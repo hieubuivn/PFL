@@ -1,4 +1,4 @@
-import { ktx2Loader } from '../../configs/setupLoaders.js';
+import { KTX2Loader } from 'three/addons/loaders/KTX2Loader.js';
 import TWEEN from 'tween';
 
 /**
@@ -28,6 +28,19 @@ class AvatarShaderEngine {
             dev: null
         };
 
+        // Initialize KTX2 Loader
+        const BASE = import.meta.env.BASE_URL;
+        this.ktx2Loader = new KTX2Loader();
+        this.ktx2Loader.setTranscoderPath('https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/libs/basis/');
+        // We use a dummy renderer detection for standalone usage
+        this.ktx2Loader.detectSupport({
+            capabilities: { isWebGL2: true },
+            extensions: {
+                has: (name) => !!this.gl.getExtension(name),
+                get: (name) => this.gl.getExtension(name)
+            }
+        });
+
         this.init();
     }
 
@@ -52,12 +65,7 @@ class AvatarShaderEngine {
     async loadTextures() {
         const loadKTX2 = (url) => {
             return new Promise((resolve, reject) => {
-                // Safety: Ensure transcoder path is set if not already
-                if (!ktx2Loader.transcoderPath) {
-                    ktx2Loader.setTranscoderPath('https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/libs/basis/');
-                }
-
-                ktx2Loader.load(url, (texture) => {
+                this.ktx2Loader.load(url, (texture) => {
                     const gl = this.gl;
                     const tex = gl.createTexture();
                     gl.bindTexture(gl.TEXTURE_2D, tex);
@@ -89,11 +97,9 @@ class AvatarShaderEngine {
         };
 
         const BASE = import.meta.env.BASE_URL;
-        // Use the shared ktx2Loader
+        // Use the new KTX2 files
         this.textures.poba = await loadKTX2(`${BASE}textures/ktx2/cv-poba-nobg.ktx2`);
         this.textures.dev = await loadKTX2(`${BASE}textures/ktx2/cv-dev-nobg.ktx2`);
-
-        // Note: No dispose() here, as it's a shared loader!
     }
 
     setupProgram() {

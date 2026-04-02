@@ -632,9 +632,7 @@ export function setInformerBg(scene, b64String, text = "INFO HERE", force = fals
         if (b64String) {
             scene.cursorInformerBox.style.display = 'flex';
             if (scene.cursorInformerIcon) {
-                // Sanitize base64 string by removing newlines and whitespace which break Data URIs in some browsers
-                const cleanB64 = b64String.replace(/\s+/g, '');
-                scene.cursorInformerIcon.style.backgroundImage = `url('data:image/svg+xml;base64,${cleanB64}')`;
+                scene.cursorInformerIcon.style.backgroundImage = `url('data:image/svg+xml;base64,${b64String}')`;
             }
         } else {
             scene.cursorInformerBox.style.display = 'none';

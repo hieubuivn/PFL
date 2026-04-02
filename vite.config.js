@@ -38,13 +38,13 @@ export default defineConfig({
   resolve: {
     alias: {
       // PRO TIP: Specificity matters! More specific paths MUST come first.
-      'three/addons/postprocessing/UnrealBloomPass-transparentBg.js': '/projectScripts/libs/UnrealBloomPass-transparentBg.js',
+      'three/addons/postprocessing/UnrealBloomPass-transparentBg.js': './projectScripts/libs/UnrealBloomPass-transparentBg.js',
       'three/addons/': 'https://esm.sh/three@0.170.0/examples/jsm/',
       'three/': 'https://esm.sh/three@0.170.0/',
       'three': 'https://esm.sh/three@0.170.0',
       'tween': 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/tween.module.min.js',
       'rapier-compat': 'https://esm.sh/@dimforge/rapier3d-compat@0.17.3',
-      '@scripts': '/projectScripts'
+      '@scripts': './projectScripts'
     }
   },
 });
