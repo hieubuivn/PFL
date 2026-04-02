@@ -106,12 +106,16 @@ class AvatarShaderEngine {
             });
         };
 
-        const BASE = import.meta.env.BASE_URL;
-        // Use the shared ktx2Loader
-        this.textures.poba = await loadKTX2(`${BASE}textures/ktx2/cv-poba-nobg.ktx2`);
-        this.textures.dev = await loadKTX2(`${BASE}textures/ktx2/cv-dev-nobg.ktx2`);
+        const BASE = (import.meta.env && import.meta.env.BASE_URL && import.meta.env.BASE_URL !== '/') 
+                     ? import.meta.env.BASE_URL 
+                     : './';
+        
+        // Use separate poba & dev textures for stability while pathing is reset
+        const pobaUrl = `${BASE}textures/ktx2/cv-poba-nobg.ktx2`.replace('//', '/');
+        const devUrl = `${BASE}textures/ktx2/cv-dev-nobg.ktx2`.replace('//', '/');
 
-        // Note: No dispose() here, as it's a shared loader!
+        this.textures.poba = await loadKTX2(pobaUrl);
+        this.textures.dev = await loadKTX2(devUrl);
     }
 
     setupProgram() {
@@ -147,8 +151,9 @@ class AvatarShaderEngine {
                 for(int j = -1; j <= 1; j ++) {
                     for(int i = -1; i <= 1; i ++) {
                         vec2 b = vec2(i, j);
-                        // Slow down the cellular animation (0.5 instead of 3.0)
-                        vec2 rand = .5 + .5 * sin(uTime * 0.5 + 12. * rand2(p + b));
+                        vec2 p_cell = p + b;
+                        // STABILIZED: Removed uTime-based jitter
+                        vec2 rand = .5 + .5 * sin(12. * rand2(p_cell));
                         vec2 r = vec2(b) - f + rand;
                         minDistance = min(minDistance, length(r));
                     }
@@ -166,26 +171,41 @@ class AvatarShaderEngine {
                 vec2 bgUv = vUv;
                 bgUv.x *= uResolution.x / uResolution.y;
 
-                // 1. GLOBAL SPOTLIGHT & GRID (Slightly simplified for PERF)
+                // 1. DYNAMIC DIGITAL GRID (Multi-layered & Pulsing)
                 vec2 m = uMouse.xy;
                 m.x *= uResolution.x / uResolution.y;
                 float distToMouse = length(bgUv - m);
                 float mouseFocus = smoothstep(0.6, 0.05, distToMouse);
                 float spotlight = pow(mouseFocus, 2.0) * 2.5; 
 
-                float vPattern = voronoi(bgUv * 4.0);
-                float val = pow(vPattern * 1.1, 4.0) * 1.35; 
-                float gridLineThickness = 1.3 / uResolution.y; 
-                vec2 grid = step(mod(bgUv, 0.1), vec2(gridLineThickness));
+                // Layer A: Sub-grid (Much Slower & Subtle)
+                float vPattern = voronoi(bgUv * 4.0 + uTime * 0.05);
+                float val = pow(vPattern * 1.1, 4.0) * 1.1; 
+                
+                // Layer B: Heavy Grid (Quiet breathing)
+                float pulse = sin(uTime * 0.5) * 0.5 + 0.5;
+                float dynamicThickness = 0.8 + pulse * 0.4; 
+                float baseThickness = dynamicThickness / uResolution.y; 
+                
+                // Two grids at different scales/speeds
+                vec2 grid1 = step(mod(bgUv + uTime * 0.005, 0.1), vec2(baseThickness * 1.2));
+                vec2 grid2 = step(mod(bgUv * 2.0 - uTime * 0.015, 0.1), vec2(baseThickness * 0.6));
+                
+                float gridFinal = max(grid1.x, grid1.y) * 0.7 + max(grid2.x, grid2.y) * 0.3;
 
                 vec3 techColor = vec3(0.0, 0.8, 0.9); 
-                vec3 bgCol = vec3(0.004, 0.02, 0.045);    
-                bgCol += val * (grid.x + grid.y) * techColor * (0.25 + spotlight);
-                bgCol += val * techColor * spotlight * 0.45;
+                vec3 bgCol = vec3(0.003, 0.015, 0.035); // Darker base
+                bgCol += val * gridFinal * techColor * (0.2 + spotlight * 0.6); // Reduced light bounce
+                bgCol += val * techColor * spotlight * 0.35;
+                
+                // Add a "scanning" scanline (Slower & Fainter)
+                float scanPos = fract(uTime * 0.08) * 1.2 - 0.1;
+                float scanHighlight = smoothstep(0.012, 0.0, abs(vUv.y - scanPos)) * gridFinal * 1.2;
+                bgCol += techColor * scanHighlight * (0.1 + spotlight * 0.4);
 
                 // Polish
                 float dist = length(vUv - 0.5);
-                float vignette = smoothstep(1.0, 0.38, dist);
+                float vignette = smoothstep(1.0, 0.45, dist); // Slightly softer vignette
                 bgCol *= vignette;
                 
                 // 2. PERSONA SWAP (UNSTABLE VARIABLE-BAND GLITCH)
@@ -219,7 +239,7 @@ class AvatarShaderEngine {
                 // 3. SCAN-DASHES & DEBRIS
                 vec3 glitchCoreCol = vec3(0.0, 0.55, 0.7); 
                 float scanLine = smoothstep(0.03, 0.0, abs(sweepX - threshold)) * step(0.4, digitalNoise(vec2(floor(vUv.y * 200.0), uT)));
-                float zapFlicker = digitalNoise(vec2(uT, uT)) * 0.4 + 0.3;
+                float zapFlicker = digitalNoise(vec2(uT, uT)) * 0.3 + 0.75;
                 vec3 materialGlow = glitchCoreCol * scanLine * zapFlicker * 1.8;
                 
                 if (glitchZone > 0.01) {
@@ -230,21 +250,28 @@ class AvatarShaderEngine {
                     materialGlow += techColor * sparks * 3.0;
                 }
 
-                // 4. SILHOUETTE EDGE (Optimized: 2 samples center-weighted instead of 8)
-                float o = 0.0075; 
-                float alphaNear = mix(texture(uTexDev, vUv + vec2(o, o)).a, texture(uTexPoba, vUv + vec2(o, o)).a, sweepVal);
+                // 4. SILHOUETTE EDGE (4-Way cardinal MIN sampling to find boundaries)
+                float o = 0.02; 
+                float aDev = min(min(texture(uTexDev, vUv + vec2(o, 0)).a, texture(uTexDev, vUv - vec2(o, 0)).a),
+                                 min(texture(uTexDev, vUv + vec2(0, o)).a, texture(uTexDev, vUv - vec2(0, o)).a));
+                float aPoba = min(min(texture(uTexPoba, vUv + vec2(o, 0)).a, texture(uTexPoba, vUv - vec2(o, 0)).a),
+                                  min(texture(uTexPoba, vUv + vec2(0, o)).a, texture(uTexPoba, vUv - vec2(0, o)).a));
+                
+                float alphaNear = mix(aDev, aPoba, sweepVal);
                 float edge = avatarCol.a * (1.0 - alphaNear);
 
-                // 5. CIRCUIT PULSE
-                float baseSpeed = uTime * 0.5 + sin(uTime * 1.3) * 0.4;
-                vec2 center = vec2(0.3, 0.55); 
+                // 5. CIRCUIT PULSE (Irregular 'Lurching' Speed)
+                // MODULATED: Fast and slow rotation for an organic digital feel
+                float baseSpeed = uTime * 0.12 + sin(uTime * 1.5) * 0.15; 
+                vec2 center = vec2(0.5, 0.5); 
                 float angle = atan(vUv.y - center.y, vUv.x - center.x);
                 float sparkPos = fract(angle / 6.2831 + baseSpeed);
                 float spark = pow(smoothstep(0.06, 0.0, abs(sparkPos - 0.5)), 4.0); 
-                vec3 rimGlow = (techColor * 0.2 + (techColor + vec3(0.4, 0.4, 0.1)) * spark * 4.0) * edge * (0.8 + spotlight * 1.5);
+                // BOLD CYAN: High-contrast rim glow
+                vec3 rimGlow = (techColor * 0.6 + (techColor + vec3(0.4, 0.4, 0.1)) * spark * 4.0) * edge * (1.2 + spotlight);
 
                 // 6. FINAL COMPOSITION
-                vec3 finalCol = mix(bgCol, avatarCol.rgb + rimGlow + materialGlow, avatarCol.a);
+                vec3 finalCol = mix(bgCol, avatarCol.rgb + rimGlow + materialGlow + 0.05, avatarCol.a);
                 fragColor = vec4(finalCol, 1.0);
             }
         `;

@@ -43,8 +43,10 @@ const addToLoader = (filename, key, type = 'texture', options = {}) => {
 
     let path = folder;
     if (!path) {
-        const BASE = import.meta.env.BASE_URL;
-        path = (type === 'gltf') ? `${BASE}models/` : `${BASE}textures/`;
+        const BASE = (import.meta.env && import.meta.env.BASE_URL && import.meta.env.BASE_URL !== '/') 
+                     ? import.meta.env.BASE_URL 
+                     : './';
+        path = ((type === 'gltf') ? `${BASE}models/` : (type === 'ktx2' ? `${BASE}textures/ktx2/` : `${BASE}textures/`)).replace('//', '/');
     }
     const url = `${path}${filename}?v=${ASSET_VERSION}`;
 

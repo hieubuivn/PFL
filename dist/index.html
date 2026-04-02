@@ -127,23 +127,22 @@
     href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap">
 
   <link rel="canonical" href="https://hieubuivn.github.io/">
-  <link rel="icon" href="/PFL/textures/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="textures/favicon.svg" type="image/svg+xml" />
 
-  <link href="/PFL/css/source.css" rel="stylesheet" type="text/css" />
-  <link href="/PFL/css/room.css" rel="stylesheet" type="text/css" />
-  <link href="/PFL/project.css" rel="stylesheet" type="text/css" />
+  <link href="css/source.css" rel="stylesheet" type="text/css" />
+  <link href="css/room.css" rel="stylesheet" type="text/css" />
   <!-- NEW LAYOUT STYLES -->
-  <link href="/PFL/css/layout.css" rel="stylesheet" type="text/css" />
-  <link href="/PFL/css/cv-styles.css" rel="stylesheet" type="text/css" />
-  <link href="/PFL/css/textBoard.css" rel="stylesheet" type="text/css" />
-  <link href="/PFL/css/loader-patch.css" rel="stylesheet" type="text/css" />
+  <link href="css/layout.css" rel="stylesheet" type="text/css" />
+  <link href="css/cv-styles.css" rel="stylesheet" type="text/css" />
+  <link href="css/textBoard.css" rel="stylesheet" type="text/css" />
+  <link href="css/loader-patch.css" rel="stylesheet" type="text/css" />
 
   <!-- FONTS ALREADY PRELOADED IN HEAD -->
 
   <!-- CRITICAL ASSET PRELOAD -->
-  <link rel="preload" href="/PFL/models/points.glb" as="fetch" crossorigin="anonymous" fetchpriority="high">
-  <link rel="preload" href="/PFL/textures/ktx2/spriteSheet-etc.ktx2" as="fetch" crossorigin="anonymous">
-  <link rel="preload" href="/PFL/textures/spriteSheet.webp" as="image" crossorigin>
+  <link rel="preload" href="./models/points.glb?v=1.0.0" as="fetch" crossorigin="anonymous" fetchpriority="high">
+  <link rel="preload" href="./textures/ktx2/spriteSheet-etc.ktx2?v=1.0.0" as="fetch" crossorigin="anonymous">
+  <link rel="preload" href="./textures/spriteSheet.webp?v=1.0.0" as="image" crossorigin>
 
   <style id="critical-path-css">
     :root {
@@ -207,7 +206,7 @@
 
 
   <!-- PERFORMANCE: Start parsing logic while assets download -->
-  <link rel="modulepreload" href="/PFL/assets/office-B4ovQhP2.js">
+  <link rel="modulepreload" href="/assets/office-DqQQKyhg.js">
   <script type="importmap">
     {
       "imports": {
@@ -224,13 +223,18 @@
       }
     }
   </script>
-  <script type="module" crossorigin src="/PFL/assets/main-BjmMkFsu.js"></script>
+  <script type="module" crossorigin src="/assets/main-DPW4fGZn.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/main-ri8ZpvRh.css">
 </head>
 
 <body>
   <!-- 0. INSTANT BOOTLOADER: Starts the cinematic worker while modules parse -->
 
-  <!-- GSAP Libraries (UMD) -->
+  <!-- GSAP Libraries (UMD) - Loaded as regular scripts to ensure global window access -->
+  <script src="libs/gsap.min.js"></script>
+  <script src="libs/Observer.min.js"></script>
+  <script src="libs/ScrollTrigger.min.js"></script>
+  <script src="libs/uiUtils.js"></script>
 
 
   <!-- APP CONTAINER (Split Layout) -->
@@ -1086,7 +1090,8 @@
   <!-- SCRIPTS -->
   <!-- STRUCTURAL & PERFORMANCE LOGIC -->
 
-  <!-- UI & INTERACTION LOGIC -->
+  <!-- UI & INTERACTION LOGIC -->
+  <script src="/libs/scroll-experience.js"></script>
 
 </body>
 

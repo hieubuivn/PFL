@@ -10,10 +10,6 @@ import { NavInteractions } from './navInteractions.js';
 
 export const BEAM_IMPACT_DUR = 100; // Delay before beam dissipation (ms)
 
-const gsap = window.gsap;
-const Observer = window.Observer;
-
-gsap.registerPlugin(Observer);
 
 /**
  * scroll-pointsMorph.js
@@ -21,6 +17,12 @@ gsap.registerPlugin(Observer);
  */
 
 export function initScrollMorph(scene, pointsInstance, TWEEN) {
+    const gsap = window.gsap;
+    const Observer = window.Observer || (gsap ? gsap.Observer : null);
+
+    if (gsap && Observer) {
+        gsap.registerPlugin(Observer);
+    }
 
     // Manage scroll lock state globally for this module
     let isScrollLocked = true;

@@ -201,7 +201,8 @@ const UI_REGISTRY = [
         event: 'click',
         action: (e, scene) => {
             const link = document.createElement('a');
-            link.href = './cvs/Bui_Quoc_Hieu_CV_Portable.pdf';
+            const base = (import.meta.env && import.meta.env.BASE_URL) || './';
+            link.href = `${base}cvs/Bui_Quoc_Hieu_CV_Portable.pdf`.replace('//', '/');
             link.download = 'Bui_Quoc_Hieu_CV_Portable.pdf';
             document.body.appendChild(link);
             link.click();
