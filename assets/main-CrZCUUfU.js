@@ -4796,12 +4796,16 @@ void main()
                     materialGlow += techColor * step(0.99, digitalNoise(vUv * 15.0 + uTime)) * glitchZone * 3.0;
                 }
 
-                // 4. SILHOUETTE EDGE (Reduced sampling logic for mobile optimization)
+                // 4. SILHOUETTE EDGE (8 texture samples total for optimal balance)
                 float edge = 0.0;
-                if (avatarCol.a > 0.001 && avatarCol.a < 0.999) {
+                if (avatarCol.a > 0.001) {
                     float o = 0.015; 
-                    float alphaAround = texture(uTexDev, vUv + vec2(o, o)).a + texture(uTexPoba, vUv - vec2(o, o)).a;
-                    edge = avatarCol.a * smoothstep(0.8, 0.0, alphaAround * 0.5);
+                    float aDev = min(texture(uTexDev, vUv + vec2(o, 0)).a, 
+                                 min(texture(uTexDev, vUv + vec2(-o, o)).a, texture(uTexDev, vUv + vec2(-o, -o)).a));
+                    float aPoba = min(texture(uTexPoba, vUv + vec2(o, 0)).a, 
+                                  min(texture(uTexPoba, vUv + vec2(-o, o)).a, texture(uTexPoba, vUv + vec2(-o, -o)).a));
+                    
+                    edge = avatarCol.a * (1.0 - mix(aDev, aPoba, sweepVal));
                 }
 
                 // 5. CIRCUIT RIM
