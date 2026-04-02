@@ -7,7 +7,9 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
   },
   "repository": {
     "type": "git",
@@ -22,6 +24,7 @@
   "homepage": "https://github.com/hieubuivn/PFL#readme",
   "devDependencies": {
     "@dimforge/rapier3d-compat": "^0.19.3",
+    "gh-pages": "^6.3.0",
     "three": "^0.183.2",
     "vite": "^8.0.3"
   }
