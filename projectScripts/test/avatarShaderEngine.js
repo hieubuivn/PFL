@@ -57,6 +57,18 @@ class AvatarShaderEngine {
                     ktx2Loader.setTranscoderPath('https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/libs/basis/');
                 }
 
+                // Safety: Ensure support is detected (required by KTX2Loader before .load)
+                // If the main app hasn't initialized the shared loader yet, we do a mock detection here.
+                if (!ktx2Loader.workerPool) {
+                    ktx2Loader.detectSupport({
+                        capabilities: { isWebGL2: true },
+                        extensions: {
+                            has: (name) => !!this.gl.getExtension(name),
+                            get: (name) => this.gl.getExtension(name)
+                        }
+                    });
+                }
+
                 ktx2Loader.load(url, (texture) => {
                     const gl = this.gl;
                     const tex = gl.createTexture();
