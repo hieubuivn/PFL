@@ -1249,8 +1249,8 @@ body.cv-collapsed .icon-lines span:nth-child(4) {
     height: 100%;
     position: absolute;
     top: 0;
-    left: -7.5%;
-    /* Restored 0.75 offset */
+    left: 0;
+    /* Removed legacy -7.5% offset */
     object-fit: cover;
     display: block;
     z-index: 10;

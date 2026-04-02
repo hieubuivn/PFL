@@ -211,10 +211,11 @@
   <script type="importmap">
     {
       "imports": {
-        "tween": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/tween.module.min.js",
-        "three": "https://esm.sh/three@0.170.0",
+        "three/addons/postprocessing/UnrealBloomPass-transparentBg.js": "/projectScripts/libs/UnrealBloomPass-transparentBg.js",
         "three/addons/": "https://esm.sh/three@0.170.0/examples/jsm/",
-        "three/addons/postprocessing/UnrealBloomPass-transparentBg.js": "./projectScripts/libs/UnrealBloomPass-transparentBg.js",
+        "three/": "https://esm.sh/three@0.170.0/",
+        "three": "https://esm.sh/three@0.170.0",
+        "tween": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/tween.module.min.js",
         "three/webgpu": "https://esm.sh/three@0.170.0/build/three.webgpu.min.js",
         "three/tsl": "https://esm.sh/three@0.170.0/build/three.tsl.min.js",
         "postprocessing-extra/" : "https://esm.sh/three@0.170.0/examples/jsm/postprocessing-extra/",
@@ -223,7 +224,7 @@
       }
     }
   </script>
-  <script type="module" crossorigin src="/PFL/assets/main-Dc7JML6y.js"></script>
+  <script type="module" crossorigin src="/PFL/assets/main-O7uzhVRK.js"></script>
 </head>
 
 <body>
@@ -454,27 +455,10 @@
               <!-- Right Column: Avatar Component & Information -->
               <div class="header-right">
 
-                <div class="header-photo" style="margin: 0;">
-                  <div class="avatar-cube-container profile-img">
-                    <div class="avatar-cube" id="cv-avatar-cube">
-                      <!-- Front face will hold current avatar -->
-                      <div class="avatar-face avatar-front">
-                        <picture>
-                          <source srcset="/PFL/textures/cv-poba-nobg.webp" type="image/webp">
-                          <img src="/PFL/textures/cv-poba-nobg.png" alt="Bui Quoc Hieu" id="cv-avatar-img-front"
-                            loading="lazy" decoding="async">
-                        </picture>
-                      </div>
-                      <!-- Back face will hold incoming avatar -->
-                      <div class="avatar-face avatar-back">
-                        <picture>
-                          <source srcset="/PFL/textures/cv-poba-nobg.webp" type="image/webp">
-                          <img src="/PFL/textures/cv-poba-nobg.png" alt="Bui Quoc Hieu" id="cv-avatar-img-back"
-                            loading="lazy" decoding="async">
-                        </picture>
-                      </div>
-                    </div>
-                  </div>
+                <div class="header-photo">
+                   <div id="avatar-container" class="profile-img">
+                      <canvas id="avatar-canvas" style="width: 100%; height: 100%; display: block;"></canvas>
+                   </div>
                 </div>
 
                 <!-- Location Data Only -->
