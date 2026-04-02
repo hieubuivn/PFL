@@ -72,6 +72,7 @@ const progressBar = document.getElementById('progress-bar');
 function assignPresets() {
     let collectionSection = document.getElementById('experience-container');
     [scene, camera, renderer] = setupSCR({ alpha: true, domElement: collectionSection, useBackdrop: true });
+    initKTX2Loader(renderer);
     orbitControl = setupOrbitControl(scene, camera, renderer, true);
     orbitControl.enableZoom = false;
     scene.renderer = renderer;

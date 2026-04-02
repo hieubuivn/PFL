@@ -183,6 +183,7 @@
     border: 1px solid var(--accent-color);
     box-shadow: 0 0 10px var(--glow-color);
     transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+    box-sizing: border-box;
 }
 
 /* Content Styling */

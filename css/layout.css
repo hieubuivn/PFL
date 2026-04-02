@@ -1114,20 +1114,18 @@ body.cv-collapsed .icon-lines span:nth-child(4) {
 
 .header-photo {
     flex-shrink: 0;
-    width: 100px; /* Smaller footprint for better vertical economy */
+    width: 100px;
     height: 100px;
-    border: 1px solid var(--cv-accent-gold);
-    padding: 3px;
+    border: 1px solid var(--cv-accent-gold); /* Thinner as requested */
+    padding: 0;
     position: relative;
     background: #0d1117;
-    /* Tech Obsidian */
     overflow: visible;
-    /* Allowing head to pop out */
     z-index: 5;
-    /* FIX 1: Static box-shadow — no animation, no repaint cost */
-    box-shadow: inset 0 0 20px rgba(0, 240, 255, 0.12), 0 0 8px rgba(0, 240, 255, 0.08);
-
-    /* Allow centering child absolute elements easier */
+    box-shadow: none; /* Removed bleeding shadows */
+    box-sizing: border-box;
+    transform: translateZ(0); /* Force GPU alignment */
+    backface-visibility: hidden;
     display: flex;
     justify-content: center;
 }
@@ -1250,43 +1248,20 @@ body.cv-collapsed .icon-lines span:nth-child(4) {
     position: absolute;
     top: 0;
     left: 0;
-    /* Removed legacy -7.5% offset */
     object-fit: cover;
     display: block;
     z-index: 10;
-    /* Put image above the decorative corners */
-
-    /* Static filter - no animation cost */
     filter: contrast(1.1) brightness(1.0);
-
-    /* Option B: GPU-composited transform + opacity heartbeat */
-    transform-origin: bottom center;
+    transform-origin: center center;
     pointer-events: none;
-    will-change: transform, opacity;
-    animation: sensorHeartbeat 4s infinite ease-in-out;
     transition: transform 0.4s ease, opacity 0.4s ease;
 }
 
-@keyframes sensorHeartbeat {
-
-    0%,
-    100% {
-        transform: scale(1.00);
-        opacity: 0.92;
-    }
-
-    50% {
-        transform: scale(1.01);
-        opacity: 1.00;
-    }
-}
 
 .header-photo:hover .profile-img {
-    transform: scale(1.25);
-    /* Restored zoom */
+    transform: scale(1.0); /* REMOVED SCALING on hover */
     opacity: 1;
     filter: contrast(1.15) brightness(1.05);
-    /* Static, not animated */
 }
 
 .photo-placeholder {
@@ -1310,25 +1285,13 @@ body.cv-collapsed .icon-lines span:nth-child(4) {
     position: absolute;
     width: 15px;
     height: 15px;
-    border: 2px solid var(--cv-accent-cyan);
+    border: 1px solid var(--cv-accent-cyan);
     /* FIX 3: Explicit properties only — no 'transition: all' */
     transition: opacity 0.3s ease, width 0.3s ease, height 0.3s ease;
     z-index: 7;
-    animation: cornerPulse 2s infinite ease-in-out;
 }
 
 /* Option A: opacity-only cornerPulse — no border-color repaint */
-@keyframes cornerPulse {
-
-    0%,
-    100% {
-        opacity: 0.4;
-    }
-
-    50% {
-        opacity: 1.0;
-    }
-}
 
 .header-photo::before {
     top: -2px;
@@ -1346,8 +1309,8 @@ body.cv-collapsed .icon-lines span:nth-child(4) {
 
 .header-photo:hover::before,
 .header-photo:hover::after {
-    width: 40%;
-    height: 40%;
+    width: 15px; /* REMOVED GROWING corner accents on hover */
+    height: 15px;
     border-color: #fff;
     box-shadow: 0 0 10px var(--cv-accent-cyan);
 }
