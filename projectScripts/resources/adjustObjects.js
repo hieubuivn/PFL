@@ -76,7 +76,7 @@ export async function adjustObjects(scene, progressText) {
             uClickPos: { value: new THREE.Vector2(0.5, 0.5) },
             uClickTime: { value: -99.0 },
             uBootState: { value: 0.0 },
-            uChannelAvatars: hubUniforms.uChannelAvatars || { value: null },
+            uChannelAvatars: { value: resources.avatarsCelShaded },
             uHasAvatarTexture: { value: 1.0 },
             uSpecialPos1: { value: new THREE.Vector2(0, 1) }, // Top Left
             uSpecialPos2: { value: new THREE.Vector2(2, 0) }  // Bot Right
@@ -659,7 +659,6 @@ export async function patchGridToObjects(scene) {
         else {
             strategyUniforms = (body.bodyType() === 0) ? dynamicStrategy : fixedStrategy;
         }
-
         root.traverse((child) => {
             if (child.isMesh) applyPatch(child, strategyUniforms);
         });

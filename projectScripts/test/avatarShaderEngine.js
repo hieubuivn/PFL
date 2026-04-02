@@ -110,7 +110,7 @@ class AvatarShaderEngine {
                      ? import.meta.env.BASE_URL 
                      : './';
         
-        // Use separate poba & dev textures for stability while pathing is reset
+        // Reverting to separate textures for poba & dev as requested
         const pobaUrl = `${BASE}textures/ktx2/cv-poba-nobg.ktx2`.replace('//', '/');
         const devUrl = `${BASE}textures/ktx2/cv-dev-nobg.ktx2`.replace('//', '/');
 
