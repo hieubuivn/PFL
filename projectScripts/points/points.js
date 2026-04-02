@@ -5,7 +5,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
-import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass-transparentBg.js';
+import { UnrealBloomPass } from '../libs/UnrealBloomPass-transparentBg.js';
 import TWEEN from 'tween';
 import { createUI as createUIFromModule } from './ui.js';
 import { vertexShader, fragmentShader, constellationVertexShader, constellationFragmentShader } from './shaders.js';

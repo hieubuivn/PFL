@@ -1,4 +1,9 @@
 import { defineConfig } from 'vite';
+import { fileURLToPath } from 'url';
+import path from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export default defineConfig({
   // GitHub Pages hosting sub-path
@@ -38,7 +43,7 @@ export default defineConfig({
   resolve: {
     alias: {
       // PRO TIP: Specificity matters! More specific paths MUST come first.
-      'three/addons/postprocessing/UnrealBloomPass-transparentBg.js': './projectScripts/libs/UnrealBloomPass-transparentBg.js',
+      'three/addons/postprocessing/UnrealBloomPass-transparentBg.js': path.resolve(__dirname, 'projectScripts/libs/UnrealBloomPass-transparentBg.js'),
       'three/addons/': 'https://esm.sh/three@0.170.0/examples/jsm/',
       'three/': 'https://esm.sh/three@0.170.0/',
       'three': 'https://esm.sh/three@0.170.0',
