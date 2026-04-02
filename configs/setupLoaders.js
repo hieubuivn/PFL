@@ -226,6 +226,8 @@ export const ktx2Loader = new KTX2Loader(manager);
 export const fileLoader = new THREE.FileLoader(manager);
 
 export function initKTX2Loader(renderer) {
+    if (window._ktx2SupportDetected) return; // Already setup by initial UI
     ktx2Loader.setTranscoderPath('https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/libs/basis/');
     ktx2Loader.detectSupport(renderer);
+    window._ktx2SupportDetected = true;
 }

@@ -59,14 +59,20 @@ class AvatarShaderEngine {
 
                 // Safety: Ensure support is detected (required by KTX2Loader before .load)
                 // If the main app hasn't initialized the shared loader yet, we do a mock detection here.
-                if (!ktx2Loader.workerPool) {
+                // Use a global flag to ensure we only call this once to avoid "Multiple Active Loaders" warnings.
+                if (!window._ktx2SupportDetected) {
                     ktx2Loader.detectSupport({
                         capabilities: { isWebGL2: true },
                         extensions: {
-                            has: (name) => !!this.gl.getExtension(name),
-                            get: (name) => this.gl.getExtension(name)
+                            has: (name) => {
+                                try { return !!this.gl.getExtension(name); } catch(e) { return false; }
+                            },
+                            get: (name) => {
+                                try { return this.gl.getExtension(name); } catch(e) { return null; }
+                            }
                         }
                     });
+                    window._ktx2SupportDetected = true;
                 }
 
                 ktx2Loader.load(url, (texture) => {
