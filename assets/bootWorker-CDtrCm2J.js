@@ -1,11 +1,13 @@
-(function(){let e,t,n,r={};function i(e,t,n){let r=e.createShader(t);return e.shaderSource(r,n),e.compileShader(r),e.getShaderParameter(r,e.COMPILE_STATUS)?r:(console.error(e.getShaderInfoLog(r)),null)}function a(a){if(e=a.getContext(`webgl`,{alpha:!0,antialias:!0}),!e)return;n=e.createProgram(),e.attachShader(n,i(e,e.VERTEX_SHADER,`
+(function() {
+	let e, d, r, i = {};
+	const b = `
     attribute vec2 position;
     varying vec2 vUv;
     void main() {
         vUv = position * 0.5 + 0.5;
         gl_Position = vec4(position, 0.0, 1.0);
     }
-`)),e.attachShader(n,i(e,e.FRAGMENT_SHADER,`
+`, g = `
     precision highp float;
     uniform float iTime;
     uniform vec2 iResolution;
@@ -244,4 +246,50 @@
         float alpha = (uLoadProgress > 1.0) ? 1.0 - smoothstep(0.0, 1.0, uLoadProgress - 1.0) : 1.0;
         gl_FragColor = vec4(pow(max(col, 0.0), vec3(1./2.2)), alpha);
     }
-`)),e.linkProgram(n),e.useProgram(n);let o=e.createBuffer();e.bindBuffer(e.ARRAY_BUFFER,o),e.bufferData(e.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),e.STATIC_DRAW);let s=e.getAttribLocation(n,`position`);e.enableVertexAttribArray(s),e.vertexAttribPointer(s,2,e.FLOAT,!1,0,0),r.iTime=e.getUniformLocation(n,`iTime`),r.iResolution=e.getUniformLocation(n,`iResolution`),r.iMouse=e.getUniformLocation(n,`iMouse`),r.uLoadProgress=e.getUniformLocation(n,`uLoadProgress`),r.uQuality=e.getUniformLocation(n,`uQuality`),t=performance.now(),requestAnimationFrame(m)}let o=0,s=0,c={x:.5,y:.5},l={x:.5,y:.5},u={w:0,h:0},d=1,f=1,p=0;function m(n){if(!e)return;let i=(n-t)/1e3,a=(n-p)/1e3;p=n,o+=(s-o)*.05,f=a>.018?Math.max(.1,f-.25):Math.min(1,f+.01),d+=(f-d)*.1;let h=.08;l.x+=(c.x-l.x)*h,l.y+=(c.y-l.y)*h,e.uniform1f(r.iTime,i),e.uniform2f(r.iResolution,u.w,u.h),e.uniform2f(r.iMouse,l.x,l.y),e.uniform1f(r.uLoadProgress,o),e.uniform1f(r.uQuality,d),e.drawArrays(e.TRIANGLE_STRIP,0,4),requestAnimationFrame(m)}self.onmessage=t=>{let{type:n,payload:r}=t.data;n===`INIT`?(u.w=r.width,u.h=r.height,a(r.canvas),e.viewport(0,0,u.w,u.h)):n===`RESIZE`?(u.w=r.width,u.h=r.height,e&&(e.canvas.width=u.w,e.canvas.height=u.h,e.viewport(0,0,u.w,u.h))):n===`UPDATE_PROGRESS`?s=r:n===`MOUSE`&&(c.x=r.x,c.y=r.y)}})();
+`;
+	function u(a, l, o) {
+		const s = a.createShader(l);
+		return a.shaderSource(s, o), a.compileShader(s), a.getShaderParameter(s, a.COMPILE_STATUS) ? s : (console.error(a.getShaderInfoLog(s)), null);
+	}
+	function x(a) {
+		if (e = a.getContext("webgl", {
+			alpha: !0,
+			antialias: !0
+		}), !e) return;
+		r = e.createProgram(), e.attachShader(r, u(e, e.VERTEX_SHADER, b)), e.attachShader(r, u(e, e.FRAGMENT_SHADER, g)), e.linkProgram(r), e.useProgram(r);
+		const l = e.createBuffer();
+		e.bindBuffer(e.ARRAY_BUFFER, l), e.bufferData(e.ARRAY_BUFFER, new Float32Array([
+			-1,
+			-1,
+			1,
+			-1,
+			-1,
+			1,
+			1,
+			1
+		]), e.STATIC_DRAW);
+		const o = e.getAttribLocation(r, "position");
+		e.enableVertexAttribArray(o), e.vertexAttribPointer(o, 2, e.FLOAT, !1, 0, 0), i.iTime = e.getUniformLocation(r, "iTime"), i.iResolution = e.getUniformLocation(r, "iResolution"), i.iMouse = e.getUniformLocation(r, "iMouse"), i.uLoadProgress = e.getUniformLocation(r, "uLoadProgress"), i.uQuality = e.getUniformLocation(r, "uQuality"), d = performance.now(), requestAnimationFrame(y);
+	}
+	let f = 0, m = 0, v = {
+		x: .5,
+		y: .5
+	}, c = {
+		x: .5,
+		y: .5
+	}, t = {
+		w: 0,
+		h: 0
+	}, p = 1, n = 1, h = 0;
+	function y(a) {
+		if (!e) return;
+		const l = (a - d) / 1e3, o = (a - h) / 1e3;
+		h = a, f += (m - f) * .05, o > .018 ? n = Math.max(.1, n - .25) : n = Math.min(1, n + .01), p += (n - p) * .1;
+		const s = .08;
+		c.x += (v.x - c.x) * s, c.y += (v.y - c.y) * s, e.uniform1f(i.iTime, l), e.uniform2f(i.iResolution, t.w, t.h), e.uniform2f(i.iMouse, c.x, c.y), e.uniform1f(i.uLoadProgress, f), e.uniform1f(i.uQuality, p), e.drawArrays(e.TRIANGLE_STRIP, 0, 4), requestAnimationFrame(y);
+	}
+	self.onmessage = (a) => {
+		const { type: l, payload: o } = a.data;
+		l === "INIT" ? (t.w = o.width, t.h = o.height, x(o.canvas), e.viewport(0, 0, t.w, t.h)) : l === "RESIZE" ? (t.w = o.width, t.h = o.height, e && (e.canvas.width = t.w, e.canvas.height = t.h, e.viewport(0, 0, t.w, t.h))) : l === "UPDATE_PROGRESS" ? m = o : l === "MOUSE" && (v.x = o.x, v.y = o.y);
+	};
+})();
