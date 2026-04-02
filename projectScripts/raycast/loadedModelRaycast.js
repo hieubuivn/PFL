@@ -310,7 +310,7 @@ const getInteractionConfig = (scene, objectMap, stats) => {
             if (scene._bulbBaseline === undefined) {
                 scene._bulbBaseline = { intensity: bLight.intensity, angle: bLight.angle };
             }
-            
+
             // Darken the room by decreasing the bulbLight intensity to 0.04 of baseline value
             // (Using baseline * 0.04 instead of current intensity * 0.04 ensures target is absolute if triggered twice)
             animateBulbLightParams(scene, scene._bulbBaseline.intensity * 0.04, scene._bulbBaseline.angle, 1500);
@@ -2372,7 +2372,7 @@ function triggerFanBlast(scene, fanBody) {
     if (bLight && scene._bulbBaseline === undefined) {
         scene._bulbBaseline = { intensity: bLight.intensity, angle: bLight.angle };
     }
-    
+
     // Use the current color of the bulbLight for the entire effect
     const hColor = bLight ? bLight.color.clone() : (GLOBAL_COLORS.ELECTRIC_CYAN || 0x00f3ff);
 

@@ -623,18 +623,34 @@ export function adjustNebula(scene) {
 
 // --- Informer Helpers (Moved from loadedModelRaycast.js) ---
 // --- Informer Helpers (Moved from loadedModelRaycast.js) ---
-export function setInformerBg(scene, b64String, text = "INFO HERE", force = false, isContact = false) {
+export function setInformerBg(scene, iconData, text = "INFO HERE", force = false, isContact = false) {
     // 0. CHECK ENABLED FLAG: Do not show if explicit disabled
     if (scene.cursorInformerEnabled === false && !force) return;
 
-    // 1. UPDATE ICON (if icon string is provided)
+    // 1. UPDATE ICON (if icon data is provided)
     if (scene.cursorInformerBox) {
-        if (b64String) {
+        if (iconData) {
             scene.cursorInformerBox.style.display = 'flex';
             if (scene.cursorInformerIcon) {
-                // Sanitize base64 string by removing newlines and whitespace which break Data URIs in some browsers
-                const cleanB64 = b64String.replace(/\s+/g, '');
-                scene.cursorInformerIcon.style.backgroundImage = `url('data:image/svg+xml;base64,${cleanB64}')`;
+                // If it's the new coordinate object { row, col }
+                if (typeof iconData === 'object' && iconData.row !== undefined) {
+                    // Sprite sheet is 320x240 (4 cols x 3 rows)
+                    const posX = ((iconData.col - 1) * 100) / 3;
+                    const posY = ((iconData.row - 1) * 100) / 2;
+
+                    Object.assign(scene.cursorInformerIcon.style, {
+                        backgroundImage: "url('./textures/icons.png')",
+                        backgroundSize: '400% 300%',
+                        backgroundPosition: `${posX}% ${posY}%`,
+                        filter: 'none'
+                    });
+                } else if (typeof iconData === 'string') {
+                    // Fallback for legacy Base64 string support
+                    const cleanB64 = iconData.replace(/\s+/g, '');
+                    scene.cursorInformerIcon.style.backgroundImage = `url('data:image/svg+xml;base64,${cleanB64}')`;
+                    scene.cursorInformerIcon.style.backgroundSize = 'contain';
+                    scene.cursorInformerIcon.style.backgroundPosition = 'center';
+                }
             }
         } else {
             scene.cursorInformerBox.style.display = 'none';

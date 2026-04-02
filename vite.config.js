@@ -15,13 +15,18 @@ export default defineConfig({
   // Use standard 'public' folder.
   publicDir: 'public',
 
+  esbuild: {
+    legalComments: 'none',
+  },
+
   build: {
     outDir: 'dist',
     emptyOutDir: true,
     assetsInlineLimit: 0, // Ensure models are not inlined as base64
     rollupOptions: {
       input: {
-        main: './index.html'
+        main: './index.html',
+        office: './office.js'
       },
       // EXTERNAL: Do NOT bundle these. Let the browser load them from CDN via importmap.
       external: [

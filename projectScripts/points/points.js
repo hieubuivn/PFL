@@ -274,7 +274,7 @@ export default class Points {
             uStickRect: { value: new THREE.Vector4(0, 0, 0, 0) },
             uStickStrength: { value: 0.0 }
         };
-        console.log("[Points] shaderUniforms initialized with uTitleMaskRectBase, uTitleMaskScale, uTitleMaskEdgeJitter, uKnowhereGravityMultiplier and uIsGardenHovering");
+        // console.log("[Points] shaderUniforms initialized with uTitleMaskRectBase, uTitleMaskScale, uTitleMaskEdgeJitter, uKnowhereGravityMultiplier and uIsGardenHovering");
         this.bigDipper = bigDipper;
 
         this.currentPulseIndex = 0;
@@ -2678,7 +2678,7 @@ export default class Points {
                     const clampTiltX = (screenY - 0.5) * 15; // Vertical tilt based on character height
                     const clampTiltY = (0.5 - screenX) * 20; // Horizontal tilt follows character
                     const transform = `perspective(1200px) rotateX(${clampTiltX}deg) rotateY(${clampTiltY}deg)`;
-                    
+
                     this._boardItems.forEach(item => {
                         item.style.transform = transform;
                     });

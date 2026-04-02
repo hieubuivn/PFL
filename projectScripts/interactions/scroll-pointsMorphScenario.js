@@ -916,7 +916,8 @@ export function initScrollMorph(scene, pointsInstance, TWEEN) {
             if (scene.knowhere && config.knowhere) {
                 const kMat = scene.knowhere.material;
                 if (kMat.uniforms.uScaleFactor && kMat.uniforms.uHudOffset) {
-                    if (pointsInstance.knowhereTween) pointsInstance.knowhereTween.stop();
+                    if (pointsInstance.knowhereMorphTween) pointsInstance.knowhereMorphTween.stop();
+                    if (pointsInstance.knowherePhysicsTween) pointsInstance.knowherePhysicsTween.stop();
 
                     const startScale = kMat.uniforms.uScaleFactor.value;
                     const startX = kMat.uniforms.uHudOffset.value.x;
@@ -929,31 +930,45 @@ export function initScrollMorph(scene, pointsInstance, TWEEN) {
                     const startRadius = pMat.uniforms.uKnowhereRadius.value;
                     const startHoverMult = pMat.uniforms.uKnowhereGravityHoverFactor.value;
 
-                    pointsInstance.knowhereTween = new TWEEN.Tween({
+                    // 1. ARCHITECTURAL MORPH (Scale & Position of the Mesh)
+                    pointsInstance.knowhereMorphTween = new TWEEN.Tween({
                         scale: startScale,
                         x: startX,
-                        y: startY,
+                        y: startY
+                    })
+                        .to({
+                            scale: config.knowhere.scale,
+                            x: config.knowhere.offset.x,
+                            y: config.knowhere.offset.y
+                        }, morphDur)
+                        .easing(TWEEN.Easing.Quadratic.InOut)
+                        .onUpdate((obj) => {
+                            kMat.uniforms.uScaleFactor.value = obj.scale;
+                            kMat.uniforms.uHudOffset.value.set(obj.x, obj.y);
+                        })
+                        .onComplete(() => { pointsInstance.knowhereMorphTween = null; })
+                        .start();
+
+                    // 2. PHYSICS MORPH (Attraction Uniforms) - Can be safely interrupted by Tooltip/HUD interactions
+                    pointsInstance.knowherePhysicsTween = new TWEEN.Tween({
                         gravity: startGravity,
                         radius: startRadius,
                         hoverMult: startHoverMult
                     })
                         .to({
-                            scale: config.knowhere.scale,
-                            x: config.knowhere.offset.x,
-                            y: config.knowhere.offset.y,
                             gravity: config.knowhere.gravity || 0.0,
                             radius: config.knowhere.radius || 200.0,
                             hoverMult: config.knowhere.gardenHoverMult || 50.0
                         }, morphDur)
                         .easing(TWEEN.Easing.Quadratic.InOut)
                         .onUpdate((obj) => {
-                            kMat.uniforms.uScaleFactor.value = obj.scale;
-                            kMat.uniforms.uHudOffset.value.set(obj.x, obj.y);
                             pMat.uniforms.uKnowhereGravity.value = obj.gravity;
                             pMat.uniforms.uKnowhereRadius.value = obj.radius;
-                            pMat.uniforms.uKnowhereGravityHoverFactor.value = obj.hoverMult;
+                            if (pMat.uniforms.uKnowhereGravityHoverFactor) {
+                                pMat.uniforms.uKnowhereGravityHoverFactor.value = obj.hoverMult;
+                            }
                         })
-                        .onComplete(() => { pointsInstance.knowhereTween = null; })
+                        .onComplete(() => { pointsInstance.knowherePhysicsTween = null; })
                         .start();
 
                     // Store for other modules (like HUD garden hover) to know the "resting" values

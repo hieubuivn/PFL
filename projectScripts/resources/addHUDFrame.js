@@ -1453,19 +1453,19 @@ export function addHUDFrame(scene) {
                             const startR = pMat.uniforms.uKnowhereRadius.value;
                             const targetR = 100000.0;
 
-                            const chargeUpDur = points.targetChargeUpDur !== undefined ? points.targetChargeUpDur : HUD_CONFIG.GARDEN_HOVER_TWEEN_DUR;
-                            if (points.knowhereTween) points.knowhereTween.stop();
-                            points.knowhereTween = new TWEEN.Tween({ g: startG, r: startR })
-                                .to({ g: targetG, r: targetR }, chargeUpDur)
-                                .easing(TWEEN.Easing.Exponential.InOut)
-                                .onUpdate((obj) => {
-                                    pMat.uniforms.uKnowhereGravity.value = obj.g;
-                                    pMat.uniforms.uKnowhereRadius.value = obj.r;
-                                })
-                                .onComplete(() => {
-                                    points.knowhereTween = null;
-                                })
-                                .start();
+                             const chargeUpDur = points.targetChargeUpDur !== undefined ? points.targetChargeUpDur : HUD_CONFIG.GARDEN_HOVER_TWEEN_DUR;
+                             if (points.knowherePhysicsTween) points.knowherePhysicsTween.stop();
+                             points.knowherePhysicsTween = new TWEEN.Tween({ g: startG, r: startR })
+                                 .to({ g: targetG, r: targetR }, chargeUpDur)
+                                 .easing(TWEEN.Easing.Exponential.InOut)
+                                 .onUpdate((obj) => {
+                                     pMat.uniforms.uKnowhereGravity.value = obj.g;
+                                     pMat.uniforms.uKnowhereRadius.value = obj.r;
+                                 })
+                                 .onComplete(() => {
+                                     points.knowherePhysicsTween = null;
+                                 })
+                                 .start();
                         }
                     }
 
@@ -1505,23 +1505,23 @@ export function addHUDFrame(scene) {
                             const resetG = points.targetKnowhereGravity !== undefined ? points.targetKnowhereGravity : 50.0;
                             const resetR = points.targetKnowhereRadius !== undefined ? points.targetKnowhereRadius : 200.0;
 
-                            const collapseOutDur = points.targetCollapseOutDur !== undefined ? points.targetCollapseOutDur : 800;
-                            if (points.knowhereTween) points.knowhereTween.stop();
-                            points.knowhereTween = new TWEEN.Tween({ g: currentG, r: currentR })
-                                .to({ g: resetG, r: resetR }, collapseOutDur)
-                                .easing(TWEEN.Easing.Exponential.InOut)
-                                .onUpdate((obj) => {
-                                    pMat.uniforms.uKnowhereGravity.value = obj.g;
-                                    pMat.uniforms.uKnowhereRadius.value = obj.r;
-                                })
-                                .onComplete(() => {
-                                    points.knowhereTween = null;
-                                    // 2.5 Reset Garden Hover Uniform ONLY after the field has collapsed
-                                    if (pMat.uniforms.uIsGardenHovering && !isHoveringKnowhere && !isHoveringFlower) {
-                                        pMat.uniforms.uIsGardenHovering.value = 0.0;
-                                    }
-                                })
-                                .start();
+                             const collapseOutDur = points.targetCollapseOutDur !== undefined ? points.targetCollapseOutDur : 800;
+                             if (points.knowherePhysicsTween) points.knowherePhysicsTween.stop();
+                             points.knowherePhysicsTween = new TWEEN.Tween({ g: currentG, r: currentR })
+                                 .to({ g: resetG, r: resetR }, collapseOutDur)
+                                 .easing(TWEEN.Easing.Exponential.InOut)
+                                 .onUpdate((obj) => {
+                                     pMat.uniforms.uKnowhereGravity.value = obj.g;
+                                     pMat.uniforms.uKnowhereRadius.value = obj.r;
+                                 })
+                                 .onComplete(() => {
+                                     points.knowherePhysicsTween = null;
+                                     // 2.5 Reset Garden Hover Uniform ONLY after the field has collapsed
+                                     if (pMat.uniforms.uIsGardenHovering && !isHoveringKnowhere && !isHoveringFlower) {
+                                         pMat.uniforms.uIsGardenHovering.value = 0.0;
+                                     }
+                                 })
+                                 .start();
                         }
                     }
 
@@ -1563,20 +1563,20 @@ export function addHUDFrame(scene) {
                                 const startVib = pMat.uniforms.uKnowhereVibrateBoost ? pMat.uniforms.uKnowhereVibrateBoost.value : 0.0;
                                 const targetVib = 2.0; // Immediate magnetic hum
 
-                                const chargeUpDur = 3000; // MUCH slower for cinematic buildup (was 1500)
-                                if (points.knowhereTween) points.knowhereTween.stop();
-                                points.knowhereTween = new TWEEN.Tween({ g: startG, r: startR, v: startVib })
-                                    .to({ g: targetG, r: targetR, v: targetVib }, chargeUpDur)
-                                    .easing(TWEEN.Easing.Exponential.InOut) // slow-fast-slow
-                                    .onUpdate((obj) => {
-                                        pMat.uniforms.uKnowhereGravity.value = obj.g;
-                                        pMat.uniforms.uKnowhereRadius.value = obj.r;
-                                        if (pMat.uniforms.uKnowhereVibrateBoost) pMat.uniforms.uKnowhereVibrateBoost.value = obj.v;
-                                    })
-                                    .onComplete(() => {
-                                        points.knowhereTween = null;
-                                    })
-                                    .start();
+                                 const chargeUpDur = 3000; // MUCH slower for cinematic buildup (was 1500)
+                                 if (points.knowherePhysicsTween) points.knowherePhysicsTween.stop();
+                                 points.knowherePhysicsTween = new TWEEN.Tween({ g: startG, r: startR, v: startVib })
+                                     .to({ g: targetG, r: targetR, v: targetVib }, chargeUpDur)
+                                     .easing(TWEEN.Easing.Exponential.InOut) // slow-fast-slow
+                                     .onUpdate((obj) => {
+                                         pMat.uniforms.uKnowhereGravity.value = obj.g;
+                                         pMat.uniforms.uKnowhereRadius.value = obj.r;
+                                         if (pMat.uniforms.uKnowhereVibrateBoost) pMat.uniforms.uKnowhereVibrateBoost.value = obj.v;
+                                     })
+                                     .onComplete(() => {
+                                         points.knowherePhysicsTween = null;
+                                     })
+                                     .start();
                             }
                         }
                     }
