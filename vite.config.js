@@ -6,8 +6,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export default defineConfig({
-  // GitHub Pages hosting sub-path
-  base: '/PFL/',
+  // GitHub Pages hosting root domain
+  base: '/',
   
   // Project Root (where index.html is located)
   root: './',
