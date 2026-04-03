@@ -1269,9 +1269,10 @@ body.cv-collapsed .icon-lines span:nth-child(4) {
 
 .persona-tag-inline:hover,
 .persona-tag-inline.persona-active-hover {
-    background: rgba(0, 243, 255, 0.1);
-    border-color: rgba(0, 243, 255, 0.3);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2), inset 0 0 10px rgba(0, 243, 255, 0.05);
+    background: rgba(0, 243, 255, 0.05); /* Very light tech-tint */
+    border-left: 2px solid var(--c-cyan); /* Active HUD Notch on left only */
+    padding-left: 10px; /* Shift text slightly to accommodate notch */
+    box-shadow: none; /* Removed weird shadow */
 }
 
 .persona-tag-inline .persona-icon-inline {

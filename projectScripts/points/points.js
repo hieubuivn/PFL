@@ -423,6 +423,11 @@ export default class Points {
     warmup() {
         if (!this.composer || !this.points) return;
 
+        // Safety Guard: Avoid rendering into zero-sized framebuffers (prevents WebGL errors)
+        const w = this.renderer.domElement.clientWidth;
+        const h = this.renderer.domElement.clientHeight;
+        if (w <= 0 || h <= 0) return;
+
         const wasVisible = this.points.visible;
         this.points.visible = true;
 
@@ -2486,6 +2491,9 @@ export default class Points {
             w = this.renderer.domElement.clientWidth;
             h = this.renderer.domElement.clientHeight;
         }
+
+        // --- GL GUARD: Avoid zero-sized framebuffer attachments ---
+        if (w <= 0 || h <= 0) return;
 
         if (this.camera) {
             this.camera.aspect = w / h;

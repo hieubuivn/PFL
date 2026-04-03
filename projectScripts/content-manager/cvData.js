@@ -3,7 +3,7 @@ import { ASSET_VERSION } from '../configs/sceneConfig.js';
 export const cvData = {
     poba: {
         id: "PROTOCOL: BA_PO_2026",
-        systemTitle: "SR. PO / ITBA",
+        systemTitle: "STRATEGIC PRODUCT LEAD",
         role: "SENIOR TECHNICAL PRODUCT OWNER & BUSINESS ANALYST",
         summary: `Pi-shaped Technical Product Specialist with 10+ years of experience executing roadmaps across Fintech, DePIN (IoT & Web3), and EV mobility. I serve as a Technical Product Partner, bridging the gap between abstract business strategy and deep engineering reality. By integrating UX Design with functional prototyping, I validate complex product logic ensuring requirements are architecturally sound and user-optimized.`,
         summaryTags: [
@@ -106,9 +106,9 @@ export const cvData = {
         ]
     },
     dev: {
-        id: "PROTOCOL: CREATIVE_DEV_2026",
-        systemTitle: "INTERACTIVE DEV",
-        role: "CREATIVE DEVELOPER & SHADER ENGINEER (GLSL/3D)",
+        id: "PROTOCOL: DEV_EX_2026",
+        systemTitle: "INTERACTIVE DEVELOPER",
+        role: "INTERACTIVE WEBGL DEVELOPER & CREATIVE ENGINEER",
         summary: `Creative Developer with a focus on immersive 3D experiences and high-performance WebGL/Three.js applications. I bridge the gap between complex mathematical concepts (GLSL) and intuitive user interfaces. With 10 years of background in technical product management, I bring a unique "business-aware" engineering mindset to creative projects—ensuring that high-end visuals are performant, maintainable, and aligned with user goals.`,
         summaryTags: [
             { key: "Specialization", val: "+3 Years Creative Dev Focus" },
