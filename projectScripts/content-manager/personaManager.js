@@ -758,7 +758,7 @@ class PersonaManager {
 
         if (this.elements.experience) {
             this.elements.experience.innerHTML = data.experience.map(job => `
-                <div class="role-block">
+                <div class="role-block collapsed">
                     <div class="role-header">
                         <div class="company-wrapper">
                             <span class="company">${job.company}</span>
@@ -773,7 +773,7 @@ class PersonaManager {
                             ` : ''}
                         </div>
                         <div class="role-collapse-hint">
-                            <span class="hint-text">CLICK TO COLLAPSE</span>
+                            <span class="hint-text">Expand</span>
                             <svg class="chevron-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                                 <polyline points="6 9 12 15 18 9"></polyline>
                             </svg>
@@ -893,7 +893,7 @@ class PersonaManager {
 
                 // Update Header Hints
                 if (hintText) {
-                    hintText.textContent = isCollapsed ? 'CLICK TO EXPAND' : 'CLICK TO COLLAPSE';
+                    hintText.textContent = isCollapsed ? 'Expand' : 'Collapse';
                 }
 
                 // Recalculate offsets after UI changes

@@ -221,6 +221,41 @@ const UI_REGISTRY = [
             const base = (import.meta.env && import.meta.env.BASE_URL) || './';
             const url = `${base}cvs/`.replace('//', '/');
             window.open(url, '_blank');
+            // Hide parent dropdown immediately
+            document.querySelectorAll('.hud-dropdown').forEach(d => d.classList.add('hidden-dropdown'));
+        }
+    },
+    // 7c. CV Combo Toggle (Dropdown Control)
+    {
+        selector: '#cv-combo-toggle',
+        event: 'click',
+        action: (e) => {
+            e.stopPropagation();
+            const dd = document.getElementById('cv-combo-dropdown');
+            if (dd) dd.classList.toggle('hidden-dropdown');
+        }
+    },
+    // 7d. Contact Mode Button (Grouped Contacts)
+    {
+        selector: '#contact-mode-btn',
+        event: 'click',
+        action: (e) => {
+            e.stopPropagation();
+            const dd = document.getElementById('contact-dropdown');
+            if (dd) dd.classList.toggle('hidden-dropdown');
+        }
+    },
+    // 7e. Global Dropdown Focus Management
+    {
+        selector: 'body',
+        event: 'click',
+        action: (e) => {
+            // Close all HUD dropdowns if clicking elsewhere
+            if (!e.target.closest('.cv-combo-box') && !e.target.closest('.contact-links-group')) {
+                document.querySelectorAll('.hud-dropdown').forEach(dd => {
+                    dd.classList.add('hidden-dropdown');
+                });
+            }
         }
     },
     // 5f. WORK Modal Backdrop (Close on click outside)

@@ -91,7 +91,7 @@ function initRoleToggles() {
 
             // Update Header Hints
             if (hintText) {
-                hintText.textContent = isCollapsed ? 'CLICK TO EXPAND' : 'CLICK TO COLLAPSE';
+                hintText.textContent = isCollapsed ? 'Expand' : 'Collapse';
             }
         });
     });

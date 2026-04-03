@@ -657,17 +657,14 @@ body.cv-collapsed .icon-lines span:nth-child(4) {
 @keyframes hudBreathe {
     0% {
         transform: scale(1);
-        box-shadow: 0 0 15px rgba(0, 243, 255, 0.1);
     }
 
     50% {
-        transform: scale(1.08);
-        box-shadow: 0 0 35px rgba(0, 243, 255, 0.5);
+        transform: scale(1.05);
     }
 
     100% {
         transform: scale(1);
-        box-shadow: 0 0 15px rgba(0, 243, 255, 0.1);
     }
 }
 
@@ -1013,34 +1010,159 @@ body.cv-collapsed .icon-lines span:nth-child(4) {
     transform: scale(1.15);
 }
 
+/* === CV COMBO BOX (SPLIT BUTTON) === */
+.cv-combo-box {
+    display: flex;
+    position: relative;
+    border: 1px solid rgba(0, 243, 255, 0.4);
+    background: rgba(0, 243, 255, 0.05);
+    height: 38px;
+    transition: all 0.3s ease;
+}
+
+.combo-main {
+    flex: 1;
+    border: none !important;
+    background: transparent !important;
+    padding-right: 8px !important;
+}
+
+.combo-arrow {
+    width: 30px;
+    border: none !important;
+    background: rgba(0, 243, 255, 0.1) !important;
+    border-left: 1px solid rgba(0, 243, 255, 0.3) !important;
+    font-size: 0.5rem !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Dropdown Hud System */
+.hud-dropdown {
+    position: absolute;
+    top: calc(100% + 5px);
+    right: 0;
+    width: 140px;
+    background: rgba(0, 5, 10, 0.98);
+    border: 1px solid var(--c-cyan);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.8), 0 0 10px rgba(0, 243, 255, 0.3);
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+    padding: 2px;
+}
+
+.dropdown-item {
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.65rem;
+    padding: 10px 15px;
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.2s;
+    width: 100%;
+}
+
+.dropdown-item:hover {
+    background: rgba(0, 243, 255, 0.15);
+    color: var(--c-cyan);
+}
+
+.hidden-dropdown {
+    display: none !important;
+}
+
 /* CTA: Export Box - Standardized */
+.cv-actions-cluster {
+    display: flex;
+    align-items: center;
+    gap: 0px; /* Fusion look */
+    border: 1px solid rgba(0, 243, 255, 0.3);
+    background: rgba(0, 243, 255, 0.03);
+    will-change: transform, border-color;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
 .cta-btn {
-    background: rgba(0, 243, 255, 0.08);
-    /* Slightly more fill */
-    border: 1px solid rgba(0, 243, 255, 0.5);
-    /* Stronger border */
+    background: transparent;
+    border: none;
     color: var(--c-cyan);
     font-family: 'Fira Code', monospace;
     font-size: 0.65rem;
     padding: 8px 16px;
-    /* Increased for better button presence */
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+    transition: background 0.3s ease, color 0.3s ease, opacity 0.3s ease;
     letter-spacing: 1px;
     text-transform: uppercase;
     font-weight: 700;
+    will-change: transform, opacity;
+}
+
+.cta-btn:first-child {
+    background: rgba(0, 243, 255, 0.1); /* Main action slight fill */
+}
+
+/* Secondary Ghost Look */
+.cta-btn.cta-secondary {
+    opacity: 0.6;
+    position: relative;
+    padding-left: 20px;
+}
+
+.cta-btn.cta-secondary::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 20%;
+    height: 60%;
+    width: 1px;
+    background: rgba(0, 243, 255, 0.2); /* Tactical divider */
 }
 
 .cta-btn:hover {
     background: rgba(0, 243, 255, 0.2);
     color: #fff;
-    border-color: rgba(0, 243, 255, 1);
-    box-shadow: 0 0 40px rgba(0, 243, 255, 0.3);
-    transform: translateY(-2px);
+    opacity: 1;
+    /* Static text-shadow is cheaper than animating it */
+    text-shadow: 0 0 5px rgba(0, 243, 255, 0.5);
     animation: hudBreathe 2s infinite ease-in-out;
 }
 
-/* Mini Switcher Refinement */
+.cv-actions-cluster:hover {
+    border-color: rgba(0, 243, 255, 0.8);
+    /* Subtle static shadow on hover, no animation */
+    box-shadow: 0 0 15px rgba(0, 243, 255, 0.15);
+}
+
+/* Contact Grouping */
+.contact-links-group {
+    display: flex;
+    position: relative;
+    margin-right: 10px;
+}
+
+#contact-dropdown {
+    width: 160px;
+    right: 0;
+}
+
+#contact-dropdown .contact-btn-tiny {
+    width: 100% !important;
+    height: auto !important;
+    padding: 10px !important;
+    justify-content: flex-start !important;
+    border: none !important;
+    background: transparent !important;
+    font-size: 0.6rem !important;
+}
+
+#contact-dropdown .contact-btn-tiny:hover {
+    background: rgba(0, 243, 255, 0.1) !important;
+}
+
 .mini-switcher {
     display: flex;
     background: rgba(255, 255, 255, 0.03);

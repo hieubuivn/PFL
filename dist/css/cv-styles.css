@@ -326,6 +326,35 @@
 }
 
 
+.status-text-open {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.65rem;
+    color: #00f3ff;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: 700;
+    white-space: nowrap;
+    /* Force 1 line */
+}
+
+/* Hide text when space is low on mobile */
+.mobile-mode .status-text-open {
+    display: none !important;
+}
+
+.avatar-cube-container {
+    width: 40px;
+    height: 40px;
+}
+
+.cv-actions-cluster {
+    flex-shrink: 0;
+}
+
+.contact-btn {
+    transform: scale(0.9);
+}
+
 .box-desc {
     font-family: 'Rajdhani', sans-serif;
     font-size: 13px;
@@ -1053,6 +1082,7 @@
     display: flex;
     align-items: center;
     gap: 10px;
+    flex: 1;
 }
 
 .company-info-trigger {
@@ -1229,11 +1259,11 @@
 .mobile-mode .role-header {
     display: flex !important;
     flex-direction: row !important;
-    justify-content: flex-start !important;
+    justify-content: space-between !important;
     align-items: center !important;
     width: 100% !important;
     position: relative !important;
-    padding-right: 120px !important; /* Space for the (TAP) hint */
+    padding-right: 5px !important;
     cursor: pointer !important;
     margin-bottom: 15px !important;
 }
@@ -1244,6 +1274,7 @@
     font-size: 0.6rem;
     color: var(--c-cyan);
     margin-right: 12px;
+    flex-shrink: 0;
     transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1);
     transform: rotate(90deg); /* Default open */
     filter: drop-shadow(0 0 5px var(--c-cyan));
@@ -1292,6 +1323,46 @@
     flex-shrink: 0;
 }
 
+/* CV HINT AREA (New Architecture) */
+.role-collapse-hint {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+    opacity: 0.6;
+    transition: opacity 0.3s;
+    gap: 8px; /* Space for the chevron */
+}
+
+.role-block:hover .role-collapse-hint {
+    opacity: 1;
+}
+
+.hint-text {
+    font-family: 'Rajdhani', sans-serif; /* Cleaner for mixed case */
+    font-size: 0.72rem; /* Balanced size */
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: var(--c-cyan);
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.hint-text:hover {
+    color: #fff;
+    text-shadow: 0 0 8px var(--c-cyan);
+}
+
+
+.chevron-icon {
+    transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+    color: var(--c-cyan);
+    flex-shrink: 0;
+}
+
+.role-block.collapsed .chevron-icon {
+    transform: rotate(-90deg);
+}
+
 @keyframes breathing-hint {
     0%, 100% { opacity: 0.4; }
     50% { opacity: 1; }
@@ -1321,24 +1392,45 @@
 
 /* Footer & System ID Module adjustments */
 .mobile-mode .system-id-module {
-    white-space: nowrap !important;
-    gap: 10px !important;
+    flex-shrink: 0 !important;
+    gap: 8px !important;
+    margin-right: 5px !important;
+}
+
+.mobile-mode .avatar-cube-container {
+    width: 28px !important;
+    height: 28px !important;
 }
 
 .mobile-mode .sys-value-large {
-    font-size: 1rem !important;
+    font-size: 0.85rem !important;
 }
 
 .mobile-mode .contact-btn-tiny {
-    width: 36px !important;
-    height: 36px !important;
+    width: 30px !important;
+    height: 30px !important;
+    padding: 0 !important;
 }
 
-.mobile-mode .cta-btn {
-    padding: 10px 16px !important;
-    font-size: 0.8rem !important;
-    width: 100% !important;
-    justify-content: center !important;
+.mobile-mode .contact-btn-tiny svg {
+    width: 14px !important;
+    height: 14px !important;
+}
+
+.mobile-mode .status-text-open {
+    display: inline-block !important;
+    font-size: 0.65rem !important;
+    letter-spacing: 1px !important;
+    color: var(--c-cyan) !important;
+    background: none !important;
+    border: none !important;
+    padding: 0 !important;
+    margin-left: 8px !important;
+    text-shadow: 0 0 5px rgba(0, 243, 255, 0.5);
+}
+
+.mobile-mode .cv-combo-box {
+    display: none !important;
 }
 
 /* Adjustments for touch */

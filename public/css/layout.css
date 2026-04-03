@@ -1010,6 +1010,71 @@ body.cv-collapsed .icon-lines span:nth-child(4) {
     transform: scale(1.15);
 }
 
+/* === CV COMBO BOX (SPLIT BUTTON) === */
+.cv-combo-box {
+    display: flex;
+    position: relative;
+    border: 1px solid rgba(0, 243, 255, 0.4);
+    background: rgba(0, 243, 255, 0.05);
+    height: 38px;
+    transition: all 0.3s ease;
+}
+
+.combo-main {
+    flex: 1;
+    border: none !important;
+    background: transparent !important;
+    padding-right: 8px !important;
+}
+
+.combo-arrow {
+    width: 30px;
+    border: none !important;
+    background: rgba(0, 243, 255, 0.1) !important;
+    border-left: 1px solid rgba(0, 243, 255, 0.3) !important;
+    font-size: 0.5rem !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Dropdown Hud System */
+.hud-dropdown {
+    position: absolute;
+    top: calc(100% + 5px);
+    right: 0;
+    width: 140px;
+    background: rgba(0, 5, 10, 0.98);
+    border: 1px solid var(--c-cyan);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.8), 0 0 10px rgba(0, 243, 255, 0.3);
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+    padding: 2px;
+}
+
+.dropdown-item {
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.65rem;
+    padding: 10px 15px;
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.2s;
+    width: 100%;
+}
+
+.dropdown-item:hover {
+    background: rgba(0, 243, 255, 0.15);
+    color: var(--c-cyan);
+}
+
+.hidden-dropdown {
+    display: none !important;
+}
+
 /* CTA: Export Box - Standardized */
 .cv-actions-cluster {
     display: flex;
@@ -1072,7 +1137,32 @@ body.cv-collapsed .icon-lines span:nth-child(4) {
     box-shadow: 0 0 15px rgba(0, 243, 255, 0.15);
 }
 
-/* Mini Switcher Refinement */
+/* Contact Grouping */
+.contact-links-group {
+    display: flex;
+    position: relative;
+    margin-right: 10px;
+}
+
+#contact-dropdown {
+    width: 160px;
+    right: 0;
+}
+
+#contact-dropdown .contact-btn-tiny {
+    width: 100% !important;
+    height: auto !important;
+    padding: 10px !important;
+    justify-content: flex-start !important;
+    border: none !important;
+    background: transparent !important;
+    font-size: 0.6rem !important;
+}
+
+#contact-dropdown .contact-btn-tiny:hover {
+    background: rgba(0, 243, 255, 0.1) !important;
+}
+
 .mini-switcher {
     display: flex;
     background: rgba(255, 255, 255, 0.03);
