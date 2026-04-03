@@ -1,0 +1,1910 @@
+/* =========================================
+   NEW LAYOUT ARCHITECTURE
+   ========================================= */
+
+body {
+    margin: 0;
+    overflow: hidden;
+    /* Prevent global scroll to control it per-pane */
+    width: 100vw;
+    height: 100vh;
+}
+
+#app-container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    background-color: #000;
+}
+
+/* LEFT PANE: EXPERIENCE */
+#experience-container {
+    flex-grow: 1;
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+    /* REMOVED: will-change: width — layout property, not GPU-compositable (transform/opacity only) */
+    /* Clips the frames if they exceed */
+
+    /* Hide scrollbar but keep scroll functionality */
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+}
+
+#experience-container::-webkit-scrollbar {
+    display: none;
+    /* Chrome, Safari, Opera */
+}
+
+/* Ensure ThreeJS canvas fills this container */
+#experience-container canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;
+    outline: none;
+    z-index: 3 !important;
+    /* TOP: Canvas above Title */
+    /* Base layer */
+}
+
+/* DOPPELGANGER: Static Background Layer */
+.three-js-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    /* BOTTOM: Behind canvas and title */
+    pointer-events: none;
+    background: linear-gradient(to right,
+            rgb(83.137% 83.137% 83.137%) 0%,
+            rgb(78.408% 78.408% 78.408%) 1.5625%,
+            rgb(73.68% 73.68% 73.68%) 3.125%,
+            rgb(68.951% 68.951% 68.951%) 4.6875%,
+            rgb(64.222% 64.222% 64.222%) 6.25%,
+            rgb(60.35% 60.35% 60.35%) 7.8125%,
+            rgb(56.478% 56.478% 56.478%) 9.375%,
+            rgb(52.606% 52.606% 52.606%) 10.9375%,
+            rgb(48.734% 48.734% 48.734%) 12.5%,
+            rgb(45.609% 45.609% 45.609%) 14.0625%,
+            rgb(42.483% 42.483% 42.483%) 15.625%,
+            rgb(39.358% 39.358% 39.358%) 17.1875%,
+            rgb(36.232% 36.232% 36.232%) 18.75%,
+            rgb(33.75% 33.75% 33.75%) 20.3125%,
+            rgb(31.268% 31.268% 31.268%) 21.875%,
+            rgb(28.786% 28.786% 28.786%) 23.4375%,
+            rgb(26.305% 26.305% 26.305%) 25%,
+            rgb(24.372% 24.372% 24.372%) 26.5625%,
+            rgb(22.439% 22.439% 22.439%) 28.125%,
+            rgb(20.506% 20.506% 20.506%) 29.6875%,
+            rgb(18.573% 18.573% 18.573%) 31.25%,
+            rgb(17.101% 17.101% 17.101%) 32.8125%,
+            rgb(15.63% 15.63% 15.63%) 34.375%,
+            rgb(14.158% 14.158% 14.158%) 35.9375%,
+            rgb(12.686% 12.686% 12.686%) 37.5%,
+            rgb(11.596% 11.596% 11.596%) 39.0625%,
+            rgb(10.505% 10.505% 10.505%) 40.625%,
+            rgb(9.414% 9.414% 9.414%) 42.1875%,
+            rgb(8.323% 8.323% 8.323%) 43.75%,
+            rgb(7.542% 7.542% 7.542%) 45.3125%,
+            rgb(6.76% 6.76% 6.76%) 46.875%,
+            rgb(5.978% 5.978% 5.978%) 48.4375%,
+            rgb(5.196% 5.196% 5.196%) 50%,
+            rgb(4.658% 4.658% 4.658%) 51.5625%,
+            rgb(4.121% 4.121% 4.121%) 53.125%,
+            rgb(3.584% 3.584% 3.584%) 54.6875%,
+            rgb(3.046% 3.046% 3.046%) 56.25%,
+            rgb(2.695% 2.695% 2.695%) 57.8125%,
+            rgb(2.345% 2.345% 2.345%) 59.375%,
+            rgb(1.995% 1.995% 1.995%) 60.9375%,
+            rgb(1.644% 1.644% 1.644%) 62.5%,
+            rgb(1.431% 1.431% 1.431%) 64.0625%,
+            rgb(1.218% 1.218% 1.218%) 65.625%,
+            rgb(1.005% 1.005% 1.005%) 67.1875%,
+            rgb(0.793% 0.793% 0.793%) 68.75%,
+            rgb(0.676% 0.676% 0.676%) 70.3125%,
+            rgb(0.559% 0.559% 0.559%) 71.875%,
+            rgb(0.442% 0.442% 0.442%) 73.4375%,
+            rgb(0.325% 0.325% 0.325%) 75%,
+            rgb(0.269% 0.269% 0.269%) 76.5625%,
+            rgb(0.214% 0.214% 0.214%) 78.125%,
+            rgb(0.158% 0.158% 0.158%) 79.6875%,
+            rgb(0.103% 0.103% 0.103%) 81.25%,
+            rgb(0.082% 0.082% 0.082%) 82.8125%,
+            rgb(0.061% 0.061% 0.061%) 84.375%,
+            rgb(0.041% 0.041% 0.041%) 85.9375%,
+            rgb(0.02% 0.02% 0.02%) 87.5%,
+            rgb(0.016% 0.016% 0.016%) 89.0625%,
+            rgb(0.011% 0.011% 0.011%) 90.625%,
+            rgb(0.006% 0.006% 0.006%) 92.1875%,
+            rgb(0.001% 0.001% 0.001%) 93.75%,
+            rgb(0% 0% 0%) 100%);
+}
+
+/* FRAME OVERRIDES: Force frames to stick to the experience-container */
+#main-ui {
+    position: absolute !important;
+    /* Override room.css */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    /* Above canvas */
+    pointer-events: none;
+    /* Let clicks pass */
+    display: block !important;
+}
+
+/* UI Elements that need interaction */
+.frame_status-text {
+    pointer-events: auto;
+}
+
+/* SCROLL INDICATOR: Centered in Left Pane */
+/* SCROLL INDICATOR: Unified Layout (Controlled by variables) */
+.scroll-indicator {
+    --scroll-scale: 1;
+    --scroll-indicator-margin: 16vh;
+    
+    /* Layout is now primarily controlled by textBoard.css for !important precedence */
+    /* We just ensure the transform handles scale correctly without breaking the position */
+    transform: scale(var(--scroll-scale, 1)) !important;
+    
+    /* Performance & Reset */
+    width: auto !important;
+    height: auto !important;
+    border: none !important;
+    
+    /* pointer-events handled by interaction logic */
+    opacity: 0.9;
+    animation: none !important;
+}
+
+/* The Icon Wrapper */
+.indicator-icon {
+    position: relative;
+    width: 78px;
+    /* Shrunken for high-density micro look */
+    height: 54px;
+    /* Proportional V-shape */
+    animation: bounce 1.5s infinite cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.indicator-icon::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100px;
+    height: 80px;
+    background: radial-gradient(circle, rgba(0, 243, 255, 0.4) 0%, transparent 70%);
+    animation: urgentGlow 1.5s infinite alternate;
+    pointer-events: none;
+    z-index: -1;
+}
+
+@keyframes urgentGlow {
+    0% {
+        opacity: 0.3;
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    100% {
+        opacity: 0.7;
+        transform: translate(-50%, -50%) scale(1.4);
+    }
+}
+
+/* The 3 Diamonds Pattern (V-Shape) */
+/*
+    Pattern:
+    [1]   [2]
+       [3]
+*/
+/* Pattern: [1] [2] / [3] (Centered below) */
+.indicator-icon span {
+    position: absolute;
+    width: 30px;
+    /* Tripled from 5px */
+    height: 30px;
+    background-color: #e0e0e0;
+    border: none;
+    transform: rotate(45deg);
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.4);
+}
+
+/* Top Left */
+.indicator-icon span:nth-child(1) {
+    top: 0;
+    left: 0;
+}
+
+/* Top Right */
+.indicator-icon span:nth-child(2) {
+    top: 0;
+    left: 48px;
+    /* Tripled Gap */
+}
+
+/* Bottom Center */
+.indicator-icon span:nth-child(3) {
+    top: 24px;
+    left: 24px;
+    transform: rotate(45deg);
+}
+
+.scroll-text {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.91rem;
+    letter-spacing: 3px;
+    /* Extended spacing for sci-fi look */
+    color: #ffffff;
+    text-transform: uppercase;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+    opacity: 0.9;
+    font-weight: 600;
+}
+
+@keyframes bounce {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(8px);
+    }
+}
+
+/* Re-define animation just in case or rely on project.css */
+
+/* RIGHT PANE: CV WRAPPER (Outer) */
+#cv-container {
+    /* 
+       MIN: 450px (Enhanced readability)
+       IDEAL: 35.5vw (Expanded for No-Truncation UX)
+       MAX: 680px (Optimal text column cap)
+    */
+    width: clamp(450px, 35.5vw, 680px);
+    height: 100%;
+    background: transparent;
+    overflow: visible;
+    position: relative;
+    z-index: 200;
+    z-index: 200;
+    /* backdrop-filter moved to #cv-scroller for consistency */
+
+    flex-shrink: 0;
+    will-change: transform;
+    transform: translateX(0); /* Default expanded state */
+    margin-right: 0;
+    transition: transform 0.8s cubic-bezier(0.2, 1, 0.2, 1);
+
+    /* Theme Variables for CV Area */
+    --cv-bg-primary: rgba(0, 0, 0, 0.6);
+    --cv-bg-secondary: rgba(13, 17, 23, 0.8);
+    --cv-accent-cyan: var(--c-cyan);
+    --cv-accent-gold: var(--c-gold);
+    --cv-accent-dim: rgba(0, 243, 255, 0.15);
+    --cv-text-primary: #e6edf3;
+    --cv-text-secondary: #8b949e;
+    --cv-border: #30363d;
+
+    /* Scientific / Technical Font Stack (Sans-Serif Monospace) */
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.1rem;
+    /* Monospace tends to be larger/wider, slight adjustment */
+    color: var(--cv-text-primary);
+    line-height: 1.6;
+    letter-spacing: 0.03em;
+    /* Improve readability for block text */
+}
+
+/* Collapsed State (Fixed ghost space bug) */
+#cv-container.collapsed {
+    /* Slide removed from CSS, handled by JS TWEEN now */
+    opacity: 0;
+    overflow: hidden; /* Crucial: prevent bleed into ThreeJS space */
+    pointer-events: none;
+}
+
+
+    /* CV SCROLLER (Inner) */
+#cv-scroller {
+    width: 100%;
+    height: 100%;
+    background-color: #070707;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    background-size: 30px 30px;
+    /* Removed backdrop-filter: blur — expensive over WebGL canvas every frame */
+    overflow-y: auto;
+    scroll-behavior: smooth;
+    overscroll-behavior-y: contain;
+    /* Prevent scroll-chaining to 3D scene */
+    -webkit-overflow-scrolling: touch;
+    /* Momentum scroll for iOS */
+    position: relative;
+    padding-top: 8vh; /* Switched to vh for responsive ratio and reduced space */
+}
+
+/* CV Headers - Use Orbitron for titles inside CV to match theme */
+#cv-content h1,
+#cv-content h2,
+#cv-content h3,
+#cv-content h4,
+#cv-content h5,
+#cv-content h6,
+.cv-terminal-header,
+.header-name,
+.header-title {
+    font-family: 'Orbitron', sans-serif !important;
+}
+
+/* CV Content Wrapper */
+#cv-content {
+    padding: 4vh 50px 8vh; /* Reduced top padding to 4vh for more compact Space A */
+    max-width: 100%;
+    will-change: transform;
+    /* Hint for compositor optimization */
+    backface-visibility: hidden;
+    /* Prevent flickering in some browsers */
+}
+
+/* --- CV System Control Bar (UX Redesign) --- */
+#cv-fixed-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background: rgba(4, 6, 8, 0.98);
+    /* Near black — fully opaque, no blur needed */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    z-index: 210;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    box-sizing: border-box;
+    justify-content: space-between;
+    font-family: 'Rajdhani', sans-serif;
+}
+
+/* AVATAR 3D CUBE SWAP ENGINE */
+.avatar-cube-container {
+    perspective: 800px;
+    /* 3D Depth */
+}
+
+.avatar-cube {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
+    /* Snappy flip */
+    transform-origin: center center -60px;
+    /* Depth-aware rotation */
+}
+
+.avatar-face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    /* Hide the back when flipped */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: transparent;
+}
+
+.avatar-front {
+    transform: rotateY(0deg);
+}
+
+.avatar-back {
+    transform: translateZ(-120px) rotateY(180deg);
+}
+
+.avatar-cube img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* CSS logic to execute the flip */
+.swapping-avatar .avatar-cube {
+    transform: rotateY(-180deg);
+}
+
+.profile-img.swapping-avatar {
+    left: 0%;
+}
+
+/* Module 1: System ID */
+.system-id-module {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex: 1.2;
+}
+
+.identity-text {
+    line-height: 1.1;
+}
+
+.main-id-row {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.sys-value-large {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: 2px;
+    line-height: 1;
+    white-space: nowrap;
+    /* Force single line */
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Unified Persona Switch Button */
+.persona-icon-inline {
+    background: rgba(10, 20, 30, 0.9);
+    /* Solid enough — no blur needed */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.7);
+    width: 32px;
+    height: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    padding: 0;
+    margin-left: 10px;
+    transition: background 0.3s ease, border-color 0.3s ease, transform 0.3s ease, color 0.3s ease;
+}
+
+.persona-icon-inline:hover {
+    background: rgba(0, 243, 255, 0.2);
+    border-color: rgba(0, 243, 255, 1);
+    color: #00f3ff;
+    transform: scale(1.05);
+    filter: drop-shadow(0 0 8px rgba(0, 243, 255, 0.4));
+    animation: hudBreathe 2s infinite ease-in-out;
+}
+
+.status-pill {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 14px;
+    background: transparent;
+    border: none;
+    pointer-events: none;
+    /* Explicitly non-interactable */
+    margin-left: 15px;
+}
+
+/* Precise Corner Brackets (Viewfinder DNA) */
+.status-pill::before,
+.status-pill::after {
+    content: '';
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border-color: rgba(0, 243, 255, 0.4);
+    border-style: solid;
+    pointer-events: none;
+}
+
+/* Top-Left Bracket */
+.status-pill::before {
+    top: 0;
+    left: 0;
+    border-width: 1px 0 0 1px;
+}
+
+/* Bottom-Right Bracket */
+.status-pill::after {
+    bottom: 0;
+    right: 0;
+    border-width: 0 1px 1px 0;
+}
+
+.status-dot-cyan {
+    width: 4px;
+    height: 4px;
+    background-color: var(--c-cyan);
+    box-shadow: 0 0 6px var(--c-cyan);
+    animation: statBreath 4s infinite ease-in-out;
+    /* Hardware DNA: Sharp Square LED */
+}
+
+@keyframes statBreath {
+
+    0%,
+    100% {
+        opacity: 0.3;
+        transform: scale(0.9);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.1);
+    }
+}
+
+.status-text-open {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.65rem;
+    color: #00f3ff;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: 700;
+    white-space: nowrap;
+    /* Force 1 line */
+}
+
+
+/* Toggle Button for CV - Refined HUD Style */
+#cv-toggle-btn {
+    position: relative;
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    background: rgba(8, 24, 32, 0.95);
+    /* Solid — no blur needed */
+    border: 1px solid rgba(0, 243, 255, 0.4);
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 15px rgba(0, 243, 255, 0.1);
+    transition: background 0.4s ease, border-color 0.4s ease, transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+/* Container for the 4 Diamonds (Adjusted for 4 elements) */
+.icon-lines {
+    position: relative;
+    width: 22px;
+    height: 22px;
+    overflow: visible;
+}
+
+/* The Individual Diamonds - 4-Dot System */
+.icon-lines span {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    display: block;
+    width: 6px;
+    height: 6px;
+    background-color: var(--c-cyan);
+    /* Default: F-Shape (Expand State) */
+    transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+    box-shadow: 0 0 10px rgba(0, 243, 255, 0.8);
+}
+
+/* Expansion Pattern (Centered F-Shape System) */
+.icon-lines span:nth-child(1) {
+    transform: translate(-100%, -150%) rotate(45deg);
+}
+
+.icon-lines span:nth-child(2) {
+    transform: translate(-100%, -50%) rotate(45deg);
+}
+
+.icon-lines span:nth-child(3) {
+    transform: translate(-100%, 50%) rotate(45deg);
+}
+
+.icon-lines span:nth-child(4) {
+    transform: translate(0%, -50%) rotate(45deg);
+}
+
+/* Middle-Right */
+
+/* Collapse State - Merge into perfectly centered 3-dot Horizontal Line */
+body.cv-collapsed .icon-lines span:nth-child(1) {
+    transform: translate(-150%, -50%) rotate(45deg);
+    opacity: 1;
+}
+
+body.cv-collapsed .icon-lines span:nth-child(2) {
+    transform: translate(-50%, -50%) rotate(45deg);
+    opacity: 1;
+}
+
+body.cv-collapsed .icon-lines span:nth-child(3) {
+    transform: translate(50%, -50%) rotate(45deg);
+    opacity: 1;
+}
+
+body.cv-collapsed .icon-lines span:nth-child(4) {
+    transform: translate(-50%, -50%) rotate(45deg);
+    opacity: 0;
+}
+
+/* Merged/Hidden */
+
+/* Hover State */
+/* Hover State - Luminous Intensity */
+#cv-toggle-btn:hover {
+    background: rgba(0, 243, 255, 0.2);
+    border-color: rgba(0, 243, 255, 1);
+    box-shadow: 0 0 40px rgba(0, 243, 255, 0.3);
+    animation: hudBreathe 2s infinite ease-in-out;
+}
+
+@keyframes hudBreathe {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+#cv-toggle-btn:hover .icon-lines span {
+    background-color: #fff;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 1);
+}
+
+/* NEW HUD-INLINE STYLES */
+.hud-nav-label-group #cv-toggle-btn {
+    border: none;
+    background: transparent;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    pointer-events: auto;
+    box-shadow: none;
+}
+
+.hud-nav-label-group:hover #cv-toggle-btn {
+    transform: scale(1.1);
+}
+
+.hud-nav-label-group:hover .icon-lines span {
+    background-color: #fff;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+}
+
+#cv-container.collapsed #cv-mode-selector,
+#cv-container.collapsed .header-status {
+    display: none;
+}
+
+#cv-container.collapsed #cv-toggle-btn:hover {
+    left: -58px;
+}
+
+/* Scrollbar Styling */
+#cv-scroller::-webkit-scrollbar {
+    width: 6px;
+}
+
+#cv-scroller::-webkit-scrollbar-thumb {
+    background: var(--cv-border);
+    border-radius: 0;
+}
+
+#cv-scroller::-webkit-scrollbar-thumb:hover {
+    background: var(--cv-accent-cyan);
+}
+
+#cv-scroller::-webkit-scrollbar-track {
+    background: var(--cv-bg-primary);
+}
+
+/* OTHER OVERLAYS */
+/* === EXPERIENCE HERO WRAPPER (Unified HUD Title & Scroll) === */
+#experience-hero-wrapper {
+    position: absolute;
+    top: 40vh;
+    /* Updated: Center of screen for initial Step 0 state */
+    left: 5%;
+    width: 90%;
+    margin: 2vh 0;
+    /* Cinematic margin */
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    /* CRITICAL: Fixed baseline sync (feet on the same line) */
+    pointer-events: none;
+    z-index: 2;
+    /* MID: Title above backdrop, canvas above title */
+}
+
+/* === PORTFOLIO TITLE === */
+#portfolio-title {
+    position: relative !important;
+    flex: 1;
+    z-index: 10001;
+    pointer-events: none;
+    font-family: 'Orbitron', 'Rajdhani', sans-serif;
+    line-height: 0.9;
+    user-select: none;
+    max-width: 90%;
+    /* Prevent overflow */
+
+    /* Custom variables for dynamic scaling/morphing */
+    --header-scale: 1.0;
+    --header-gap: 0rem;
+
+    /* REMOVED: Glass Effect (Performance/Aesthetic Fix) */
+    padding: 0;
+    background: none;
+    backdrop-filter: none;
+    border: none;
+    box-shadow: none;
+
+    opacity: 0;
+    /* Hidden initially - revealed after protocol selection */
+    transition: transform 0.8s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.8s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    /* Enforce global left alignment */
+}
+
+
+.title-line,
+.title-header-top,
+.title-header-bottom {
+    font-size: calc(clamp(3.135rem, 7.59vw, 6.93rem) * var(--header-scale));
+    /* Increased base size by 10% */
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    transform: translateZ(0);
+    will-change: opacity, transform;
+    opacity: 0.9 !important;
+    /* Slightly lowered opacity for balance */
+    color: var(--c-white);
+    pointer-events: none;
+    line-height: 0.85;
+}
+
+.title-header-top {
+    transform: translateX(0);
+}
+
+
+
+
+/* Relocate Scroll Indicator to align with domain baseline on the right */
+
+.scroll-indicator {
+    position: absolute !important;
+    bottom: 0 !important;
+    right: 0 !important;
+    margin-bottom: 16vh !important;
+    margin-right: 16vh !important;
+    left: auto !important;
+    transform: none !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    z-index: 10001;
+}
+
+
+.scroll-text {
+    font-size: clamp(0.84rem, 1.4vw, 1.12rem);
+    /* MATCH title-credibility scale */
+    font-family: var(--font-code);
+    color: var(--c-white);
+    opacity: 0.85;
+    /* HUD balance */
+    margin: 0;
+    line-height: 1.4;
+    /* Baseline sync */
+    white-space: nowrap;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-weight: 700;
+}
+
+.scroll-indicator .indicator-text {
+    text-align: right;
+}
+
+/* === DYNAMIC MODES === */
+
+/* GLOBAL UNIFIED TEXT STYLE: Black Fill + Gold Border */
+
+/* --- Biological Status Colors (Refactored) --- */
+.stat-optimal {
+    color: var(--c-cyan) !important;
+    --stat-glow-intensity: 0;
+    /* FIX 3: Removed filter + transition — filter: brightness on a JS-updated value
+       forces a repaint every frame. Replaced with static color glow only. */
+    text-shadow: 0 0 5px var(--c-cyan) !important;
+}
+
+.stat-critical {
+    color: var(--c-crimson) !important;
+    text-shadow: var(--glow-crimson) !important;
+}
+
+.stat-stable {
+    color: var(--c-gold) !important;
+    text-shadow: none !important;
+}
+
+.frame_status-text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.5s ease, padding 0.5s ease;
+}
+
+#act-controls {
+    position: absolute !important;
+    z-index: 10000;
+    pointer-events: auto;
+    display: none;
+}
+
+
+
+/* =========================================
+   CV STYLES (HUD Theme - Option B)
+   ========================================= */
+
+/* Module 1: System ID */
+.system-id-module {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex: 1;
+}
+
+.identity-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.identity-text .sys-label {
+    font-size: 0.55rem;
+    color: rgba(255, 255, 255, 0.2);
+    letter-spacing: 2px;
+}
+
+.identity-text .sys-value {
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: #fff;
+    /* Primary: Pure White */
+    letter-spacing: 1px;
+    margin-top: -2px;
+}
+
+
+
+
+
+/* Module 3: Status & CTA */
+.status-cta-module {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex: 1;
+    justify-content: flex-end;
+}
+
+.status-indicator,
+.exp-signal {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.status-indicator .label,
+.exp-signal .label {
+    font-size: 0.55rem;
+    color: rgba(255, 255, 255, 0.2);
+    letter-spacing: 1px;
+}
+
+.status-indicator .value {
+    font-size: 0.6rem;
+    font-weight: 800;
+}
+
+.cyan-glow {
+    color: var(--c-cyan);
+    text-shadow: none;
+    /* Kill glow for better seniority signaling */
+}
+
+.exp-bar {
+    width: 60px;
+    /* Wider for factual display */
+    height: 6px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0;
+    overflow: hidden;
+    position: relative;
+}
+
+.exp-bar .fill {
+    height: 100%;
+    background: var(--c-cyan);
+    /* Segmented block look */
+    background-image: repeating-linear-gradient(90deg,
+            transparent,
+            transparent 4px,
+            rgba(0, 0, 0, 0.3) 4px,
+            rgba(0, 0, 0, 0.3) 6px);
+}
+
+.exp-signal .value {
+    font-size: 0.65rem;
+    font-family: 'Fira Code', monospace;
+    color: #fff;
+    font-weight: 800;
+}
+
+/* Contact Group in Top Bar */
+.contact-links-group {
+    display: flex;
+    gap: 10px;
+    margin-right: 20px;
+}
+
+.contact-btn-tiny {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(4, 6, 8, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.4);
+    transition: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.contact-btn-tiny:hover {
+    background: rgba(0, 243, 255, 0.1);
+    border-color: var(--c-cyan);
+    color: var(--c-cyan);
+    transform: translateY(-2px);
+    box-shadow: 0 0 15px rgba(0, 243, 255, 0.15);
+}
+
+.contact-btn-tiny svg {
+    transition: transform 0.3s ease;
+}
+
+.contact-btn-tiny:hover svg {
+    transform: scale(1.15);
+}
+
+/* === CV COMBO BOX (SPLIT BUTTON) === */
+.cv-combo-box {
+    display: flex;
+    position: relative;
+    border: 1px solid rgba(0, 243, 255, 0.4);
+    background: rgba(0, 243, 255, 0.05);
+    height: 38px;
+    transition: all 0.3s ease;
+}
+
+.combo-main {
+    flex: 1;
+    border: none !important;
+    background: transparent !important;
+    padding-right: 8px !important;
+}
+
+.combo-arrow {
+    width: 30px;
+    border: none !important;
+    background: rgba(0, 243, 255, 0.1) !important;
+    border-left: 1px solid rgba(0, 243, 255, 0.3) !important;
+    font-size: 0.5rem !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Dropdown Hud System */
+.hud-dropdown {
+    position: absolute;
+    top: calc(100% + 5px);
+    right: 0;
+    width: 140px;
+    background: rgba(0, 5, 10, 0.98);
+    border: 1px solid var(--c-cyan);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.8), 0 0 10px rgba(0, 243, 255, 0.3);
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+    padding: 2px;
+}
+
+.dropdown-item {
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.65rem;
+    padding: 10px 15px;
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.2s;
+    width: 100%;
+}
+
+.dropdown-item:hover {
+    background: rgba(0, 243, 255, 0.15);
+    color: var(--c-cyan);
+}
+
+.hidden-dropdown {
+    display: none !important;
+}
+
+/* CTA: Export Box - Standardized */
+.cv-actions-cluster {
+    display: flex;
+    align-items: center;
+    gap: 0px; /* Fusion look */
+    border: 1px solid rgba(0, 243, 255, 0.3);
+    background: rgba(0, 243, 255, 0.03);
+    will-change: transform, border-color;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.cta-btn {
+    background: transparent;
+    border: none;
+    color: var(--c-cyan);
+    font-family: 'Fira Code', monospace;
+    font-size: 0.65rem;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: background 0.3s ease, color 0.3s ease, opacity 0.3s ease;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: 700;
+    will-change: transform, opacity;
+}
+
+.cta-btn:first-child {
+    background: rgba(0, 243, 255, 0.1); /* Main action slight fill */
+}
+
+/* Secondary Ghost Look */
+.cta-btn.cta-secondary {
+    opacity: 0.6;
+    position: relative;
+    padding-left: 20px;
+}
+
+.cta-btn.cta-secondary::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 20%;
+    height: 60%;
+    width: 1px;
+    background: rgba(0, 243, 255, 0.2); /* Tactical divider */
+}
+
+.cta-btn:hover {
+    background: rgba(0, 243, 255, 0.2);
+    color: #fff;
+    opacity: 1;
+    /* Static text-shadow is cheaper than animating it */
+    text-shadow: 0 0 5px rgba(0, 243, 255, 0.5);
+    animation: hudBreathe 2s infinite ease-in-out;
+}
+
+.cv-actions-cluster:hover {
+    border-color: rgba(0, 243, 255, 0.8);
+    /* Subtle static shadow on hover, no animation */
+    box-shadow: 0 0 15px rgba(0, 243, 255, 0.15);
+}
+
+/* Contact Grouping */
+.contact-links-group {
+    display: flex;
+    position: relative;
+    margin-right: 10px;
+}
+
+#contact-dropdown {
+    width: 160px;
+    right: 0;
+}
+
+#contact-dropdown .contact-btn-tiny {
+    width: 100% !important;
+    height: auto !important;
+    padding: 10px !important;
+    justify-content: flex-start !important;
+    border: none !important;
+    background: transparent !important;
+    font-size: 0.6rem !important;
+}
+
+#contact-dropdown .contact-btn-tiny:hover {
+    background: rgba(0, 243, 255, 0.1) !important;
+}
+
+.mini-switcher {
+    display: flex;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 0;
+    padding: 2px;
+}
+
+.mini-switcher .mode-option {
+    background: transparent !important;
+    border: none !important;
+    font-family: 'Orbitron', sans-serif !important;
+    font-size: 0.5rem !important;
+    padding: 3px 6px !important;
+    color: rgba(255, 255, 255, 0.3) !important;
+    border-radius: 0;
+    cursor: pointer;
+}
+
+.mini-switcher .mode-option.active {
+    background: rgba(255, 255, 255, 0.1) !important;
+    color: #fff !important;
+    box-shadow: none !important;
+}
+
+@keyframes glow-pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+        box-shadow: 0 0 10px rgba(0, 243, 255, 1);
+    }
+
+    50% {
+        opacity: 0.6;
+        transform: scale(0.9);
+        box-shadow: 0 0 4px rgba(0, 243, 255, 0.5);
+    }
+}
+
+/* --- Main Header --- */
+#cv-content .header {
+    margin-bottom: 32px; /* Restored breathing room for cinematic feel */
+    position: relative;
+    width: 100%;
+}
+
+.header-layout {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 30px; /* Increased for better horizontal separation */
+    margin-bottom: 15px;
+}
+
+.header-info {
+    flex: 1; /* Rely on fixed-basis for right side to handle distribution */
+    min-width: 0;
+}
+
+.header-right {
+    flex: 0 0 140px; /* FIXED WIDTH Wall: Prevents image from pushing into title space */
+    flex-shrink: 0;
+    max-width: 140px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.header-photo {
+    flex-shrink: 0;
+    width: 100px;
+    height: 100px;
+    border: 1px solid var(--cv-accent-gold); /* Thinner as requested */
+    padding: 0;
+    position: relative;
+    background: #0d1117;
+    overflow: visible;
+    z-index: 5;
+    box-shadow: none; /* Removed bleeding shadows */
+    box-sizing: border-box;
+    transform: translateZ(0); /* Force GPU alignment */
+    backface-visibility: hidden;
+    display: flex;
+    justify-content: center;
+}
+
+/* Aesthetic Persona Switcher Block */
+.persona-tag-inline {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    border-radius: 0;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+    margin-left: -12px;
+    margin-bottom: 14px; /* Increased separation from name */
+    user-select: none;
+    gap: 12px;
+}
+
+.persona-tag-inline:hover,
+.persona-tag-inline.persona-active-hover {
+    background: rgba(0, 243, 255, 0.1);
+    border-color: rgba(0, 243, 255, 0.3);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2), inset 0 0 10px rgba(0, 243, 255, 0.05);
+}
+
+.persona-tag-inline .persona-icon-inline {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    color: var(--cv-accent-gold);
+    opacity: 0.8;
+    transition: all 0.3s ease;
+}
+
+.persona-tag-inline:hover .persona-icon-inline,
+.persona-tag-inline.persona-active-hover .persona-icon-inline {
+    transform: scale(1.2) rotate(90deg);
+    opacity: 1;
+    color: var(--c-cyan);
+    filter: drop-shadow(0 0 5px var(--c-cyan));
+}
+
+/* Pre-flight "Attention Catcher" - Rapid shake and glow pulse */
+.persona-tag-inline.persona-breakout {
+    animation: personaBreakout 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+    z-index: 10006 !important;
+}
+
+@keyframes personaBreakout {
+    0% {
+        transform: scale(1);
+        filter: brightness(1) drop-shadow(0 0 0px var(--c-cyan));
+    }
+
+    25% {
+        transform: scale(1.15) translate(-2px, 1px) rotate(1deg);
+        filter: brightness(1.5) drop-shadow(0 0 10px var(--c-cyan));
+    }
+
+    50% {
+        transform: scale(1.2) translate(2px, -1px) rotate(-1.5deg);
+        filter: brightness(2) drop-shadow(0 0 20px var(--c-cyan));
+    }
+
+    75% {
+        transform: scale(1.25) translate(-1px, -1px) rotate(1deg);
+        filter: brightness(2.5) drop-shadow(0 0 15px var(--c-cyan));
+    }
+
+    100% {
+        transform: scale(1.3);
+        filter: brightness(3) drop-shadow(0 0 30px var(--c-cyan));
+    }
+}
+
+
+/* Aggressive Jitter for high-tension phases (Combat Slide) */
+.persona-tag-inline.persona-aggressive-jitter {
+    animation: aggressiveJitter 0.1s infinite;
+    z-index: 10007 !important;
+}
+
+@keyframes aggressiveJitter {
+    0% {
+        transform: scale(1.1) translate(-2px, 1px) rotate(1deg);
+        filter: brightness(1.5) drop-shadow(0 0 5px var(--c-cyan));
+    }
+
+    25% {
+        transform: scale(1.15) translate(2px, -2px) rotate(-1.5deg);
+        filter: brightness(2) drop-shadow(0 0 15px var(--c-cyan));
+    }
+
+    50% {
+        transform: scale(1.2) translate(-3px, 1px) rotate(0.5deg);
+        filter: brightness(2.5) drop-shadow(0 0 25px var(--c-cyan));
+    }
+
+    75% {
+        transform: scale(1.15) translate(2px, 2px) rotate(-1deg);
+        filter: brightness(2) drop-shadow(0 0 20px var(--c-cyan));
+    }
+
+    100% {
+        transform: scale(1.1) translate(-1px, -1px) rotate(2deg);
+        filter: brightness(1.5) drop-shadow(0 0 10px var(--c-cyan));
+    }
+}
+
+
+
+
+
+.profile-img {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    object-fit: cover;
+    display: block;
+    z-index: 10;
+    filter: contrast(1.1) brightness(1.0);
+    transform-origin: center center;
+    pointer-events: none;
+    transition: transform 0.4s ease, opacity 0.4s ease;
+}
+
+
+.header-photo:hover .profile-img {
+    transform: scale(1.0); /* REMOVED SCALING on hover */
+    opacity: 1;
+    filter: contrast(1.15) brightness(1.05);
+}
+
+.photo-placeholder {
+    width: 100%;
+    height: 100%;
+    background-color: var(--cv-bg-secondary);
+    background-image: linear-gradient(45deg, var(--cv-border) 25%, transparent 25%, transparent 75%, var(--cv-border) 75%, var(--cv-border)),
+        linear-gradient(45deg, var(--cv-border) 25%, transparent 25%, transparent 75%, var(--cv-border) 75%, var(--cv-border));
+    background-size: 10px 10px;
+    background-position: 0 0, 5px 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0.3;
+}
+
+/* Corner Accents for Photo */
+.header-photo::before,
+.header-photo::after {
+    content: '';
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    border: 1px solid var(--cv-accent-cyan);
+    /* FIX 3: Explicit properties only — no 'transition: all' */
+    transition: opacity 0.3s ease, width 0.3s ease, height 0.3s ease;
+    z-index: 7;
+}
+
+/* Option A: opacity-only cornerPulse — no border-color repaint */
+
+.header-photo::before {
+    top: -2px;
+    left: -2px;
+    border-right: none;
+    border-bottom: none;
+}
+
+.header-photo::after {
+    bottom: -2px;
+    right: -2px;
+    border-left: none;
+    border-top: none;
+}
+
+.header-photo:hover::before,
+.header-photo:hover::after {
+    width: 15px; /* REMOVED GROWING corner accents on hover */
+    height: 15px;
+    border-color: #fff;
+    box-shadow: 0 0 10px var(--cv-accent-cyan);
+}
+
+/* Designation Label "▮ DESIGNATION" */
+.designation .label {
+    display: block;
+    font-family: inherit;
+    color: var(--cv-accent-gold);
+    font-size: 0.85rem;
+    margin-bottom: 5px;
+    letter-spacing: 2px;
+}
+
+#cv-content .name {
+    margin: 0 0 10px 0; /* Added bottom margin for role separation */
+    color: #ffffff;
+    font-size: clamp(1.8rem, 3.5vw, 2.2rem); 
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 800;
+    line-height: 1.05;
+    font-family: inherit;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    background: linear-gradient(to right, #fff, #aaa);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+#cv-content .role {
+    font-size: clamp(0.85rem, 1.8vw, 1.05rem); 
+    color: var(--cv-accent-cyan);
+    font-weight: 600;
+    margin: 0 0 14px 0; /* Added space before deco line */
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-family: inherit;
+    line-height: 1.35;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.scanline-deco {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, var(--cv-accent-cyan), transparent);
+    margin-top: 10px;
+    opacity: 0.5;
+}
+
+/* --- Contact Info --- */
+#cv-content .contact-info,
+.location-info {
+    font-size: 0.9rem;
+    color: var(--cv-text-secondary);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px; /* Increased for better visual balance below photo */
+    margin-top: 10px; /* Space from photo box */
+    font-family: var(--font-body);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+#cv-content a {
+    color: var(--cv-text-primary);
+    text-decoration: none;
+    transition: color 0.2s;
+    border-bottom: 1px dotted var(--cv-text-secondary);
+}
+
+#cv-content a:hover {
+    color: var(--cv-accent-cyan);
+    border-bottom-color: var(--cv-accent-cyan);
+    text-shadow: 0 0 5px var(--cv-accent-cyan);
+}
+
+/* --- Section Headers --- */
+#cv-content h2 {
+    color: var(--cv-accent-gold);
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    border: none;
+    border-left: 3px solid var(--cv-accent-gold);
+    padding-left: 15px;
+    margin-top: 24px;
+    margin-bottom: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    background: linear-gradient(90deg, rgba(220, 208, 186, 0.05), transparent);
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+/* --- Paragraphs --- */
+#cv-content p {
+    color: var(--cv-text-primary);
+    margin-bottom: 1.5em;
+    font-weight: 300;
+}
+
+#cv-content strong {
+    color: #fff;
+    font-weight: 600;
+}
+
+/* --- Role Blocks --- */
+#cv-content .role-block {
+    margin-bottom: 24px;
+    padding-left: 20px;
+    border-left: 1px solid var(--cv-border);
+    position: relative;
+}
+
+/* Timeline Dot */
+#cv-content .role-block::before {
+    content: '';
+    position: absolute;
+    left: -5px;
+    top: 5px;
+    /* Centered with Cap Height */
+    width: 9px;
+    height: 9px;
+    box-sizing: border-box;
+    /* Ensure size includes border */
+    background: var(--cv-bg-primary);
+    border: 1px solid var(--cv-text-secondary);
+    transform: rotate(45deg);
+    transition: all 0.3s ease;
+}
+
+/* --- Collapsible Logic --- */
+.collapsible-header {
+    cursor: pointer;
+    position: relative;
+    user-select: none;
+    transition: color 0.2s ease;
+}
+
+.collapsible-header:hover {
+    color: var(--cv-accent-cyan) !important;
+}
+
+/* Chevron Icon for Sections */
+.collapsible-header::after {
+    content: '▼';
+    float: right;
+    font-size: 0.6em; /* Smaller, cleaner */
+    font-family: inherit;
+    color: var(--cv-text-secondary);
+    margin-right: 10px;
+    transition: transform 0.3s ease;
+}
+
+.collapsible-header.collapsed::after {
+    transform: rotate(-90deg);
+}
+
+/* Collapsible Content Wrapper */
+.collapsible-content {
+    overflow: hidden;
+    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
+    max-height: 2000px;
+    /* Arbitrary large height */
+    opacity: 1;
+}
+
+.collapsible-content.collapsed {
+    max-height: 0;
+    opacity: 0;
+    margin: 0;
+    padding: 0;
+}
+
+/* --- Role Blocks (Nested Collapsible) --- */
+#cv-content .role-block {
+    margin-bottom: 35px;
+    padding-left: 20px;
+    border-left: 1px solid var(--cv-border);
+    position: relative;
+    transition: border-color 0.3s;
+}
+
+/* Ensure the header is clickable */
+#cv-content .role-block .role-header {
+    cursor: pointer;
+}
+
+#cv-content .role-block .role-header:hover .job-title {
+    color: #fff;
+    text-shadow: 0 0 5px var(--cv-accent-cyan);
+}
+
+/* Chevron removed here as it is now shared/inherited or we use the parent one */
+#cv-content .role-block .role-header::after {
+    display: none;
+}
+
+#cv-content .role-block.collapsed {
+    margin-bottom: 25px;
+    border-left-color: var(--cv-border);
+}
+
+#cv-content .role-block.collapsed ul {
+    max-height: 0 !important;
+    opacity: 0 !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    pointer-events: none;
+}
+
+#cv-content .role-block:hover {
+    border-left-color: var(--cv-accent-cyan);
+    background: rgba(0, 243, 255, 0.02); /* Very subtle hover fill */
+}
+
+#cv-content .role-block:hover::before {
+    border-color: var(--cv-accent-cyan);
+    background: var(--cv-accent-cyan);
+    box-shadow: 0 0 8px var(--cv-accent-cyan);
+}
+
+#cv-content .role-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    margin-bottom: 5px;
+}
+
+#cv-content .title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+}
+
+#cv-content .company {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #fff;
+}
+
+#cv-content .job-title {
+    color: var(--cv-accent-cyan);
+    font-weight: 500;
+    font-family: inherit;
+    font-size: 0.95rem;
+}
+
+#cv-content .date {
+    font-family: inherit;
+    font-size: 0.85rem;
+    color: var(--cv-text-secondary);
+    background: var(--cv-bg-secondary);
+    padding: 2px 8px;
+    border-radius: 0;
+}
+
+#cv-content ul {
+    margin-top: 15px;
+    padding-left: 15px;
+    overflow: hidden;
+    max-height: 1000px;
+    opacity: 1;
+    transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), 
+                opacity 0.4s ease, 
+                margin 0.4s ease,
+                padding 0.4s ease;
+}
+
+#cv-content li {
+    margin-bottom: 8px;
+    color: var(--cv-text-secondary);
+    position: relative;
+    list-style: none;
+}
+
+#cv-content li::before {
+    content: '>';
+    position: absolute;
+    left: -15px;
+    color: var(--cv-accent-gold);
+    font-family: inherit;
+    font-size: 0.8em;
+}
+
+/* --- Skills Grid --- */
+#cv-content .skills-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    font-size: 0.95em;
+    background: var(--cv-bg-secondary);
+    padding: 20px;
+    border: 1px solid var(--cv-border);
+}
+
+@media (min-width: 450px) {
+    #cv-content .skills-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+#cv-content .skill-category {
+    font-weight: 700;
+    color: var(--cv-accent-gold);
+    margin-bottom: 8px;
+    display: block;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    font-family: inherit;
+    letter-spacing: 1px;
+    border-bottom: 1px dashed var(--cv-border);
+    padding-bottom: 2px;
+}
+
+/* --- Terminal Footer --- */
+.terminal-footer {
+    border-top: 1px solid var(--cv-border);
+    margin-top: 40px;
+    padding-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    font-family: inherit;
+    font-size: 0.75rem;
+    color: var(--cv-text-secondary);
+    opacity: 0.7;
+}
+
+.eof-marker {
+    color: var(--cv-accent-gold);
+    letter-spacing: 2px;
+}
+
+/* Pointer Events */
+.frame_status-text,
+#act-controls button,
+#cv-toggle-btn {
+    pointer-events: auto;
+}
+
+/* --- Scroll Indicator Positions --- */
+.scroll-indicator {
+    transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+    /* Smooth movement */
+}
+
+/* Step 0: Middle -> Now moved to bottom-right to clear text */
+.scroll-indicator.pos-middle {
+    bottom: 40px !important;
+    left: auto !important;
+    right: 5% !important;
+    transform: scale(var(--scroll-scale)) !important;
+}
+
+/* Handled by modern flexbox wrapper earlier in the file */
+
+/* Step 2: Left Vertical */
+.scroll-indicator.pos-left {
+    bottom: 50% !important;
+    left: 5% !important;
+    transform: translateY(50%) scale(var(--scroll-scale));
+}
+
+/* --- Title Modes --- */
+/* Scale up for Identity Core */
+#portfolio-title.mode-horizontal-left-big {
+    bottom: auto !important;
+    top: 50% !important;
+    left: 5% !important;
+    transform: translateY(-50%) !important;
+    text-align: left;
+    width: auto;
+}
+
+#portfolio-title.mode-horizontal-left-big .title-line {
+    font-size: clamp(4rem, 10vw, 8rem);
+    /* Much bigger */
+    line-height: 0.9;
+    margin: 0;
+    display: block;
+}
+
+/* Vertical Left Mode (Legacy/Alternative) */
+#portfolio-title.mode-vertical-left {
+    bottom: auto !important;
+    top: 50% !important;
+    left: 5% !important;
+    transform: translateY(-50%) !important;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    text-align: center;
+}
+
+#portfolio-title.mode-vertical-left .title-line {
+    font-size: clamp(2rem, 6vh, 4rem);
+    margin: 10px 0;
+}
+
+/* === END OF FILE === */
+/* --- MOBILE MODE OVERRIDES (Option A: Integrated CV) --- */
+.mobile-mode #experience-container {
+    display: none !important;
+}
+
+.mobile-mode #cv-container {
+    width: 100% !important;
+    max-width: 100vw !important;
+    opacity: 1 !important;
+    transform: none !important;
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100vh !important;
+    overflow: hidden !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+}
+
+.mobile-mode #cv-scroller {
+    flex: 1 !important; /* Take remaining space */
+    height: auto !important; /* Override fixed height */
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch;
+    padding: 0 15px !important;
+}
+
+.mobile-mode #cv-container {
+    width: 100% !important;
+    max-width: 100vw !important;
+    opacity: 1 !important;
+    transform: none !important;
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100vh !important;
+    overflow: hidden !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    z-index: 100 !important;
+}
+
+.mobile-mode #cv-scroller {
+    flex: 1 !important;
+    height: auto !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch;
+    padding: 0 15px !important;
+    box-sizing: border-box !important;
+}
+
+/* Ensure CV content fills the scroller */
+.mobile-mode #cv-content {
+    padding: 20px 15px 120px !important; /* Bottom buffer for safety */
+    min-height: 100%;
+}
+
+/* Handle fixed header on mobile */
+.mobile-mode #cv-fixed-header {
+    background: rgba(0, 0, 0, 0.9);
+    backdrop-filter: blur(10px);
+}

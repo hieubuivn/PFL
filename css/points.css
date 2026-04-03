@@ -1,0 +1,97 @@
+/* Import Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&display=swap');
+
+/* Background Gradient - NOW MANAGED BY backdropLayer in setupSCR.js */
+body {
+    margin: 0;
+    overscroll-behavior: none;
+    background: #000;
+    /* Dark fallback */
+}
+
+/* Portfolio Title */
+/* Portfolio Title - Consolidated in layout.css */
+#portfolio-title {
+    /* Position handled in layout.css */
+    /* position: fixed; */
+    /* bottom: 1%; */
+    /* left: 5%; */
+    /* transform: translateY(-50%); */
+
+    font-family: 'Orbitron', 'Rajdhani', sans-serif;
+    line-height: 0.9;
+    user-select: none;
+}
+
+.title-line {
+    font-size: clamp(4rem, 12vw, 10rem);
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    -webkit-background-clip: text;
+    /* -webkit-text-fill-color: transparent; */
+    background-clip: text;
+    /* Gradient stroke is not supported, using subtle solid stroke */
+    /* -webkit-text-stroke: 2px rgba(255, 255, 255, 0.78); */
+}
+
+/* First Line: 8x Darker (Max ~5.3% Gray) */
+/* First Line: "DIGITAL" */
+.title-line:nth-child(1) {
+    opacity: 1;
+    color: #ffffff;
+    -webkit-text-fill-color: #ffffff;
+    /* High contrast stroke */
+    -webkit-text-stroke: 4px #000000;
+    paint-order: stroke fill;
+    text-shadow: 4px 4px 0px rgba(0, 0, 0, 0.5);
+
+    background: none;
+    -webkit-background-clip: unset;
+    background-clip: unset;
+}
+
+/* Second Line: "ARCHIVE" */
+.title-line:nth-child(2) {
+    margin-left: 1.25em;
+    opacity: 1;
+    color: #ffffff;
+    /* Change from Dark to White */
+    -webkit-text-fill-color: #ffffff;
+    /* High contrast stroke */
+    -webkit-text-stroke: 4px #000000;
+    paint-order: stroke fill;
+    text-shadow: 4px 4px 0px rgba(0, 0, 0, 0.5);
+
+    background: none;
+    -webkit-background-clip: unset;
+    background-clip: unset;
+}
+
+
+
+/* Ensure canvas is above the title text */
+canvas {
+    position: relative;
+    z-index: -10;
+}
+
+/* === DYNAMIC MODES FOR PORTFOLIO TITLE === */
+
+/* Default / Chaos Mode (White Text on Dark Void) */
+#portfolio-title.mode-chaos .title-line {
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    -webkit-text-stroke: 4px #000000 !important;
+    /* Block stroke */
+    text-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
+    /* Cyan glow */
+}
+
+/* Root Mode (Black Text on White Human Shape) */
+#portfolio-title.mode-root .title-line {
+    color: #000000 !important;
+    -webkit-text-fill-color: #000000 !important;
+    -webkit-text-stroke: 2px #ffffff !important;
+    /* White stroke so it doesn't blend into black bg parts */
+    text-shadow: none;
+}
