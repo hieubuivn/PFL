@@ -1,6 +1,6 @@
 /**
  * BOOT WORKER - HIGH-END OFFSCREEN RENDERER
- * Debug Fixes: Improved plunge timing and localized cell displacement.
+ * Feature: "Energy Sniper" with Rotational Alignment for diagonal trajectories.
  */
 
 let gl;
@@ -108,56 +108,79 @@ const fragmentShaderSource = `
         return inRect(uv, c + vec2(-h, -h), c + vec2(h, h));
     }
 
+    vec2 getDropPos(float t, float cycleID, float targetX, float barY) {
+        float t_acc = pow(t, 1.5);
+        float swing = sin(t * PI) * 0.15 * (rand(vec2(cycleID, 7.0)) * 2.0 - 1.0);
+        float x = mix(0.0, targetX, pow(t, 0.8)) + swing;
+        float y = mix(0.2, barY, t);
+        return vec2(x, y);
+    }
+
     void main() {
         vec2 fragCoord = gl_FragCoord.xy;
         vec2 uv = (-iResolution.xy + 2. * fragCoord.xy) / iResolution.y;
         float aspect = iResolution.x / iResolution.y;
 
         // --- GLOBAL SYNC ---
-        float globalT = mod(iTime / 3.0, 1.0);
+        float cycleDur = 3.0;
+        float cycleID = floor(iTime / cycleDur);
+        float globalT = mod(iTime / cycleDur, 1.0);
         float breathe = (1. - pow(1. - min(globalT * 1.85, 1.0), 24.0)) * (1. - pow(min(globalT * 1.85, 1.0), 2.5));
         float violentPeak = pow(breathe, 0.5);
 
-        // --- 1. THE DROpleT PHYSICS ---
-        float dropT = saturate((globalT - 0.08) * 4.0);
+        // --- INTERACTIVE MOUSE TARGETING ---
+        float targetX = clamp((iMouse.x * 2.0 - 1.0) * aspect, -0.6, 0.6);
         float barY_uv = -0.84; 
-        float dropY = mix(0.2, barY_uv, dropT);
-        float dVis = smoothstep(0.0, 0.1, dropT) * smoothstep(1.0, 0.9, dropT);
-        vec2 dPos = uv - vec2(0.0, dropY); 
+
+        // --- 1. THE DROpleT PHYSICS (Energy Sniper with Alignment) ---
+        float dropT_lin = saturate((globalT - 0.08) * 4.0);
         
-        // PHSICAL TEARDROP: Nonlinear width scaling for a sharp tip
-        float dropTip = saturate(dPos.y * 10.0 + 0.5); 
+        vec2 dPos_world = getDropPos(dropT_lin, cycleID, targetX, barY_uv);
+        vec2 dPos_future = getDropPos(dropT_lin + 0.01, cycleID, targetX, barY_uv);
+        vec2 velocity = dPos_future - dPos_world;
+        float angle = atan(velocity.y, velocity.x);
+
+        vec2 dPos_uv = uv - dPos_world;
+        pR(dPos_uv, angle + PI*0.5); // Align local Y with velocity direction
+
+        float dVis = smoothstep(0.0, 0.1, dropT_lin) * smoothstep(1.0, 0.9, dropT_lin);
+        
+        // Teardrop SDF in ALIGNED coordinates
+        float dropTip = saturate(dPos_uv.y * 10.0 + 0.5); 
         float teardropShape = 1.0 + pow(dropTip, 2.0) * 15.0; 
-        float dShape = length(dPos * vec2(teardropShape, 1.5)); 
+        float dShape = length(dPos_uv * vec2(teardropShape, 1.5)); 
         
         float dCore = smoothstep(0.035, 0.0, dShape) * dVis;
-        float dGlow = exp(-length(dPos) * 85.0) * dVis; 
+        float dGlow = exp(-length(dPos_uv) * 85.0) * dVis; 
         
-        // Impact Splashes / Shards
+        // --- 1b. Impact Splashes ---
         float impactFade = saturate((globalT - 0.28) * 4.0);
-        // FIX: Ensure splash only exists after impact starts (T > 0.28)
         float splash = (impactFade > 0.0) ? exp(-impactFade * 6.0) : 0.0;
-        vec2 impactPos = uv - vec2(0.0, barY_uv);
-        float angle = atan(impactPos.y, impactPos.x);
+        vec2 impactPos = uv - vec2(targetX, barY_uv);
+        float impactAngle = atan(impactPos.y, impactPos.x);
         float distCol = length(impactPos);
         
         float shards = 0.0;
         if (impactFade > 0.01 && impactFade < 1.0) {
-            float shardPath = distCol - (impactFade * 0.6);
-            float shardW = 0.02 + impactFade * 0.15;
-            float radialA = mod(angle + PI*0.5, PI*2.0);
-            if (radialA < PI) {
-                shards = smoothstep(shardW, 0.0, abs(radialA - PI*0.25)) + 
-                         smoothstep(shardW, 0.0, abs(radialA - PI*0.5)) + 
-                         smoothstep(shardW, 0.0, abs(radialA - PI*0.75));
-                shards *= smoothstep(0.06, 0.0, abs(shardPath)) * splash;
-            }
+            float shardPath = distCol - (impactFade * (0.6 + rand(vec2(cycleID, 1.0)) * 0.4));
+            float shardW = 0.008 + impactFade * 0.05;
+            float rSeed = cycleID + floor(targetX * 100.0);
+            float r1 = rand(vec2(rSeed, 11.0)) * 0.6 - 0.3;
+            float r2 = rand(vec2(rSeed, 12.0)) * 0.6 - 0.3;
+            float r3 = rand(vec2(rSeed, 13.0)) * 0.6 - 0.3;
+            float r4 = rand(vec2(rSeed, 14.0)) * 0.6 - 0.3;
+
+            shards = smoothstep(shardW, 0.0, abs(impactAngle - (PI*0.35 + r1))) + 
+                     smoothstep(shardW, 0.0, abs(impactAngle - (PI*0.48 + r2))) + 
+                     smoothstep(shardW, 0.0, abs(impactAngle - (PI*0.52 + r3))) +
+                     smoothstep(shardW, 0.0, abs(impactAngle - (PI*0.65 + r4)));
+            shards *= smoothstep(0.08, 0.0, abs(shardPath)) * splash;
         }
 
         // --- 2. CORE ZONE ---
         vec2 sceneUv = (uv - vec2(0.0, 0.2)) * 1.25; 
         vec3 col = mix(vec3(0.0, 0.95, 1.0), vec3(1.6), dCore) * (dGlow * 1.0 + dCore * 9.0); 
-        col += vec3(0.0, 0.95, 1.0) * (shards * 4.0 + exp(-distCol * 30.0) * splash * 2.5); 
+        col += vec3(0.0, 0.95, 1.0) * (shards * 5.0 + exp(-distCol * 35.0) * splash * 3.0); 
         
         bool isBuckyZone = length(sceneUv) < 1.2;
         if (isBuckyZone) {
@@ -203,11 +226,9 @@ const fragmentShaderSource = `
         float dyM = abs(vUv.y - barY);
         float mD = exp(-dxM * 6.5) * exp(-dyM * 30.0);
         
-        // REFINED PLUNGE: Localization and Timing
-        float impactCellX = 0.5; 
-        float distToImpactX = abs(vUv.x - impactCellX) * numCells; // Units of cell width
-        // FIX: Sharp falloff so only cells directly under the drop dip
-        float plunge = smoothstep(1.5, 0.0, distToImpactX) * splash * 1.8; 
+        float impactUvX = (targetX / aspect + 1.0) * 0.5;
+        float distToImpactX = abs(vUv.x - impactUvX) * actualBarW * numCells;
+        float plunge = smoothstep(0.05, 0.0, distToImpactX) * splash * 1.8; 
         
         vec2 uv_bar = vec2((vUv.x - startX) / actualBarW, (vUv.y - barY + plunge * 0.02) / (barH * (1.0 + mD * 2.5)) + 0.5);
         
@@ -221,10 +242,8 @@ const fragmentShaderSource = `
             float cMask = smoothstep(0.12, 0.15, cF) * smoothstep(0.88, 0.85, cF) * smoothstep(0.12, 0.15, uv_bar.y) * smoothstep(0.88, 0.85, uv_bar.y);
             if (cMask > 0.0) {
                 float act = clamp(uLoadProgress * numCells - cellID, 0.0, 1.0);
-                
-                float cellDist = abs(uv_bar.x - impactCellX) * 10.0;
+                float cellDist = abs(uv_bar.x - impactUvX) * 10.0;
                 float barRipple = exp(-cellDist) * exp(-impactFade * 3.0) * sin(impactFade * 15.0) * 0.5;
-                
                 vec3 bc = mix(vec3(0.08, 0.12, 0.15), vec3(0.0, 0.95, 1.0) * (1.5 + barRipple * 4.0), step(0.01, act));
                 float l = boxLayer(0.0, vec2(uv_bar.x * 12.0 - uLoadProgress * 12.0, uv_bar.y * 3.0), 0.7, fract(iTime * 1.5));
                 col = mix(col, bc + l * vec3(0.0, 0.95, 1.0) * 1.6, barM * cMask);
