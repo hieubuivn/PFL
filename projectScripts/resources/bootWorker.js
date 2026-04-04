@@ -1,6 +1,7 @@
 /**
  * BOOT WORKER - HIGH-END OFFSCREEN RENDERER
- * Bug Fix: NaN prevention in polyhedral folding logic (Black Core fix).
+ * Visual Fix: Removed energy-glow occlusion logic to prevent black void artifacts.
+ * The core energy flare now naturally illuminates through the exploded fragments.
  */
 
 let gl;
@@ -69,8 +70,6 @@ const fragmentShaderSource = `
         }
         
         vec3 a = icosahedronVertex(p), v_b = dodecahedronVertex(p);
-        
-        // FIX: NaN Prevention - side must NEVER be zero to avoid normalize(0) in next folding
         float side = dot(p, cross(a, v_b)) >= 0.0 ? 1.0 : -1.0;
         vec3 c = erot(v_b, a, PI * 0.4 * side);
         
@@ -83,7 +82,6 @@ const fragmentShaderSource = `
             float wobble = sin(t2 * 2.2 + pow(3. * t2, 1.5) * 4. * PI) * smoothstep(.4, .0, t2) * .15;
             p -= a * (wobble + explode) / 6.0;
             
-            // Safety: Normalize non-zero vector
             vec3 n_vba = v_b - a;
             float l_vba = length(n_vba);
             vec3 n1 = (l_vba > 0.001) ? n_vba / l_vba : vec3(1,0,0);
@@ -101,18 +99,6 @@ const fragmentShaderSource = `
     vec3 calcNormal(vec3 p) {
         const float h = 0.001; const vec2 k = vec2(1,-1);
         return normalize( k.xyy*map( p + k.xyy*h ) + k.yyx*map( p + k.yyx*h ) + k.yxy*map( p + k.yxy*h ) + k.xxx*map( p + k.xxx*h ) );
-    }
-
-    float rand(vec2 n) { return fract(sin(dot(n, vec2(12.9898, 4.1414))) * 43758.5453); }
-    float inRect(vec2 p, vec2 b1, vec2 b2) {
-        vec2 low = min(b1, b2), high = max(b1, b2);
-        vec2 s = smoothstep(low, low + 0.02, p) * smoothstep(high, high - 0.02, p);
-        return s.x * s.y;
-    }
-    float boxLayer(float depth, vec2 uv, float size, float pos) {
-        float h = size * 0.5;
-        vec2 c = vec2(4.0 * pos - 2.0, (1.0 - h) * sin(iTime * 1.5 * (0.3 + 0.7 * rand(vec2(depth, size))) ));
-        return inRect(uv, c + vec2(-h, -h), c + vec2(h, h));
     }
 
     void main() {
@@ -156,21 +142,27 @@ const fragmentShaderSource = `
                 if (abs(distM) < .003) { hit = true; break; }
                 if (rayLen > 4.5) break;
             }
+
+            vec3 coreCol = vec3(0.0);
             if (hit) {
                 vec3 n = calcNormal(rayPos);
                 float diff = max(dot(n, normalize(vec3(0.6, 1.0, 0.8))), 0.0);
                 float rim = pow(1.0 - max(dot(n, -rayDir), 0.0), 2.5);
                 vec3 cyan = vec3(0.0, 0.95, 1.0) * (diff * 0.5 + rim * 1.5);
-                col = mix(vec3(diff * 1.2 + rim * 0.8 + 0.2), cyan, uLoadProgress * 0.8);
+                coreCol = mix(vec3(diff * 1.2 + rim * 0.8 + 0.2), cyan, uLoadProgress * 0.8);
             }
+            
             float coreDist = length(sceneUv), coreV = smoothstep(0.01, 0.25, violentPeak);
             float loadI = smoothstep(0.0, 1.0, uLoadProgress);
             float bI = (0.05 + (violentPeak + loadI * 0.5) * 3.2) * coreV; 
             float bF = 160.0 - (violentPeak + loadI * 0.2) * 115.0; 
             vec3 coreC = mix(vec3(0.0, 0.95, 1.0), vec3(1.0), saturate(violentPeak * 0.8 + loadI * 0.4) * 0.9) * (1.5 + saturate(violentPeak * 0.8 + loadI * 0.4) * 5.0);
-            float flare = exp(-coreDist * max(bF, 1.0)) * 3.8 * sin(iTime * 15.0) * bI; // Min bF to prevent explosion
+            float flare = exp(-coreDist * max(bF, 1.0)) * 3.8 * sin(iTime * 15.0) * bI;
             float aura = exp(-coreDist * max(bF * 0.4, 0.5)) * (0.01 + saturate(violentPeak * 0.8 + loadI * 0.4) * 0.8);
-            col += (coreC * (flare + aura) * smoothstep(1.0, 0.5, coreDist)) * max(smoothstep(0.0, 0.4, uLoadProgress) * coreV, 0.2 * coreV) * (hit && rayPos.z < 0.2 ? 1.0 : hit ? 0.0 : 1.0);
+            
+            // Energy additive: No hit-masking to prevent black voids. Fragments glow naturally.
+            vec3 energy = (coreC * (flare + aura) * smoothstep(1.0, 0.5, coreDist)) * max(smoothstep(0.0, 0.4, uLoadProgress) * coreV, 0.2 * coreV);
+            col += mix(energy, coreCol + energy * 0.3, hit ? 1.0 : 0.0);
         }
 
         // --- BAR ---
