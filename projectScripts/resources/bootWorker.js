@@ -1,6 +1,6 @@
 /**
  * BOOT WORKER - HIGH-END OFFSCREEN RENDERER
- * Bug Fix: Removed 'round()' for WebGL 1.0 compatibility.
+ * Bug Fix: NaN prevention in polyhedral folding logic (Black Core fix).
  */
 
 let gl;
@@ -69,7 +69,9 @@ const fragmentShaderSource = `
         }
         
         vec3 a = icosahedronVertex(p), v_b = dodecahedronVertex(p);
-        float side = sign(dot(p, cross(a, v_b)));
+        
+        // FIX: NaN Prevention - side must NEVER be zero to avoid normalize(0) in next folding
+        float side = dot(p, cross(a, v_b)) >= 0.0 ? 1.0 : -1.0;
         vec3 c = erot(v_b, a, PI * 0.4 * side);
         
         float dMax = 1e8; vec3 pp = p;
@@ -80,7 +82,17 @@ const fragmentShaderSource = `
             t2 = max(t - .53, 0.) * 1.2;
             float wobble = sin(t2 * 2.2 + pow(3. * t2, 1.5) * 4. * PI) * smoothstep(.4, .0, t2) * .15;
             p -= a * (wobble + explode) / 6.0;
-            dMax = min(dMax, max(object(p), max(dot(p, normalize(v_b - a)), dot(p, normalize(c - a)))));
+            
+            // Safety: Normalize non-zero vector
+            vec3 n_vba = v_b - a;
+            float l_vba = length(n_vba);
+            vec3 n1 = (l_vba > 0.001) ? n_vba / l_vba : vec3(1,0,0);
+            
+            vec3 n_ca = c - a;
+            float l_ca = length(n_ca);
+            vec3 n2 = (l_ca > 0.001) ? n_ca / l_ca : vec3(0,1,0);
+
+            dMax = min(dMax, max(object(p), max(dot(p, n1), dot(p, n2))));
             p = pp; vec3 aa = a; a = v_b; v_b = c; c = aa;
         }
         return dMax;
@@ -136,7 +148,6 @@ const fragmentShaderSource = `
             vec3 camPos = vec3(0,0,3.2), rayDir = normalize(vec3(sceneUv,-4)), rayPos = camPos;
             float rayLen = 0., distM = 0.; bool hit = false;
             
-            // WebGL 1.0 Compatibility Fix: Manual round and fixed loop termination
             int iterations = int(floor(16.0 + 12.0 * uQuality + 0.5));
             for (int i = 0; i < 28; i++) {
                 if (i >= iterations) break;
@@ -157,8 +168,8 @@ const fragmentShaderSource = `
             float bI = (0.05 + (violentPeak + loadI * 0.5) * 3.2) * coreV; 
             float bF = 160.0 - (violentPeak + loadI * 0.2) * 115.0; 
             vec3 coreC = mix(vec3(0.0, 0.95, 1.0), vec3(1.0), saturate(violentPeak * 0.8 + loadI * 0.4) * 0.9) * (1.5 + saturate(violentPeak * 0.8 + loadI * 0.4) * 5.0);
-            float flare = exp(-coreDist * bF) * 3.8 * sin(iTime * 15.0) * bI;
-            float aura = exp(-coreDist * (bF * 0.4)) * (0.01 + saturate(violentPeak * 0.8 + loadI * 0.4) * 0.8);
+            float flare = exp(-coreDist * max(bF, 1.0)) * 3.8 * sin(iTime * 15.0) * bI; // Min bF to prevent explosion
+            float aura = exp(-coreDist * max(bF * 0.4, 0.5)) * (0.01 + saturate(violentPeak * 0.8 + loadI * 0.4) * 0.8);
             col += (coreC * (flare + aura) * smoothstep(1.0, 0.5, coreDist)) * max(smoothstep(0.0, 0.4, uLoadProgress) * coreV, 0.2 * coreV) * (hit && rayPos.z < 0.2 ? 1.0 : hit ? 0.0 : 1.0);
         }
 
