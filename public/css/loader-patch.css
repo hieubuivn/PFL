@@ -59,9 +59,9 @@
     max-width: 1400px;
     text-align: center;
     font-family: 'Orbitron', 'Fira Code', 'Roboto Mono', sans-serif;
-    font-size: clamp(1.5rem, 3.8vw, 6rem);
+    font-size: clamp(1rem, 2.8vw, 3rem);
     font-weight: 900;
-    letter-spacing: clamp(0.1rem, 0.4vw, 0.8rem);
+    letter-spacing: clamp(0.05rem, 0.2vw, 0.4rem);
     color: rgba(0, 243, 255, 0.015);
     /* Subtle enough but still traceable by LCP engines */
     text-transform: uppercase;
@@ -69,8 +69,7 @@
     z-index: 1;
     user-select: none;
     line-height: 1.2;
-    white-space: nowrap;
-    overflow: hidden;
+    white-space: normal;
     text-overflow: clip;
     transition: opacity 1s ease-out;
 }

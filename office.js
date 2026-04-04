@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { LEXICON } from './projectScripts/content-manager/content.js';
 import { personaManager } from './projectScripts/content-manager/personaManager.js';
 import { setupSCR } from './configs/setupSCR.js';
 import TWEEN from 'tween';
@@ -164,22 +165,40 @@ async function init() {
     const isMobile = forceMobile || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
     window.IS_MOBILE = isMobile;
 
-    // --- MOBILE SKIP PROTOCOL (Option A: Integrated CV) ---
+    // --- MOBILE SKIP PROTOCOL (Option B: Lite Intro) ---
     if (isMobile) {
         document.body.classList.add('mobile-mode');
         // Ensure CV is visible and expanded
         const cvContainer = document.getElementById('cv-container');
-        if (cvContainer) {
-            cvContainer.classList.remove('collapsed');
-        }
+        if (cvContainer) cvContainer.classList.remove('collapsed');
 
-        const expContainer = document.getElementById('experience-container');
-        if (expContainer) expContainer.style.display = 'none';
+        // LITE INTRO: Simulate system initialization for the 'Wow' factor on mobile
+        const liteIntro = async () => {
+            const sysKeys = Object.keys(LEXICON).filter(k => k.startsWith('SYS_') && k !== 'SYS_ERROR' && k !== 'SYS_READY');
+            
+            // Show 3 random strings to establish persona
+            for (let i = 0; i < 3; i++) {
+                const randomKey = sysKeys[Math.floor(Math.random() * sysKeys.length)];
+                const strings = LEXICON[randomKey].en;
+                const randomStr = strings[Math.floor(Math.random() * strings.length)];
+                
+                updateProgressUI((i + 1) * 33, randomStr);
+                await new Promise(r => setTimeout(r, 600));
+            }
+            
+            updateProgressUI(100, LEXICON.SYS_READY.en[0]);
+            await new Promise(r => setTimeout(r, 400));
 
-        // Fast-track the bootloader finish
-        if (window.bootLoader && typeof window.bootLoader.finish === 'function') {
-            await window.bootLoader.finish();
-        }
+            // Fast-track the bootloader finish
+            if (window.bootLoader && typeof window.bootLoader.finish === 'function') {
+                await window.bootLoader.finish();
+            }
+
+            const expContainer = document.getElementById('experience-container');
+            if (expContainer) expContainer.style.display = 'none';
+        };
+
+        await liteIntro();
         return; // Early Exit (Skip Three.js)
     }
 

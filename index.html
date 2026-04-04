@@ -160,20 +160,20 @@
       justify-content: center;
       align-items: flex-end;
       bottom: 15vh;
-      left: 50%;
-      transform: translateX(-50%);
+      left: 0;
       width: 100%;
+      transform: none !important;
       z-index: 100000;
       text-align: center;
       pointer-events: none;
     }
     #skeleton-lcp {
       font-family: var(--font-tech);
-      font-size: clamp(1.2rem, 6vw, 2.5rem);
+      font-size: clamp(1.2rem, 4vw, 2.5rem);
       font-weight: 800;
       color: var(--c-cyan);
       opacity: 0.05;
-      letter-spacing: 20px;
+      letter-spacing: 5px;
       position: fixed;
       top: 50%;
       left: 50%;
@@ -229,7 +229,33 @@
   <!-- 0. INSTANT BOOTLOADER: Starts the cinematic worker while modules parse -->
   <script type="module">
     import { BootLoader } from './projectScripts/resources/bootLoader.js';
-    window.bootLoader = new BootLoader();
+    
+    // DETECT MOBILE FOR BYPASS
+    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    window.IS_MOBILE = isMobile;
+
+    if (!isMobile) {
+      window.bootLoader = new BootLoader();
+    } else {
+      // OPTION B: LITE BOOT (HTML/CSS ONLY)
+      // Provide a mock interface to prevent crashes in office.js
+      window.bootLoader = {
+        finish: () => {
+          const loader = document.getElementById('loading-container');
+          if (loader) {
+            loader.style.transition = 'opacity 0.8s ease-out';
+            loader.style.opacity = '0';
+            setTimeout(() => loader.style.display = 'none', 850);
+          }
+          return Promise.resolve();
+        },
+        updateProgress: (p) => {
+          const bar = document.getElementById('progress-bar');
+          if (bar) bar.style.width = (p * 100) + '%';
+        }
+      };
+      document.body.classList.add('mobile-mode');
+    }
   </script>
 
   <!-- GSAP Libraries (UMD) - Loaded as regular scripts to ensure global window access -->
@@ -311,7 +337,7 @@
 
         <div class="loader-content">
           <div
-            style="font-size: 2.5rem; font-weight: 800; margin-bottom: 0.5rem; font-family: 'Orbitron', sans-serif; color: #fff; text-shadow: 0 0 20px rgba(0, 243, 255, 0.5);">
+            style="font-size: clamp(1rem, 3.8vw, 2.5rem); font-weight: 800; margin: 0 auto 0.5rem auto; font-family: 'Orbitron', sans-serif; color: #fff; text-shadow: 0 0 20px rgba(0, 243, 255, 0.5); width: 85vw; max-width: 600px; text-align: center; letter-spacing: 2px; white-space: normal; line-height: 1.2;">
             HIEU BUI'S PORTFOLIO</div>
           <div id="progress-text">INITIALIZING SYSTEM...</div>
           <div class="progress-bar-container">
