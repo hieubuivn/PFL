@@ -1397,18 +1397,24 @@ export function addHUDFrame(scene) {
                 }
             }
 
-            // --- Knowhere Hit Detection ---
+            // --- Knowhere Hit Detection (Sentinel-Aware) ---
             let inKnowhere = false;
-            // Ensure no overlap: we only check knowhere if not hovering flower UI
-            if (scene.knowhere && scene.knowhere.visible && !inY) {
-                const kwIntersects = raycaster.intersectObject(scene.knowhere);
-                if (kwIntersects.length > 0) {
-                    const uv = kwIntersects[0].uv;
-                    const px = uv.x * 2.0 - 1.0;
-                    const py = uv.y * 2.0 - 1.0;
-                    // Check exact visual area (radius < 0.9 matches shader mask)
-                    if (Math.sqrt(px * px + py * py) < 0.9) {
-                        inKnowhere = true;
+            if (scene.knowhere && scene.knowhere.visible) {
+                // Method A: Proximity Check (Most reliable for Sentinel Follow)
+                const uData = scene.knowhere.userData;
+                if (uData.smoothedNDC) {
+                    const ndcDist = uData.smoothedNDC.distanceTo(mouse);
+                    if (ndcDist < 0.2) inKnowhere = true; // 0.2 NDC radius (approx 10% screen)
+                }
+
+                // Method B: 3D Raycast (Backup for secondary objects)
+                if (!inKnowhere) {
+                    const kwIntersects = raycaster.intersectObject(scene.knowhere);
+                    if (kwIntersects.length > 0) {
+                        const uv = kwIntersects[0].uv;
+                        const px = uv.x * 2.0 - 1.0;
+                        const py = uv.y * 2.0 - 1.0;
+                        if (Math.sqrt(px * px + py * py) < 0.9) inKnowhere = true;
                     }
                 }
             }
@@ -1444,14 +1450,14 @@ export function addHUDFrame(scene) {
                             const baseG = points.targetKnowhereGravity !== undefined ? points.targetKnowhereGravity : startG;
                             const flip = pMat.uniforms.uKnowhereGravityMultiplier ? pMat.uniforms.uKnowhereGravityMultiplier.value : -1.0;
                             const factor = pMat.uniforms.uKnowhereGravityHoverFactor ? pMat.uniforms.uKnowhereGravityHoverFactor.value : 50.0;
-                            const targetG = baseG * flip * factor;
+                            const targetG = baseG * flip * factor * 5.0; // Grok effect is 5x stronger
 
                             // 2.5 Set Garden Hover Uniform for Shader Exceptions
                             if (pMat.uniforms.uIsGardenHovering) pMat.uniforms.uIsGardenHovering.value = 1.0;
 
                             // 3. Knowhere Radius Shift: 20000
                             const startR = pMat.uniforms.uKnowhereRadius.value;
-                            const targetR = 100000.0;
+                             const targetR = 1200.0; // Stronger radius for Grok (flower) hover
 
                              const chargeUpDur = points.targetChargeUpDur !== undefined ? points.targetChargeUpDur : HUD_CONFIG.GARDEN_HOVER_TWEEN_DUR;
                              if (points.knowherePhysicsTween) points.knowherePhysicsTween.stop();
@@ -1557,7 +1563,7 @@ export function addHUDFrame(scene) {
                                 if (pMat.uniforms.uIsGardenHovering) pMat.uniforms.uIsGardenHovering.value = 1.0;
 
                                 const startR = pMat.uniforms.uKnowhereRadius.value;
-                                const targetR = 100000.0;
+                                 const targetR = 800.0; // Restoring soft radius for Knowhere (hub) hover
 
                                 // Option C: Magnetic Tension (Vibration + Smooth Glide)
                                 const startVib = pMat.uniforms.uKnowhereVibrateBoost ? pMat.uniforms.uKnowhereVibrateBoost.value : 0.0;

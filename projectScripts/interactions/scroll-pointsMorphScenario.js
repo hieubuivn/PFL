@@ -532,7 +532,7 @@ export function initScrollMorph(scene, pointsInstance, TWEEN) {
         0: {
             label: "Chaos",
             bloom: 3,
-            knowhere: { scale: 0.8, offset: { x: 0, y: 0.25 }, gravity: 50.0, radius: 200.0, gardenHoverMult: 400.0, chargeUpDur: 3000, collapseOutDur: 1200 },
+            knowhere: { scale: 0.8, offset: { x: 0, y: 0.25 }, gravity: 50.0, radius: 200.0, gardenHoverMult: 12.0, chargeUpDur: 3000, collapseOutDur: 1200 },
             get targetIndex() { return pointsInstance.getChaosIndex(); },
             allowsScrollBack: false,
             ui: {
@@ -578,7 +578,7 @@ export function initScrollMorph(scene, pointsInstance, TWEEN) {
         1: {
             label: "Root",
             bloom: 3,
-            knowhere: { scale: 1.0, offset: { x: -0.4, y: -0.75 }, gravity: 60.0, radius: 200.0, gardenHoverMult: 60.0, chargeUpDur: 4000, collapseOutDur: 500 },
+            knowhere: { scale: 1.0, offset: { x: -0.4, y: -0.75 }, gravity: 60.0, radius: 200.0, gardenHoverMult: 15.0, chargeUpDur: 4000, collapseOutDur: 500 },
             get targetIndex() { return pointsInstance.getRootIndex(); },
             allowsScrollBack: true,
             ui: {
@@ -690,7 +690,7 @@ export function initScrollMorph(scene, pointsInstance, TWEEN) {
         },
         3: {
             label: "WaveSit",
-            knowhere: { scale: 0.5, offset: { x: 0, y: -3.0 }, gravity: -2000.0, radius: 200.0, gardenHoverMult: 1.2, chargeUpDur: 2250, collapseOutDur: 1200 },
+            knowhere: { scale: 0.0, offset: { x: 0, y: -3.0 }, gravity: 0.0, radius: 200.0, gardenHoverMult: 0.0, chargeUpDur: 2250, collapseOutDur: 1200 },
             get targetIndex() { return pointsInstance.getCharIndex(); },
             allowsScrollBack: false,
             ui: {
@@ -718,12 +718,10 @@ export function initScrollMorph(scene, pointsInstance, TWEEN) {
             action: async (points) => {
                 if (isStep3Sitting) return;
                 isStep3Sitting = true;
-
-                // Hide Knowhere completely after the slide down to save FPS
+ 
+                // Immediate lock on performance: hide knowhere hub as we enter state 3
                 if (scene.knowhere) {
-                    setTimeout(() => {
-                        if (scene.knowhere) scene.knowhere.visible = false;
-                    }, 2000);
+                    scene.knowhere.visible = false;
                 }
 
                 if (scene) {
