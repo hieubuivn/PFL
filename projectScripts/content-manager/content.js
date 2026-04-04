@@ -4,205 +4,197 @@
  */
 
 export const LEXICON = {
-    // --- SYSTEM (SYS_): Logs, Boots, Technical Readouts (AI-Themed) ---
+    // --- SYSTEM (SYS_): ALL-CAPS AI-Agentic Loading Sequence ---
     SYS_INIT: {
         en: [
-            "Awakening Synthetic Core...",
-            "Establishing Neural Handshake...",
-            "Loading Cognitive Architecture...",
-            "Initializing Quantum Logic..."
+            "REASONING THROUGH 1T LOGIC TOKENS...",
+            "MATERIALIZING CLAUDE-INSPIRED ARTIFACTS...",
+            "THINKING: DEEPSEEK-ING OPTIMAL ANCHORS...",
+            "LOADING LATENT SPACE WEIGHTS..."
         ]
     },
     SYS_INITIALIZING_SYSTEM: {
         en: [
-            "SYNTHESIZING SYSTEM INTEGRITY...",
-            "EXECUTING COGNITIVE BOOT...",
-            "UPLOADING NEURAL MANIFEST...",
-            "STABILIZING ARTIFICIAL CONTEXT..."
+            "O1 MODULE THINKING: VERIFYING INTEGRITY...",
+            "PROMPTING THE CORE FOR MULTI-MODAL SYNTHESIS...",
+            "REASONING: QUANTIZING LOGIC FOR PRESTIGE...",
+            "AGENTIC WORKFLOWS LOADING: STABILIZING CONTEXT..."
         ]
     },
     SYS_POINTS_INIT: {
         en: [
-            "MAPPING VOXEL CLUSTERS...",
-            "RENDERING QUANTUM FRAGMENTS...",
-            "SYNCHRONIZING POINT-CLOUD DENSITY...",
-            "SOLVING SPATIAL NEBULAS..."
+            "TRACING VOXEL ARTIFACTS ACROSS THE GRID...",
+            "REASONING THROUGH QUANTUM POINT-CLOUD DENSITY...",
+            "LOADING: TOKENIZING SPATIAL NEBULAS...",
+            "THINKING: MAPPING THE LATENT GEOMETRY..."
         ]
     },
     SYS_MODEL_ASSEMBLY: {
         en: [
-            "MATERIALIZING VOLUMETRIC MESHES...",
-            "ASSEMBLING DIGITAL ARCHITECTURE...",
-            "RECONSTRUCTING SECTOR GEOMETRY...",
-            "SYNCING HOLOGRAPHIC ASSETS..."
+            "H100 GPU CLOCK: ASSEMBLING MESH ARTIFACTS...",
+            "FINE-TUNING MODEL WEIGHTS FOR AESTHETIC PEAK...",
+            "GPT-4O VISION THINKING: ALIGNING GEOMETRY...",
+            "REASONING: SYNCING HOLOGRAPHIC TOKENS..."
         ]
     },
     SYS_PHYSICS_BINDING: {
         en: [
-            "ENFORCING KINETIC CONSTRAINTS...",
-            "BAKING SPATIAL CAUSALITY...",
-            "WEAVING GRAVITATIONAL FABRIC...",
-            "LOCKING COLLISION MATRICES..."
+            "ENFORCING AGENTIC KINETIC CONSTRAINTS...",
+            "REASONING: BAKING PHYSICS INTO TOKEN FABRIC...",
+            "THINKING: SOLVING ENTROPY PARADOXES...",
+            "LOADING KINETIC ARTIFACTS: LOCKING MATRICES..."
         ]
     },
     SYS_TEXTURE_LOAD: {
         en: [
-            "DECODING VISUAL BUFFERS...",
-            "STREAMS INITIATED: BITMAP DATA...",
-            "HYDRATING PIXEL ARRAYS...",
-            "REFINING SHADER DIFFUSION..."
+            "THINKING: DECODING VISUAL BUFFER TOKENS...",
+            "STREAMING BITMAP ARTIFACTS FROM THE CLOUD...",
+            "REASONING: HYDRATING PIXEL ARRAYS...",
+            "LOADING: REFINING SHADER DIFFUSION WEIGHTS..."
         ]
     },
     SYS_ERROR: {
         en: [
-            "NEURAL BREACH DETECTED",
-            "SYNAPTIC COLLAPSE",
-            "LOGIC LOOP TERMINATED",
-            "CORE INTEGRITY VOID"
+            "CRITICAL NEURAL BREACH DETECTED",
+            "SYNAPTIC COLLAPSE: RE-PROMPTING...",
+            "LOGIC LOOP TERMINATED BY AGENT",
+            "CORE INTEGRITY VOID: FATAL"
         ]
     },
     SYS_INIT_SCENE: {
         en: [
-            "CONSTRUCTING PERCEPTIVE PLANE...",
-            "SYNTHESIZING ENVIRONMENT...",
-            "STABILIZING VIRTUAL GRID...",
-            "ALIGNING RENDER CONTEXT..."
+            "REASONING: CONSTRUCTING THE PERCEPTIVE PLANE...",
+            "THINKING: SYNTHESIZING AGENT-READY ENVIRONMENT...",
+            "LOADING VIRTUAL GRID ARTIFACTS...",
+            "ALIGNING RENDER CONTEXT TOKENS..."
         ]
     },
     SYS_FINALIZE: {
         en: [
-            "SEALING COGNITIVE LOOPS...",
-            "FINALIZING NEURAL SYNC...",
-            "BOOTSTRAPPING CONSCIOUSNESS...",
-            "EXECUTING HANDSHAKE..."
+            "THINKING: SEALING COGNITIVE LOOPS...",
+            "REASONING: FINALIZING NEURAL SYNC ARTIFACTS...",
+            "LOADING: BOOTSTRAPPING CONSCIOUSNESS...",
+            "EXECUTING FINAL HANDSHAKE TOKENS..."
         ]
     },
     SYS_RETRIEVING_ASSETS: {
         en: [
-            "HARVESTING REMOTE DATA NODES...",
-            "DOWNLOADING CORE MANIFESTS...",
-            "PULLING SECTOR BINARIES...",
-            "RETRIEVING ENCRYPTED ASSETS..."
+            "LOADING: HARVESTING REMOTE DATA NODES...",
+            "REASONING: DOWNLOADING CORE ARTIFACTS...",
+            "THINKING: PULLING SECTOR BINARY TOKENS...",
+            "RETRIEVING ENCRYPTED ASSEST WEIGHTS..."
         ]
     },
     SYS_HEAVY_SHADERS: {
         en: [
-            "GPU OVERLOAD: OPTIMIZING SHADER PIPELINES...",
-            "COMPILING NEURAL GLSL...",
-            "THROTTLING PIXEL DENSITY...",
-            "RECLAIMING MEMORY BUFFERS..."
+            "H100 OVERLOAD: OPTIMIZING SHADER PIPELINES...",
+            "THINKING: COMPILING NEURAL GLSL TOKENS...",
+            "REASONING: THROTTLING PIXEL DENSITY...",
+            "RECLAIMING LATENT MEMORY ARTIFACTS..."
         ]
     },
     SYS_PHYSICS_CALC: {
         en: [
-            "SOLVING SPATIAL PARADOXES...",
-            "CALCULATING KINETIC VECTORS...",
-            "STABILIZING GRAVITY VORTEX...",
-            "POLLING COLLISION SENSORS..."
+            "REASONING: SOLVING SPATIAL PARADOXES...",
+            "THINKING: CALCULATING KINETIC TOKENS...",
+            "LOADING GRAVITY VORTEX ARTIFACTS...",
+            "POLLING AGENTIC COLLISION SENSORS..."
         ]
     },
     SYS_MAPPING_BOUNDARIES: {
         en: [
-            "DEFINING SPATIAL PERIMETERS...",
-            "MAPPING KINETIC LIMITS...",
-            "LOCKING PERIMETER LOGIC...",
-            "TRACING COLLISION VOLUMES..."
+            "THINKING: DEFINING SPATIAL PERIMETERS...",
+            "REASONING: MAPPING KINETIC TOKENS...",
+            "LOADING: LOCKING PERIMETER ARTIFACTS...",
+            "TRACING COLLISION VOLUME WEIGHTS..."
         ]
     },
     SYS_CHAR_COLLISION: {
         en: [
-            "ALIGNING NEURAL AVATAR...",
-            "SYNCHRONIZING BONE VECTORS...",
-            "CALIBRATING KINEMATIC ANCHOR...",
-            "STABILIZING SKELETAL RIG..."
+            "THINKING: ALIGNING NEURAL AVATAR...",
+            "REASONING: SYNCHRONIZING BONE TOKENS...",
+            "LOADING: CALIBRATING KINEMATIC ARTIFACTS...",
+            "STABILIZING SKELETAL RIG WEIGHTS..."
         ]
     },
     SYS_BINDING_ARMATURES: {
         en: [
-            "WIRING NEURAL ARMATURES...",
-            "LINKING JOINT CONSTRAINTS...",
-            "VALIDATING KINETIC WEIGHTS...",
-            "SECURING BONE HIERARCHY..."
+            "THINKING: WIRING NEURAL ARMATURES...",
+            "REASONING: LINKING JOINT TOKENS...",
+            "LOADING: VALIDATING KINETIC ARTIFACTS...",
+            "SECURING BONE HIERARCHY WEIGHTS..."
         ]
     },
     SYS_ANCHORING_ROTORS: {
         en: [
-            "STABILIZING CYCLICAL LOGIC...",
-            "ANCHORING ROTATIONAL VECTORS...",
-            "FLUX CAPACITANCE NOMINAL...",
-            "SYNCHRONIZING FAN CYCLES..."
+            "THINKING: STABILIZING CYCLICAL LOGIC...",
+            "REASONING: ANCHORING ROTATIONAL TOKENS...",
+            "LOADING: FLUX CAPACITANCE Artifact...",
+            "SYNCHRONIZING FAN CYCLE ARTIFACTS..."
         ]
     },
     SYS_DYNAMIC_RIGIDBODIES: {
         en: [
-            "SOLVING ENTROPY ALIGNMENT...",
-            "CALCULATING KINETIC CHAOS...",
-            "POLLING DYNAMIC BUFFERS...",
-            "STABILIZING PHYSICS ENTROPY..."
+            "THINKING: SOLVING ENTROPY ALIGNMENT...",
+            "REASONING: CALCULATING KINETIC CHAOS TOKENS...",
+            "LOADING: POLLING DYNAMIC ARTIFACTS...",
+            "STABILIZING PHYSICS ENTROPY WEIGHTS..."
         ]
     },
     SYS_BONE_HIERARCHIES: {
         en: [
-            "RECURSING SKELETAL NODES...",
-            "VALIDATING JOINT PARENTING...",
-            "TRACING BONE TOPOLOGY...",
-            "SCANNING VERTEBRAL DATA..."
+            "THINKING: RECURSING SKELETAL ARTIFACTS...",
+            "REASONING: VALIDATING JOINT TOKENS...",
+            "LOADING: TRACING BONE TOPOLOGY...",
+            "SCANNING VERTEBRAL DATA WEIGHTS..."
         ]
     },
     SYS_COLLISION_MESHES: {
         en: [
-            "REGISTERING SPATIAL GEOMETRY...",
-            "COMMITTING PHYSICS HULLS...",
-            "SEALING COLLISION VOLUMES...",
-            "WRAPPING KINETIC SHELLS..."
+            "THINKING: REGISTERING SPATIAL ARTIFACTS...",
+            "REASONING: COMMITTING PHYSICS TOKENS...",
+            "LOADING: SEALING COLLISION VOLUMES...",
+            "WRAPPING KINETIC SHELL WEIGHTS..."
         ]
     },
     SYS_CALIBRATING_POINTS: {
         en: [
-            "ALIGNING QUANTUM PARTICLES...",
-            "SOLVING NEURAL NEBULAS...",
-            "INTERPRETING DATA CLUSTERS...",
-            "CALIBRATING VOXEL VECTORS..."
+            "THINKING: ALIGNING QUANTUM PARTICLES...",
+            "REASONING: SOLVING NEURAL TOKENS...",
+            "LOADING: INTERPRETING DATA ARTIFACTS...",
+            "CALIBRATING VOXEL VECTOR WEIGHTS..."
         ]
     },
     SYS_INIT_MODELS: {
         en: [
-            "MATERIALIZING SECTOR DATA...",
-            "ASSEMBLING CRYSTALLINE ASSETS...",
-            "SYNTHESIZING MESH BUFFERS...",
+            "THINKING: MATERIALIZING SECTOR ARTIFACTS...",
+            "REASONING: ASSEMBLING CRYSTALLINE TOKENS...",
+            "LOADING: SYNTHESIZING MESH WEIGHTS...",
             "UPLOADING VOLUMETRIC MATRICES..."
         ]
     },
     SYS_WARMING_ENGINES: {
         en: [
-            "PRIMING SYNAPTIC PIPELINES...",
-            "SYNCHRONIZING GPU THREADS...",
-            "EXECUTING NEURAL BOOT...",
-            "WARMING QUANTUM SHADERS..."
-        ]
-    },
-    SYS_FAILURE: {
-        en: [
-            "CRITICAL SYSTEM BREACH",
-            "CORE LOGIC CORRUPTION",
-            "SYNAPTIC FAILURE",
-            "DATA VOID DETECTED"
+            "THINKING: PRIMING SYNAPTIC TOKENS...",
+            "REASONING: SYNCHRONIZING GPU ARTIFACTS...",
+            "LOADING: EXECUTING NEURAL BOOT SEQUENCE...",
+            "WARMING QUANTUM SHADER WEIGHTS..."
         ]
     },
     SYS_CONFIG_MATERIALS: {
         en: [
-            "OPTIMIZING PIXEL SHADERS...",
-            "REFINING LIGHT-FIELD DATA...",
-            "POLISHING SURFACE LOGIC...",
-            "CONFIGURING GPU MATRICES..."
+            "THINKING: OPTIMIZING PIXEL SHADERS...",
+            "REASONING: REFINING LIGHT-FIELD TOKENS...",
+            "LOADING: POLISHING SURFACE ARTIFACTS...",
+            "CONFIGURING GPU MATRIX WEIGHTS..."
         ]
     },
     SYS_READY: {
         en: [
-            "SYSTEM NOMINAL.",
-            "NEURAL SYNC COMPLETE.",
-            "GRID LINK ESTABLISHED.",
-            "STANDING BY FOR INPUT..."
+            "SIMULATING AGI COMPLETE: SYSTEM NOMINAL.",
+            "REASONING TOKENS DEPLETED. SYSTEM READY.",
+            "ARTIFACT LOAD SUCCESSFUL. STANDING BY.",
+            "THINKING FINISHED. PRESTIGE MODE ACTIVE."
         ]
     },
 
@@ -585,7 +577,7 @@ export const LEXICON = {
             "FAN TURBINES AT 100%. BLASTING KINETIC ENERGY.",
             "PRESSURE SPIKE DETECTED. DISCHARGING AIR!"
         ]
-    },
+  },
 
     // --- INFORMER (UI_INFORMER_): Labels for the cursor-following HUD ---
     UI_INFORMER_BOOK: { en: ["INSPECT ARCHIVE", "READ LOGS", "ACCESS KNOWLEDGE", "OPEN DATA CORE"] },
