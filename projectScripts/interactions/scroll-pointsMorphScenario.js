@@ -718,7 +718,7 @@ export function initScrollMorph(scene, pointsInstance, TWEEN) {
             action: async (points) => {
                 if (isStep3Sitting) return;
                 isStep3Sitting = true;
- 
+
                 // Immediate lock on performance: hide knowhere hub as we enter state 3
                 if (scene.knowhere) {
                     scene.knowhere.visible = false;

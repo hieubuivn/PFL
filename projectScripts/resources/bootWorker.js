@@ -1,7 +1,6 @@
 /**
  * BOOT WORKER - HIGH-END OFFSCREEN RENDERER
- * Visual Fix: Removed energy-glow occlusion logic to prevent black void artifacts.
- * The core energy flare now naturally illuminates through the exploded fragments.
+ * Debug Fixes: Improved plunge timing and localized cell displacement.
  */
 
 let gl;
@@ -31,13 +30,17 @@ const fragmentShaderSource = `
     #define PHI 1.618033988749895
 
     float saturate(float x) { return clamp(x, 0.0, 1.0); }
-    void pR(inout vec2 p, float a) { p = cos(a)*p + sin(a)*vec2(p.y, -p.x); }
+    void pR(inout vec2 p, float a) {
+        p = cos(a)*p + sin(a)*vec2(p.y, -p.x);
+    }
     float vmax(vec3 v) { return max(max(v.x, v.y), v.z); }
     float fBox(vec3 p, vec3 b) {
         vec3 d = abs(p) - b;
         return length(max(d, vec3(0))) + vmax(min(d, vec3(0)));
     }
-    vec3 erot(vec3 p, vec3 ax, float ro) { return mix(dot(ax,p)*ax, p, cos(ro))+sin(ro)*cross(ax,p); }
+    vec3 erot(vec3 p, vec3 ax, float ro) {
+        return mix(dot(ax,p)*ax, p, cos(ro))+sin(ro)*cross(ax,p);
+    }
     vec3 boolSign(vec3 v) { return max(vec3(0), sign(v)) * 2. - 1.; }
     float distSq(vec3 a, vec3 b) { vec3 d = a - b; return dot(d, d); }
 
@@ -54,26 +57,26 @@ const fragmentShaderSource = `
         if (distSq(ap, v4) < distSq(ap, v)) v = v4;
         return normalize(v) * boolSign(p);
     }
+    vec3 secondDodecahedronVertex(vec3 p, vec3 iv, vec3 dv) {
+        float side = sign(dot(p, cross(iv, dv)));
+        return erot(dv, iv, PI * 0.4 * side);
+    }
 
     float object(vec3 p) {
         pR(p.xz, 1.2); pR(p.xy, .3);
-        return fBox(p, vec3(.10)) - .02;
+        float d = fBox(p, vec3(.10)) - .02;
+        return d;
     }
 
     float map(vec3 p) {
-        float b = length(p) - 1.25;
-        if (b > 0.05) return b; 
-
+        float b = length(p) - 1.5;
+        if (b > 0.1) return b;
         if (iMouse.x > 0. || iMouse.y > 0.) {
             pR(p.yz, (0.5 - iMouse.y) * PI * 0.5);
             pR(p.xz, (0.5 - iMouse.x) * PI * 2.0);
         }
-        
-        vec3 a = icosahedronVertex(p), v_b = dodecahedronVertex(p);
-        float side = dot(p, cross(a, v_b)) >= 0.0 ? 1.0 : -1.0;
-        vec3 c = erot(v_b, a, PI * 0.4 * side);
-        
-        float dMax = 1e8; vec3 pp = p;
+        vec3 a = icosahedronVertex(p), v_b = dodecahedronVertex(p), c = secondDodecahedronVertex(p, a, v_b);
+        float d = 1e12; vec3 pp = p;
         for (int i = 0; i < 3; i++) {
             float t = mod((iTime - dot(a.xy, vec2(1,-1)) / 6.) / 3., 1.);
             float t2 = min(t * 1.85, 1.);
@@ -81,24 +84,28 @@ const fragmentShaderSource = `
             t2 = max(t - .53, 0.) * 1.2;
             float wobble = sin(t2 * 2.2 + pow(3. * t2, 1.5) * 4. * PI) * smoothstep(.4, .0, t2) * .15;
             p -= a * (wobble + explode) / 6.0;
-            
-            vec3 n_vba = v_b - a;
-            float l_vba = length(n_vba);
-            vec3 n1 = (l_vba > 0.001) ? n_vba / l_vba : vec3(1,0,0);
-            
-            vec3 n_ca = c - a;
-            float l_ca = length(n_ca);
-            vec3 n2 = (l_ca > 0.001) ? n_ca / l_ca : vec3(0,1,0);
-
-            dMax = min(dMax, max(object(p), max(dot(p, n1), dot(p, n2))));
+            d = min(d, max(object(p), max(dot(p, normalize(v_b - a)), dot(p, normalize(c - a)))));
             p = pp; vec3 aa = a; a = v_b; v_b = c; c = aa;
         }
-        return dMax;
+        return d;
     }
 
     vec3 calcNormal(vec3 p) {
-        const float h = 0.001; const vec2 k = vec2(1,-1);
+        const float h = 0.0005; const vec2 k = vec2(1,-1);
         return normalize( k.xyy*map( p + k.xyy*h ) + k.yyx*map( p + k.yyx*h ) + k.yxy*map( p + k.yxy*h ) + k.xxx*map( p + k.xxx*h ) );
+    }
+
+    float rand(vec2 n) { return fract(sin(dot(n, vec2(12.9898, 4.1414))) * 43758.5453); }
+    float inRect(vec2 p, vec2 b1, vec2 b2) {
+        vec2 low = min(b1, b2), high = max(b1, b2);
+        float edge = 0.02; 
+        vec2 s = smoothstep(low, low + edge, p) * smoothstep(high, high - edge, p);
+        return s.x * s.y;
+    }
+    float boxLayer(float depth, vec2 uv, float size, float pos) {
+        float h = size * 0.5;
+        vec2 c = vec2(4.0 * pos - 2.0, (1.0 - h) * sin(iTime * 1.5 * (0.3 + 0.7 * rand(vec2(depth, size))) ));
+        return inRect(uv, c + vec2(-h, -h), c + vec2(h, h));
     }
 
     void main() {
@@ -106,96 +113,129 @@ const fragmentShaderSource = `
         vec2 uv = (-iResolution.xy + 2. * fragCoord.xy) / iResolution.y;
         float aspect = iResolution.x / iResolution.y;
 
+        // --- GLOBAL SYNC ---
         float globalT = mod(iTime / 3.0, 1.0);
         float breathe = (1. - pow(1. - min(globalT * 1.85, 1.0), 24.0)) * (1. - pow(min(globalT * 1.85, 1.0), 2.5));
         float violentPeak = pow(breathe, 0.5);
 
+        // --- 1. THE DROpleT PHYSICS ---
         float dropT = saturate((globalT - 0.08) * 4.0);
         float barY_uv = -0.84; 
         float dropY = mix(0.2, barY_uv, dropT);
-        float dVis = smoothstep(0.0, 0.05, dropT) * step(barY_uv, uv.y) * step(uv.y, dropY + 0.05);
+        float dVis = smoothstep(0.0, 0.1, dropT) * smoothstep(1.0, 0.9, dropT);
         vec2 dPos = uv - vec2(0.0, dropY); 
         
-        float dropW = 1.0 + smoothstep(-0.02, 0.08, dPos.y) * 15.0; 
-        float dCore = smoothstep(0.03, 0.0, length(dPos * vec2(dropW, 2.2))) * dVis;
-        float dGlow = exp(-length(dPos) * 120.0) * dVis; 
+        // PHSICAL TEARDROP: Nonlinear width scaling for a sharp tip
+        float dropTip = saturate(dPos.y * 10.0 + 0.5); 
+        float teardropShape = 1.0 + pow(dropTip, 2.0) * 15.0; 
+        float dShape = length(dPos * vec2(teardropShape, 1.5)); 
         
-        float impactActive = step(0.33, globalT);
-        float impactFade = saturate((globalT - 0.33) * 10.0);
-        float impactPeak = impactActive * exp(-impactFade * 12.0);
-        float dImpact = length(uv - vec2(0.0, barY_uv));
+        float dCore = smoothstep(0.035, 0.0, dShape) * dVis;
+        float dGlow = exp(-length(dPos) * 85.0) * dVis; 
+        
+        // Impact Splashes / Shards
+        float impactFade = saturate((globalT - 0.28) * 4.0);
+        // FIX: Ensure splash only exists after impact starts (T > 0.28)
+        float splash = (impactFade > 0.0) ? exp(-impactFade * 6.0) : 0.0;
+        vec2 impactPos = uv - vec2(0.0, barY_uv);
+        float angle = atan(impactPos.y, impactPos.x);
+        float distCol = length(impactPos);
+        
+        float shards = 0.0;
+        if (impactFade > 0.01 && impactFade < 1.0) {
+            float shardPath = distCol - (impactFade * 0.6);
+            float shardW = 0.02 + impactFade * 0.15;
+            float radialA = mod(angle + PI*0.5, PI*2.0);
+            if (radialA < PI) {
+                shards = smoothstep(shardW, 0.0, abs(radialA - PI*0.25)) + 
+                         smoothstep(shardW, 0.0, abs(radialA - PI*0.5)) + 
+                         smoothstep(shardW, 0.0, abs(radialA - PI*0.75));
+                shards *= smoothstep(0.06, 0.0, abs(shardPath)) * splash;
+            }
+        }
 
-        vec3 col = mix(vec3(0.0, 0.95, 1.0), vec3(1.5), dCore) * (dGlow * 1.2 + dCore * 8.0); 
-        col += vec3(0.0, 0.95, 1.0) * (exp(-dImpact * 120.0) * impactPeak * 18.0);
-        
-        // CORE RENDERER
+        // --- 2. CORE ZONE ---
         vec2 sceneUv = (uv - vec2(0.0, 0.2)) * 1.25; 
-        if (length(sceneUv) < 1.15) { 
+        vec3 col = mix(vec3(0.0, 0.95, 1.0), vec3(1.6), dCore) * (dGlow * 1.0 + dCore * 9.0); 
+        col += vec3(0.0, 0.95, 1.0) * (shards * 4.0 + exp(-distCol * 30.0) * splash * 2.5); 
+        
+        bool isBuckyZone = length(sceneUv) < 1.2;
+        if (isBuckyZone) {
             vec3 camPos = vec3(0,0,3.2), rayDir = normalize(vec3(sceneUv,-4)), rayPos = camPos;
-            float rayLen = 0., distM = 0.; bool hit = false;
-            
-            int iterations = int(floor(16.0 + 12.0 * uQuality + 0.5));
-            for (int i = 0; i < 28; i++) {
-                if (i >= iterations) break;
-                rayLen += distM; rayPos = camPos + rayDir * rayLen;
-                distM = map(rayPos);
-                if (abs(distM) < .003) { hit = true; break; }
+            float rayLen = 0., dist = 0.; bool hit = false;
+            for (int i = 0; i < 24; i++) {
+                rayLen += dist; rayPos = camPos + rayDir * rayLen;
+                dist = map(rayPos);
+                if (abs(dist) < .003) { hit = true; break; }
                 if (rayLen > 4.5) break;
             }
-
-            vec3 coreCol = vec3(0.0);
             if (hit) {
                 vec3 n = calcNormal(rayPos);
                 float diff = max(dot(n, normalize(vec3(0.6, 1.0, 0.8))), 0.0);
                 float rim = pow(1.0 - max(dot(n, -rayDir), 0.0), 2.5);
+                vec3 base = vec3(diff * 1.2 + rim * 0.8 + 0.2);
                 vec3 cyan = vec3(0.0, 0.95, 1.0) * (diff * 0.5 + rim * 1.5);
-                coreCol = mix(vec3(diff * 1.2 + rim * 0.8 + 0.2), cyan, uLoadProgress * 0.8);
+                col = mix(base, cyan, uLoadProgress * 0.8);
             }
-            
-            float coreDist = length(sceneUv), coreV = smoothstep(0.01, 0.25, violentPeak);
+            float coreDist = length(sceneUv);
+            float microPulse = sin(iTime * 15.0) * 0.03 + 0.97;
             float loadI = smoothstep(0.0, 1.0, uLoadProgress);
+            float coreV = smoothstep(0.01, 0.25, violentPeak);
             float bI = (0.05 + (violentPeak + loadI * 0.5) * 3.2) * coreV; 
             float bF = 160.0 - (violentPeak + loadI * 0.2) * 115.0; 
+            float rev = max(smoothstep(0.0, 0.4, uLoadProgress) * coreV, 0.2 * coreV);
             vec3 coreC = mix(vec3(0.0, 0.95, 1.0), vec3(1.0), saturate(violentPeak * 0.8 + loadI * 0.4) * 0.9) * (1.5 + saturate(violentPeak * 0.8 + loadI * 0.4) * 5.0);
-            float flare = exp(-coreDist * max(bF, 1.0)) * 3.8 * sin(iTime * 15.0) * bI;
-            float aura = exp(-coreDist * max(bF * 0.4, 0.5)) * (0.01 + saturate(violentPeak * 0.8 + loadI * 0.4) * 0.8);
-            
-            // Energy additive: No hit-masking to prevent black voids. Fragments glow naturally.
-            vec3 energy = (coreC * (flare + aura) * smoothstep(1.0, 0.5, coreDist)) * max(smoothstep(0.0, 0.4, uLoadProgress) * coreV, 0.2 * coreV);
-            col += mix(energy, coreCol + energy * 0.3, hit ? 1.0 : 0.0);
+            coreC *= (rand(vec2(iTime, 0.0)) > 0.97 ? 1.5 : 1.0);
+            float flare = exp(-coreDist * bF) * 3.8 * microPulse * bI;
+            float aura = exp(-coreDist * (bF * 0.4)) * (0.01 + saturate(violentPeak * 0.8 + loadI * 0.4) * 0.8);
+            col += (coreC * (flare + aura) * smoothstep(1.0, 0.5, coreDist)) * rev * (hit && rayPos.z < 0.2 ? 1.0 : hit ? 0.0 : 1.0);
         }
 
-        // --- BAR ---
+        // 3. THE LOADING BAR ZONE
         float barH = 0.025, barW = 0.6;
-        float actualBarW = floor(barW / (barH / aspect)) * (barH / aspect);
+        float cellW = barH / aspect, numCells = floor(barW / cellW), actualBarW = numCells * cellW;
         float startX = (1.0 - actualBarW) * 0.5, barY = 0.08;
+        float leadX = startX + uLoadProgress * actualBarW;
+        float dxL = abs(vUv.x - leadX) * aspect;
+        float dyL = abs(vUv.y - barY);
+        float lG = exp(-dxL * 12.0) * exp(-dyL * 20.0);
         float dxM = abs(vUv.x - iMouse.x) * aspect;
-        float mD = exp(-dxM * 6.5) * exp(-abs(vUv.y - barY) * 30.0);
+        float dyM = abs(vUv.y - barY);
+        float mD = exp(-dxM * 6.5) * exp(-dyM * 30.0);
         
-        vec2 uv_bar = vec2((vUv.x - startX) / actualBarW, (vUv.y - barY) / (barH * (1.0 + mD * 2.5)) + 0.5);
-        if (uv_bar.x >= 0.0 && uv_bar.x <= 1.0 && uv_bar.y >= 0.0 && uv_bar.y <= 1.0) {
-            float numCells = floor(barW / (barH / aspect));
+        // REFINED PLUNGE: Localization and Timing
+        float impactCellX = 0.5; 
+        float distToImpactX = abs(vUv.x - impactCellX) * numCells; // Units of cell width
+        // FIX: Sharp falloff so only cells directly under the drop dip
+        float plunge = smoothstep(1.5, 0.0, distToImpactX) * splash * 1.8; 
+        
+        vec2 uv_bar = vec2((vUv.x - startX) / actualBarW, (vUv.y - barY + plunge * 0.02) / (barH * (1.0 + mD * 2.5)) + 0.5);
+        
+        float aa = 2.0 / iResolution.y; 
+        float barM = smoothstep(0.0, aa, uv_bar.x) * smoothstep(1.0, 1.0 - aa, uv_bar.x) *
+                     smoothstep(0.0, aa * 2.0, uv_bar.y) * smoothstep(1.0, 1.0 - aa * 2.0, uv_bar.y);
+        
+        if (barM > 0.0) {
             float cellID = floor(uv_bar.x * numCells);
-            float cellIDNorm = cellID / numCells;
-            float cellPlunge = impactActive * exp(-abs(cellIDNorm - 0.5) * 15.0) * impactPeak * 6.5; 
-            float localY = uv_bar.y - cellPlunge; 
-
-            if (localY >= 0.12 && localY <= 0.88) {
-                float cF = fract(uv_bar.x * numCells);
-                if (cF >= 0.12 && cF <= 0.88) {
-                    float ripple = impactActive * exp(-abs(cellIDNorm - 0.5) * 4.0) * impactPeak * sin(impactFade * 15.0) * 0.5;
-                    vec3 bc = mix(vec3(0.08, 0.12, 0.15), vec3(0.0, 0.95, 1.0) * (1.5 + ripple * 4.0), step(0.01, clamp(uLoadProgress * numCells - cellID, 0.0, 1.0)));
-                    bc = mix(bc, vec3(1.5), impactActive * exp(-abs(cellIDNorm - 0.5) * 12.0) * impactPeak); 
-                    col = mix(col, bc, 1.0); 
-                }
+            float cF = fract(uv_bar.x * numCells);
+            float cMask = smoothstep(0.12, 0.15, cF) * smoothstep(0.88, 0.85, cF) * smoothstep(0.12, 0.15, uv_bar.y) * smoothstep(0.88, 0.85, uv_bar.y);
+            if (cMask > 0.0) {
+                float act = clamp(uLoadProgress * numCells - cellID, 0.0, 1.0);
+                
+                float cellDist = abs(uv_bar.x - impactCellX) * 10.0;
+                float barRipple = exp(-cellDist) * exp(-impactFade * 3.0) * sin(impactFade * 15.0) * 0.5;
+                
+                vec3 bc = mix(vec3(0.08, 0.12, 0.15), vec3(0.0, 0.95, 1.0) * (1.5 + barRipple * 4.0), step(0.01, act));
+                float l = boxLayer(0.0, vec2(uv_bar.x * 12.0 - uLoadProgress * 12.0, uv_bar.y * 3.0), 0.7, fract(iTime * 1.5));
+                col = mix(col, bc + l * vec3(0.0, 0.95, 1.0) * 1.6, barM * cMask);
             }
         }
         
-        float leadX = startX + uLoadProgress * actualBarW;
-        float lH = (0.22 + impactPeak * 1.25) * (0.4 + violentPeak * 2.1); 
-        col += exp(-abs(vUv.x - leadX) * aspect * 12.0) * exp(-abs(vUv.y - barY) * 20.0) * lH * vec3(0.0, 0.95, 1.0);
+        col += lG * 0.22 * (0.4 + violentPeak * 2.1) * vec3(0.0, 0.95, 1.0);
         col += mD * 0.05 * vec3(0.0, 0.95, 1.0);
-        gl_FragColor = vec4(pow(max(col, 0.0), vec3(1./2.2)), (uLoadProgress > 1.0) ? 1.0 - smoothstep(0.0, 1.0, uLoadProgress - 1.0) : 1.0);
+
+        float alpha = (uLoadProgress > 1.0) ? 1.0 - smoothstep(0.0, 1.0, uLoadProgress - 1.0) : 1.0;
+        gl_FragColor = vec4(pow(max(col, 0.0), vec3(1./2.2)), alpha);
     }
 `;
 
