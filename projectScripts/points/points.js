@@ -3289,7 +3289,13 @@ export default class Points {
             }
         }
 
-        if (skipMorph) return;
+        if (skipMorph) {
+            // ENHANCEMENT: Still refresh the board's persona-specific text even if we skip the 3D morph
+            if (typeof this.refreshUIPersonaSync === 'function') {
+                this.refreshUIPersonaSync();
+            }
+            return;
+        }
 
         // If we are currently in or morphing to a ROOT state, update the target
         const currentIdx = this.getCurrentStep();
@@ -3302,13 +3308,18 @@ export default class Points {
         if (isRootAffected) {
             // ENHANCEMENT: Treat click as a target scroll morph
             // Requirement: Only trigger scroll morph if in 'points' scenario
-            const isPointsScenario = window.scene && window.scene.scenarioState && window.scene.scenarioState.name === 'points';
+            const isPointsScenario = this.scene && this.scene.scenarioState && this.scene.scenarioState.name === 'points';
 
             if (isPointsScenario && typeof this.triggerStep === 'function') {
                 // If in Dance (2), Chaos (0), or Root (1) -> Click always brings user to Root (Step 1)
                 const stepToTrigger = 1;
                 console.log(`[Points] Avatar Switch -> Triggering Scroll Step ${stepToTrigger} for ${mode.toUpperCase()}`);
                 this.triggerStep(stepToTrigger);
+
+                // ENHANCEMENT: Explicitly trigger UI refresh for the board state
+                if (typeof this.refreshUIPersonaSync === 'function') {
+                    this.refreshUIPersonaSync();
+                }
             } else {
                 // Fallback to raw morph if in other scenarios or scroll-morph logic isn't initialized
                 if (currentIdx !== targetIdx || this.isMorphing) {

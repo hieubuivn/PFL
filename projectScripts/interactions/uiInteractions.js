@@ -730,10 +730,7 @@ async function handleHeroAvatarTransition(scene, switchPersona = true) {
                 return;
             }
 
-            // 1. Immediate UI Swap
-            personaManager.setPersona(nextMode);
-
-            // 2. Trigger Visual Ritual
+            // 1. Trigger Visual Ritual (Lock Hero immediately to prevent double-trigger from global listener)
             runHeroPersonaCinematic(scene, {
                 onImpact: () => {
                     // --- IMPACT SYNC ---
@@ -747,6 +744,10 @@ async function handleHeroAvatarTransition(scene, switchPersona = true) {
                     }
                 }
             });
+
+            // 2. Immediate UI Swap (Dispatches audienceChanged which will be ignored by office.js since isHeroAnimating is true)
+            personaManager.setPersona(nextMode);
+
             return;
         }
 

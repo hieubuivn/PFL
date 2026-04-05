@@ -434,7 +434,8 @@ async function init() {
 
         // Whenever persona is changed (via UI or otherwise), trigger the combat sequence too
         window.addEventListener('audienceChanged', () => {
-            if (!scene.isHeroAnimating) {
+            const isRoom = scene.scenarioState?.name === 'room';
+            if (isRoom && !scene.isHeroAnimating) {
                 runHeroPersonaCinematic(scene);
             }
         });

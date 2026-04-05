@@ -573,6 +573,9 @@ export function initScrollMorph(scene, pointsInstance, TWEEN) {
             },
             action: (points) => {
                 points.stopAnimations(0.8);
+                if (typeof points.refreshUIPersonaSync === 'function') {
+                    points.refreshUIPersonaSync();
+                }
             }
         },
         1: {
@@ -609,6 +612,9 @@ export function initScrollMorph(scene, pointsInstance, TWEEN) {
             },
             action: (points) => {
                 points.stopAnimations(0.8);
+                if (typeof points.refreshUIPersonaSync === 'function') {
+                    points.refreshUIPersonaSync();
+                }
                 // REVEAL Nav Buttons when transitioning to Root state morph
                 NavInteractions.onMorphToAbout(points.scene);
             }
@@ -646,6 +652,9 @@ export function initScrollMorph(scene, pointsInstance, TWEEN) {
                 }
             },
             action: (points) => {
+                if (typeof points.refreshUIPersonaSync === 'function') {
+                    points.refreshUIPersonaSync();
+                }
                 // Sequential Dance Routine: breakDance -> robotDance -> gangnam -> recycle
                 const runDanceCycle = () => {
                     if (pointsInstance.getCurrentStep() !== 2) return; // Safety: Stop if state changed
