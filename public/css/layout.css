@@ -1376,7 +1376,7 @@ body.cv-collapsed .icon-lines span:nth-child(4) {
     z-index: 10;
     filter: contrast(1.1) brightness(1.0);
     transform-origin: center center;
-    pointer-events: none;
+    pointer-events: auto;
     transition: transform 0.4s ease, opacity 0.4s ease;
 }
 
