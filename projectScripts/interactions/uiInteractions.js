@@ -30,7 +30,11 @@ const UI_REGISTRY = [
     {
         selector: '.header-photo',
         event: 'click',
-        action: (e, scene) => handleHeroAvatarTransition(scene, true)
+        action: (e, scene) => {
+            e.stopPropagation();
+            e.preventDefault();
+            handleHeroAvatarTransition(scene, true);
+        }
     },
     // 2b. Name Class (Interactions across states)
     {
@@ -47,6 +51,8 @@ const UI_REGISTRY = [
         selector: '.name',
         event: 'click',
         action: (e, scene) => {
+            e.stopPropagation();
+            e.preventDefault();
             if (scene.scenarioState?.name === 'room') {
                 handleHeroAvatarTransition(scene, false);
             } else {

@@ -429,16 +429,6 @@ class PersonaManager {
                 }
             });
         }
-        
-        // 7. Avatar Container Interaction (NEW: Toggle Persona on Click)
-        const avatarBox = document.getElementById('avatar-container');
-        if (avatarBox) {
-            avatarBox.addEventListener('click', (e) => {
-                e.preventDefault();
-                const nextMode = (this.currentMode === 'dev') ? 'poba' : 'dev';
-                this.setPersona(nextMode);
-            });
-        }
     }
 
     applyMode(mode, instant = false, skipPointsSync = false) {

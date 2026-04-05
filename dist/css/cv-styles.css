@@ -1220,6 +1220,12 @@
     display: none !important;
 }
 
+/* Header Avatar: Disable interaction on mobile */
+.mobile-mode .header-photo {
+    pointer-events: none !important;
+    cursor: default !important;
+}
+
 .mobile-mode .header-right {
     width: 100% !important;
     flex-direction: column !important;
