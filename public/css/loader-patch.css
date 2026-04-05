@@ -4,6 +4,16 @@
     bottom: 15vh !important;
 }
 
+@media screen and (max-width: 1024px) {
+    #loading-container, #skeleton-lcp {
+        display: none !important;
+    }
+}
+.mobile-mode #loading-container,
+.mobile-mode #skeleton-lcp {
+    display: none !important;
+}
+
 .loader-content h1 {
     font-family: 'Orbitron', sans-serif !important;
     font-size: 1rem !important;
