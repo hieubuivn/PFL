@@ -9,6 +9,40 @@
         display: none !important;
     }
 }
+
+/* PC MODE ALIGNMENT FIX */
+@media screen and (min-width: 1025px) {
+    #loading-container {
+        left: 0 !important;
+        width: 100% !important;
+        transform: none !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: flex-end !important;
+        text-align: center !important;
+    }
+
+    .loader-content {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 auto !important;
+    }
+
+    .loader-content div, 
+    .loader-content span, 
+    .loader-content h1 {
+        text-align: center !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+    }
+}
 .mobile-mode #loading-container,
 .mobile-mode #skeleton-lcp {
     display: none !important;
@@ -63,11 +97,10 @@
 #skeleton-lcp {
     position: fixed;
     top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 95vw;
-    max-width: 1400px;
-    text-align: center;
+    left: 0 !important;
+    width: 100% !important;
+    transform: translateY(-50%) !important;
+    text-align: center !important;
     font-family: 'Orbitron', 'Fira Code', 'Roboto Mono', sans-serif;
     font-size: clamp(1rem, 2.8vw, 3rem);
     font-weight: 900;
