@@ -1193,11 +1193,37 @@
     gap: 30px !important;
     align-items: center !important;
     text-align: center !important;
-    padding-top: 40px !important;
+    padding-top: 80px !important;
 }
 
 .mobile-mode .header-info {
     align-items: center !important;
+}
+
+/* Mobile Persona Tag: Static Text Mode */
+.mobile-mode .persona-tag-inline {
+    background: none !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 0 16px 0 !important;
+    pointer-events: none !important;
+    cursor: default !important;
+    text-align: center !important;
+    justify-content: center !important;
+    width: auto !important;
+    display: flex !important;
+    align-items: center !important;
+}
+
+/* Hide the icon to make it look strictly like text */
+.mobile-mode .persona-tag-inline .persona-icon-inline {
+    display: none !important;
+}
+
+/* Header Avatar: Disable interaction on mobile */
+.mobile-mode .header-photo {
+    pointer-events: none !important;
+    cursor: default !important;
 }
 
 .mobile-mode .header-right {
@@ -1481,7 +1507,7 @@
     display: flex !important;
     flex-direction: column !important;
     justify-content: center !important;
-    align-items: flex-start !important;
+    align-items: stretch !important;
     position: fixed !important;
     bottom: 20px !important;
     left: 15px !important;
@@ -1512,6 +1538,7 @@
 
 .mobile-mode .hint-label {
     display: block !important;
+    width: 100% !important;
     font-family: 'Orbitron', sans-serif !important;
     font-size: 0.82rem !important;
     font-weight: 900 !important;
@@ -1524,12 +1551,18 @@
     padding-top: 5px !important;
 }
 
+.mobile-mode .hint-text {
+    width: 100% !important;
+}
+
 .mobile-mode .hint-text p {
     font-size: 0.85rem !important;
     line-height: 1.5 !important;
     color: rgba(255, 255, 255, 0.85) !important;
     margin: 0 !important;
     overflow: visible !important;
+    white-space: normal !important;
+    width: 100% !important;
 }
 
 .dismiss-hint-btn {

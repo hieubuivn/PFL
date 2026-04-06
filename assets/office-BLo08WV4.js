@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { LEXICON } from './projectScripts/content-manager/content.js';
 import { personaManager } from './projectScripts/content-manager/personaManager.js';
 import { setupSCR } from './configs/setupSCR.js';
 import TWEEN from 'tween';
@@ -164,22 +165,40 @@ async function init() {
     const isMobile = forceMobile || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
     window.IS_MOBILE = isMobile;
 
-    // --- MOBILE SKIP PROTOCOL (Option A: Integrated CV) ---
+    // --- MOBILE SKIP PROTOCOL (Option B: Lite Intro) ---
     if (isMobile) {
         document.body.classList.add('mobile-mode');
         // Ensure CV is visible and expanded
         const cvContainer = document.getElementById('cv-container');
-        if (cvContainer) {
-            cvContainer.classList.remove('collapsed');
-        }
+        if (cvContainer) cvContainer.classList.remove('collapsed');
 
-        const expContainer = document.getElementById('experience-container');
-        if (expContainer) expContainer.style.display = 'none';
+        // LITE INTRO: Simulate system initialization for the 'Wow' factor on mobile
+        const liteIntro = async () => {
+            const sysKeys = Object.keys(LEXICON).filter(k => k.startsWith('SYS_') && k !== 'SYS_ERROR' && k !== 'SYS_READY');
+            
+            // Show 3 random strings to establish persona
+            for (let i = 0; i < 3; i++) {
+                const randomKey = sysKeys[Math.floor(Math.random() * sysKeys.length)];
+                const strings = LEXICON[randomKey].en;
+                const randomStr = strings[Math.floor(Math.random() * strings.length)];
+                
+                updateProgressUI((i + 1) * 33, randomStr);
+                await new Promise(r => setTimeout(r, 600));
+            }
+            
+            updateProgressUI(100, LEXICON.SYS_READY.en[0]);
+            await new Promise(r => setTimeout(r, 400));
 
-        // Fast-track the bootloader finish
-        if (window.bootLoader && typeof window.bootLoader.finish === 'function') {
-            await window.bootLoader.finish();
-        }
+            // Fast-track the bootloader finish
+            if (window.bootLoader && typeof window.bootLoader.finish === 'function') {
+                await window.bootLoader.finish();
+            }
+
+            const expContainer = document.getElementById('experience-container');
+            if (expContainer) expContainer.style.display = 'none';
+        };
+
+        await liteIntro();
         return; // Early Exit (Skip Three.js)
     }
 
@@ -244,7 +263,15 @@ async function init() {
 
             // Positioning Logic: Center on bottom notch with uXOffset vertical shift
             const syncStarPosition = () => {
-                if (!scene.knowhere || !scene.knowhere.visible || !pointsApp.points || !scene.HUD) return;
+                const isRoom = (scene.scenarioState && scene.scenarioState.name === 'room');
+                if (!scene.knowhere || !scene.knowhere.visible || !pointsApp.points || !scene.HUD || isRoom) {
+                    // Reset interaction field even if mesh is gone/hidden to save GPU performance
+                    if (pointsApp.material && pointsApp.material.uniforms.uKnowhereScale) {
+                        pointsApp.material.uniforms.uKnowhereScale.value = 0.0;
+                    }
+                    if (scene.knowhere) scene.knowhere.visible = false;
+                    return;
+                }
 
                 const resX = renderer.domElement.clientWidth;
                 const resY = renderer.domElement.clientHeight;
@@ -282,8 +309,48 @@ async function init() {
                     targetHUDY += (1.0 - Math.abs(ux)) * bNotchH * Math.abs(uy);
                 }
 
-                const xNDC = targetHUDX / (resX * 0.5);
-                const yNDC = targetHUDY / (resY * 0.5);
+                const baseNDC = new THREE.Vector2(targetHUDX / (resX * 0.5), targetHUDY / (resY * 0.5));
+
+                // --- REFINED: Sentinel Settle-First Logic ---
+                const uData = scene.knowhere.userData;
+                if (!uData.smoothedNDC) uData.smoothedNDC = baseNDC.clone();
+                if (!uData.lastBaseNDC) uData.lastBaseNDC = baseNDC.clone();
+                if (!uData.smoothedDist) uData.smoothedDist = camera.position.length();
+
+                const smoothed = uData.smoothedNDC;
+                const mouseNDC = raycaster.pointer;
+
+                // 1. Detect if the "Home" state just moved (e.g. Scrolling)
+                const transitioning = scene.isTransitioning || (pointsApp && pointsApp.isMorphing);
+                const stateMoved = baseNDC.distanceTo(uData.lastBaseNDC) > 0.0001;
+
+                if (transitioning || stateMoved) {
+                    // --- SYNC MODE: Lock 1:1 to the TWEEN during morphs ---
+                    smoothed.copy(baseNDC);
+                    uData.isSettling = true;
+                    uData.settleFrameCount = 0;
+                } else {
+                    // --- SENTINEL MODE: Settle first, then follow guest ---
+                    let targetPos = baseNDC; // Head Home
+                    if (!uData.isSettling) {
+                        targetPos = mouseNDC; // Follow cursor
+                    } else {
+                        // Check if we are close enough to Home to start following guest
+                        if (smoothed.distanceTo(baseNDC) < 0.005) {
+                             uData.settleFrameCount = (uData.settleFrameCount || 0) + 1;
+                             if (uData.settleFrameCount > 40) uData.isSettling = false; // Settle for ~0.6s
+                        }
+                    }
+
+                    const followFactor = 0.0015; // Increased (2x of previous 0.00075)
+                    smoothed.x += (targetPos.x - smoothed.x) * followFactor;
+                    smoothed.y += (targetPos.y - smoothed.y) * followFactor;
+                }
+
+                uData.lastBaseNDC.copy(baseNDC);
+
+                const xNDC = smoothed.x;
+                const yNDC = smoothed.y;
 
                 // Sync the ripple center uniform
                 if (scene.knowhere.material.uniforms.uStarScreenPos) {
@@ -300,18 +367,24 @@ async function init() {
                     pointsApp.material.uniforms.uKnowhereScale.value = scene.knowhere.material.uniforms.uScaleFactor.value;
                 }
 
+                // --- VIBRATION FIX: Smooth the unprojected distance ---
+                const rawDistance = Math.max(10.0, camera.position.length() - 0.1);
+                uData.smoothedDist += (rawDistance - uData.smoothedDist) * 0.05; 
+
                 // Project from screen space to world space
                 const vector = new THREE.Vector3(xNDC, yNDC, 0.5);
                 vector.unproject(camera);
                 const dir = vector.sub(camera.position).normalize();
 
-                // Snap distance slightly in front of the grid origin
-                const distance = Math.max(10.0, camera.position.length() - 0.1);
-                const pos = camera.position.clone().add(dir.multiplyScalar(distance));
+                const pos = camera.position.clone().add(dir.multiplyScalar(uData.smoothedDist));
 
-                // Match the point system's coordinate space
-                pointsApp.points.worldToLocal(pos);
-                scene.knowhere.position.set(pos.x, pos.y, pos.z);
+                // PERFORMANCE: Check if world position has changed significantly before updating (Stop Jitter)
+                const lastPos = uData.lastMeshPos || new THREE.Vector3();
+                if (pos.distanceTo(lastPos) > 0.0001) {
+                    pointsApp.points.worldToLocal(pos);
+                    scene.knowhere.position.set(pos.x, pos.y, pos.z);
+                    uData.lastMeshPos = pos.clone();
+                }
             };
 
             // Initial sync and event linking
@@ -361,7 +434,8 @@ async function init() {
 
         // Whenever persona is changed (via UI or otherwise), trigger the combat sequence too
         window.addEventListener('audienceChanged', () => {
-            if (!scene.isHeroAnimating) {
+            const isRoom = scene.scenarioState?.name === 'room';
+            if (isRoom && !scene.isHeroAnimating) {
                 runHeroPersonaCinematic(scene);
             }
         });

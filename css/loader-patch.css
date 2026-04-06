@@ -4,6 +4,50 @@
     bottom: 15vh !important;
 }
 
+@media screen and (max-width: 1024px) {
+    #loading-container, #skeleton-lcp {
+        display: none !important;
+    }
+}
+
+/* PC MODE ALIGNMENT FIX */
+@media screen and (min-width: 1025px) {
+    #loading-container {
+        left: 0 !important;
+        width: 100% !important;
+        transform: none !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: flex-end !important;
+        text-align: center !important;
+    }
+
+    .loader-content {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 auto !important;
+    }
+
+    .loader-content div, 
+    .loader-content span, 
+    .loader-content h1 {
+        text-align: center !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+    }
+}
+.mobile-mode #loading-container,
+.mobile-mode #skeleton-lcp {
+    display: none !important;
+}
+
 .loader-content h1 {
     font-family: 'Orbitron', sans-serif !important;
     font-size: 1rem !important;
@@ -53,15 +97,14 @@
 #skeleton-lcp {
     position: fixed;
     top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 95vw;
-    max-width: 1400px;
-    text-align: center;
+    left: 0 !important;
+    width: 100% !important;
+    transform: translateY(-50%) !important;
+    text-align: center !important;
     font-family: 'Orbitron', 'Fira Code', 'Roboto Mono', sans-serif;
-    font-size: clamp(1.5rem, 3.8vw, 6rem);
+    font-size: clamp(1rem, 2.8vw, 3rem);
     font-weight: 900;
-    letter-spacing: clamp(0.1rem, 0.4vw, 0.8rem);
+    letter-spacing: clamp(0.05rem, 0.2vw, 0.4rem);
     color: rgba(0, 243, 255, 0.015);
     /* Subtle enough but still traceable by LCP engines */
     text-transform: uppercase;
@@ -69,8 +112,7 @@
     z-index: 1;
     user-select: none;
     line-height: 1.2;
-    white-space: nowrap;
-    overflow: hidden;
+    white-space: normal;
     text-overflow: clip;
     transition: opacity 1s ease-out;
 }
