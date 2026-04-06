@@ -116,3 +116,13 @@
     text-overflow: clip;
     transition: opacity 1s ease-out;
 }
+/* ENHANCEMENT: HEADER MARBLE PHYSICS OPTIMIZATION */
+.header-layout {
+    perspective: 1000px;
+}
+
+.header-right {
+    will-change: transform;
+    transition: none !important;
+    transform-style: preserve-3d;
+}
