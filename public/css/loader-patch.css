@@ -5,7 +5,9 @@
 }
 
 @media screen and (max-width: 1024px) {
-    #loading-container, #skeleton-lcp-v1 {
+
+    #loading-container,
+    #skeleton-lcp-v1 {
         display: none !important;
     }
 }
@@ -42,8 +44,8 @@
         margin: 0 auto !important;
     }
 
-    .loader-content div, 
-    .loader-content span, 
+    .loader-content div,
+    .loader-content span,
     .loader-content h1 {
         text-align: center !important;
         margin-left: auto !important;
@@ -53,6 +55,7 @@
         align-items: center !important;
     }
 }
+
 .mobile-mode #loading-container,
 .mobile-mode #skeleton-lcp-v2 {
     display: none !important;

@@ -927,8 +927,39 @@ export function initScrollMorph(scene, pointsInstance, TWEEN) {
                     if (pointsInstance.knowherePhysicsTween) pointsInstance.knowherePhysicsTween.stop();
 
                     const startScale = kMat.uniforms.uScaleFactor.value;
-                    const startX = kMat.uniforms.uHudOffset.value.x;
-                    const startY = kMat.uniforms.uHudOffset.value.y;
+                    let startX = kMat.uniforms.uHudOffset.value.x;
+                    let startY = kMat.uniforms.uHudOffset.value.y;
+
+                    // Option A: Reverse calculate current dynamic mouse-attracted position
+                    if (scene.knowhere.userData && scene.knowhere.userData.smoothedNDC && scene.renderer && scene.HUD) {
+                        const resX = scene.renderer.domElement.clientWidth;
+                        const resY = scene.renderer.domElement.clientHeight;
+
+                        const hMarginPct = scene.HUD.material.uniforms.uMarginPct.value;
+                        const vMarginOffset = scene.HUD.material.uniforms.uVerticalMarginPct.value;
+                        const vMarginPx = resY * (hMarginPct + vMarginOffset);
+                        const hMarginPx = resY * hMarginPct;
+
+                        const boxSizeX = (resX - hMarginPx * 2.0) * 0.5;
+                        const boxSizeY = (resY - vMarginPx * 2.0) * 0.5;
+
+                        const bNotchH = (boxSizeY * 2.0) * (scene.HUD.material.uniforms.uBNotchHRatio?.value || 0.0);
+                        const rNotchW = (boxSizeY * 2.0) * (scene.HUD.material.uniforms.uRNotchHRatio?.value || 0.0);
+
+                        const targetHUDX = scene.knowhere.userData.smoothedNDC.x * (resX * 0.5);
+                        const targetHUDY = scene.knowhere.userData.smoothedNDC.y * (resY * 0.5);
+
+                        const ux0 = targetHUDX / boxSizeX;
+                        const uy0 = targetHUDY / boxSizeY;
+
+                        startX = targetHUDX / (boxSizeX - (1.0 - Math.min(1.0, Math.abs(uy0))) * rNotchW);
+                        
+                        if (Math.abs(ux0) < 1.0 && uy0 < 0.0) {
+                            startY = targetHUDY / (boxSizeY - (1.0 - Math.abs(ux0)) * bNotchH);
+                        } else {
+                            startY = targetHUDY / boxSizeY;
+                        }
+                    }
 
 
                     // Points Gravity, Radius & Hover Factor Tween
