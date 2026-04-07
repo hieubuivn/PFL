@@ -14,8 +14,8 @@ export class Tooltip {
         this.tooltip.style.fontFamily = "'Rajdhani', sans-serif"; // Body font default
         this.tooltip.style.fontSize = '13px'; // Smaller body
         this.tooltip.style.lineHeight = '1.4';
-        this.tooltip.style.pointerEvents = 'auto';
-        this.tooltip.addEventListener('click', () => this.hide());
+        this.tooltip.style.pointerEvents = 'none';
+        // this.tooltip.addEventListener('click', () => this.hide());
         this.tooltip.style.display = 'none';
         this.tooltip.style.zIndex = '100000';
         this.tooltip.style.border = '1px solid rgba(0, 255, 255, 0.3)'; // Cyan border hint
