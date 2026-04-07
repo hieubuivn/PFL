@@ -1238,9 +1238,20 @@ function handleCVHover(scene, isActive) {
  */
 function handleContactHover(scene, btn, isActive) {
     if (isActive) {
-        const label = btn.getAttribute('data-label');
-        const platform = btn.getAttribute('data-platform');
-        const text = `COPY ${label.toUpperCase()} & OPEN ${platform.toUpperCase()}`;
+        const id = btn.getAttribute('data-id');
+        const label = btn.getAttribute('data-label') || '';
+        const platform = btn.getAttribute('data-platform') || '';
+        
+        let text = `COPY ${label.toUpperCase()} & OPEN ${platform.toUpperCase()}`;
+        
+        if (id === 'phone') {
+            const url = btn.getAttribute('data-url') || '';
+            const phoneNumber = url.replace('tel:', '');
+            // Format phone slightly if possible (e.g. 0965 292 489)
+            const formattedPhone = phoneNumber.replace(/(\d{4})(\d{3})(\d{3})/, '$1 $2 $3');
+            text = `CALL/COPY: ${formattedPhone}`;
+        }
+        
         RAYCAST.setInformerBg(scene, null, text, true, true);
     } else {
         RAYCAST.hideInformer(scene);
