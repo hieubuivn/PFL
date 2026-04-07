@@ -251,19 +251,7 @@ const UI_REGISTRY = [
             if (dd) dd.classList.toggle('hidden-dropdown');
         }
     },
-    // 7e. Global Dropdown Focus Management
-    {
-        selector: 'body',
-        event: 'click',
-        action: (e) => {
-            // Close all HUD dropdowns if clicking elsewhere
-            if (!e.target.closest('.cv-combo-box') && !e.target.closest('.contact-links-group')) {
-                document.querySelectorAll('.hud-dropdown').forEach(dd => {
-                    dd.classList.add('hidden-dropdown');
-                });
-            }
-        }
-    },
+
     // 5f. WORK Modal Backdrop (Close on click outside)
     {
         selector: '#work-experience-modal',
@@ -409,6 +397,16 @@ function delegatedClickHandler(e, scene) {
 function registerUIElements(scene) {
     // A. DELEGATED CLICKS: One listener for the entire page
     document.body.addEventListener('click', (e) => delegatedClickHandler(e, scene));
+
+    // Global Dropdown Focus Management (Standalone to prevent swallowing delegated clicks)
+    document.body.addEventListener('click', (e) => {
+        // Close all HUD dropdowns if clicking elsewhere
+        if (!e.target.closest('.cv-combo-box') && !e.target.closest('.contact-links-group') && !e.target.closest('#contact-mode-btn') && !e.target.closest('#cv-combo-toggle')) {
+            document.querySelectorAll('.hud-dropdown').forEach(dd => {
+                dd.classList.add('hidden-dropdown');
+            });
+        }
+    });
 
     // B. DIRECT ATTACHMENTS: Only for non-bubbling events (mouseenter, mouseleave)
     UI_REGISTRY.forEach(reg => {
