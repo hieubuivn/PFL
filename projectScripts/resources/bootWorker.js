@@ -169,9 +169,19 @@ const fragmentShaderSource = `
         vec3 col = mix(vec3(0.0, 0.95, 1.0), vec3(1.6), dCore) * (dGlow * 1.0 + dCore * 9.0); 
         col += vec3(0.0, 0.95, 1.0) * (rippleIntensity * 1.2 + exp(-distCol * 35.0) * splash * 2.5); 
         
-        bool isBuckyZone = length(sceneUv) < 1.2;
+        bool isBuckyZone = length(sceneUv) < 1.3;
         if (isBuckyZone) {
-            vec3 camPos = vec3(0,0,3.2), rayDir = normalize(vec3(sceneUv,-4)), rayPos = camPos;
+            // A. KINETIC MATERIALIZATION (Growth + Resolve)
+            float entryT = saturate(iTime * 0.82); 
+            float bloom = mix(0.7, 1.0, 1.0 - exp(-entryT * 5.0));
+            float buckyReveal = saturate((iTime - 0.4) * 1.15); 
+            float noise = rand(uv * 135.0 + iTime * 0.005);
+            float revealMask = smoothstep(noise - 0.1, noise + 0.1, buckyReveal);
+            
+            vec2 blossomedUv = sceneUv / bloom;
+            vec3 buckyOut = vec3(0.0);
+
+            vec3 camPos = vec3(0,0,3.2), rayDir = normalize(vec3(blossomedUv,-4)), rayPos = camPos;
             float rayLen = 0., dist = 0.; bool hit = false;
             for (int i = 0; i < 24; i++) {
                 rayLen += dist; rayPos = camPos + rayDir * rayLen;
@@ -185,9 +195,10 @@ const fragmentShaderSource = `
                 float rim = pow(1.0 - max(dot(n, -rayDir), 0.0), 2.5);
                 vec3 base = vec3(diff * 1.2 + rim * 0.8 + 0.2);
                 vec3 cyan = vec3(0.0, 0.95, 1.0) * (diff * 0.5 + rim * 1.5);
-                col = mix(base, cyan, uLoadProgress * 0.8);
+                buckyOut = mix(base, cyan, uLoadProgress * 0.8);
             }
-            float coreDist = length(sceneUv);
+
+            float coreDist = length(blossomedUv);
             float microPulse = sin(iTime * 15.0) * 0.03 + 0.97;
             float loadI = smoothstep(0.0, 1.0, uLoadProgress);
             float coreV = smoothstep(0.01, 0.25, violentPeak);
@@ -198,10 +209,14 @@ const fragmentShaderSource = `
             coreC *= (rand(vec2(iTime, 0.0)) > 0.97 ? 1.5 : 1.0);
             float flare = exp(-coreDist * bF) * 3.8 * microPulse * bI;
             float aura = exp(-coreDist * (bF * 0.4)) * (0.01 + saturate(violentPeak * 0.8 + loadI * 0.4) * 0.8);
-            col += (coreC * (flare + aura) * smoothstep(1.0, 0.5, coreDist)) * rev * (hit && rayPos.z < 0.2 ? 1.0 : hit ? 0.0 : 1.0);
+            
+            buckyOut += (coreC * (flare + aura) * smoothstep(1.0, 0.5, coreDist)) * rev * (hit && rayPos.z < 0.2 ? 1.0 : hit ? 0.0 : 1.0);
+            
+            // APPLY REVEAL MASK TO ALL BUCKY CONTENT
+            col += buckyOut * revealMask;
         }
 
-        // 3. THE LOADING BAR ZONE
+        // --- 3. THE LOADING BAR ZONE ---
         float barH = 0.025, barW = 0.6;
         float cellW = barH / aspect, numCells = floor(barW / cellW), actualBarW = numCells * cellW;
         float startX = (1.0 - actualBarW) * 0.5, barY = 0.08;
@@ -213,7 +228,6 @@ const fragmentShaderSource = `
         float dyM = abs(vUv.y - barY);
         float mD = exp(-dxM * 6.5) * exp(-dyM * 30.0);
         
-        // REFINED PLUNGE (Clean and Toned down)
         float impactUvX = (targetX / aspect + 1.0) * 0.5;
         float distToImpactX = abs(vUv.x - impactUvX) * actualBarW * numCells;
         float plunge = smoothstep(0.9, 0.0, distToImpactX) * splash * 1.8; 
@@ -245,8 +259,10 @@ const fragmentShaderSource = `
         col += lG * 0.22 * (0.4 + violentPeak * 2.1) * vec3(0.0, 0.95, 1.0);
         col += mD * 0.05 * vec3(0.0, 0.95, 1.0);
 
+        // --- GLOBAL FADE ---
+        float globalPulse = saturate(iTime * 1.5); 
         float alpha = (uLoadProgress > 1.0) ? 1.0 - smoothstep(0.0, 1.0, uLoadProgress - 1.0) : 1.0;
-        gl_FragColor = vec4(pow(max(col, 0.0), vec3(1./2.2)), alpha);
+        gl_FragColor = vec4(pow(max(col * globalPulse, 0.0), vec3(1./2.2)), alpha);
     }
 `;
 

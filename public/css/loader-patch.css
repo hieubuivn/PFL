@@ -5,7 +5,7 @@
 }
 
 @media screen and (max-width: 1024px) {
-    #loading-container, #skeleton-lcp {
+    #loading-container, #skeleton-lcp-v1 {
         display: none !important;
     }
 }
@@ -20,6 +20,16 @@
         justify-content: center !important;
         align-items: flex-end !important;
         text-align: center !important;
+    }
+
+    #skeleton-lcp-v2 {
+        left: 0 !important;
+        width: 100% !important;
+        font-size: clamp(1rem, 2.8vw, 3rem) !important;
+        letter-spacing: 12px !important;
+        transform: translateY(-50%) !important;
+        text-align: center !important;
+        z-index: 1 !important;
     }
 
     .loader-content {
@@ -44,7 +54,7 @@
     }
 }
 .mobile-mode #loading-container,
-.mobile-mode #skeleton-lcp {
+.mobile-mode #skeleton-lcp-v2 {
     display: none !important;
 }
 

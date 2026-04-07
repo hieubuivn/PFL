@@ -131,7 +131,7 @@
 
   <link href="css/source.css" rel="stylesheet" type="text/css" />
   <link href="css/room.css" rel="stylesheet" type="text/css" />
-  <link href="project.css" rel="stylesheet" type="text/css" />
+  <link href="project.css?v=2.0.0" rel="stylesheet" type="text/css" />
   <!-- NEW LAYOUT STYLES -->
   <link href="css/layout.css" rel="stylesheet" type="text/css" />
   <link href="css/cv-styles.css" rel="stylesheet" type="text/css" />
@@ -174,23 +174,22 @@
       pointer-events: none;
     }
 
-    #skeleton-lcp {
-      font-family: var(--font-tech);
-      font-size: clamp(1.2rem, 4vw, 2.5rem);
-      font-weight: 800;
-      color: var(--c-cyan);
-      opacity: 0.05;
-      letter-spacing: 5px;
+    #skeleton-lcp-v2 {
       position: fixed;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
       width: 100vw;
       text-align: center;
-      z-index: -1;
-      text-shadow: 0 0 20px rgba(0, 243, 255, 0.1);
       pointer-events: none;
-      user-select: none;
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(1.2rem, 4vw, 2.5rem);
+      font-weight: 800;
+      color: var(--c-cyan);
+      opacity: 0.05;
+      letter-spacing: 12px;
+      z-index: -1;
+      text-shadow: 0 0 20px rgba(0, 243, 255, 0.3);
       animation: lcp-fade-out 3s forwards ease-in-out;
       animation-delay: 2s;
     }
@@ -351,7 +350,7 @@
 
       <div id="loading-container">
         <!-- LCP SKELETON: Fires a sub-second 'Largest Contentful Paint' for Google SEO -->
-        <div id="skeleton-lcp">SYSTEMS PORTFOLIO // V1.0</div>
+        <div id="skeleton-lcp-v2">STRATEGY // ENGINEERING // V2.0</div>
 
         <div class="loader-content">
           <div
@@ -451,7 +450,7 @@
           </div>
 
           <div id="cv-combo-box" class="cv-combo-box">
-            <button id="cv-export-btn" class="cta-btn combo-main">DOWNLOAD</button>
+            <button id="cv-export-btn" class="cta-btn combo-main">DOWNLOAD CV</button>
             <button id="cv-combo-toggle" class="cta-btn combo-arrow">▼</button>
             <div id="cv-combo-dropdown" class="hud-dropdown hidden-dropdown">
               <button id="cv-view-btn" class="dropdown-item">🌐 VIEW ONLINE</button>
