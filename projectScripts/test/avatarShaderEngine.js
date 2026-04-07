@@ -208,39 +208,66 @@ class AvatarShaderEngine {
                 bgCol += val * gridFinal * techColor * (0.2 + spotlight * 0.6);
                 bgCol += val * techColor * spotlight * 0.35;
                 
-                float scanPos = fract(uTime * 0.08) * 1.2 - 0.1;
-                float scanHighlight = smoothstep(0.012, 0.0, abs(vUv.y - scanPos)) * gridFinal * 1.2;
-                bgCol += techColor * scanHighlight * (0.1 + spotlight * 0.4);
-
-                bgCol *= smoothstep(1.0, 0.45, length(vUv - 0.5));
-                
-                // 2. PERSONA SWAP
+                // --- PERSONA SWAP & SPECTRAL GLITCH ---
                 float uT = uTime * 15.0; 
                 float threshold = uProgress * 1.3 - 0.15;
                 float jitter = digitalNoise(vec2(floor(vUv.y * 150.0), uT)) * 0.035;
                 float sweepX = vUv.x + jitter;
-                threshold += (digitalNoise(vec2(uT, uT)) - 0.5) * 0.015; 
-                float sweepVal = smoothstep(threshold - 0.015, threshold + 0.015, sweepX);
-                
                 float glitchZone = smoothstep(0.2, 0.0, abs(sweepX - threshold));
-                float chaoticY = floor(vUv.y * (40.0 + digitalNoise(vec2(floor(vUv.y * 5.0), uT)) * 60.0));
-                float drift = (digitalNoise(vec2(chaoticY, uT)) - 0.5) * 2.0 * step(0.3, digitalNoise(vec2(chaoticY, uT))) * glitchZone * 0.25; 
+                
+                // --- 1. WARPED UV (Spectral Distortion) ---
+                vec2 warpedUv = vUv;
+                
+                // Temporal burst glitch
+                float timeGlitch = min(0.0, cos(vUv.y * 12.0 + uTime * 2.1) + 0.85); 
+                
+                // --- NEW: Localized Mouse Glitch ---
+                // Creates a circular disruption field under the cursor
+                float distToMouse = length(vUv - uMouse.xy);
+                float mouseGlitch = smoothstep(0.2, 0.0, distToMouse) * 0.25; 
+                
+                // Combine: either a temporal burst OR the mouse presence triggers the warp
+                float glitchTrigger = min(0.0, timeGlitch - mouseGlitch); 
+                
+                warpedUv.x += tan(cos(vUv.y) + uTime + digitalNoise(vUv.yy + uTime)) * glitchTrigger * 0.04;
+                
+                float sweepVal = smoothstep(threshold - 0.015, threshold + 0.015, warpedUv.x);
+                
+                // --- 2. CHROMATIC ABERRATION OFFSETS ---
+                float pi = 3.141592;
+                float abAmt = 0.008 + (abs(glitchTrigger) * 0.05);
+                vec2 offR = vec2(cos(uTime * 0.8), sin(uTime * 0.8)) * abAmt;
+                vec2 offG = vec2(cos(uTime + (2.0/3.0 * pi)), sin(uTime + (2.0/3.0 * pi))) * abAmt;
+                vec2 offB = vec2(cos(uTime * 0.9 + pi), sin(uTime * 0.9 + pi)) * abAmt;
 
                 vec4 texDev = vec4(0.0);
                 vec4 texPoba = vec4(0.0);
                 
-                if (sweepVal < 0.999) texDev = texture(uTexDev, vUv + vec2(-drift, 0));
+                if (sweepVal < 0.999) {
+                    texDev.r = texture(uTexDev, warpedUv + offR).r;
+                    texDev.g = texture(uTexDev, warpedUv + offG).g;
+                    texDev.b = texture(uTexDev, warpedUv + offB).b;
+                    texDev.a = texture(uTexDev, warpedUv).a;
+                }
+                
                 if (sweepVal > 0.001) {
-                    texPoba = texture(uTexPoba, vUv + vec2(drift, 0));
-                    if (glitchZone > 0.01) texPoba.r = texture(uTexPoba, vUv + vec2(drift + 0.03 * glitchZone, 0.0)).r;
+                    texPoba.r = texture(uTexPoba, warpedUv + offR).r;
+                    texPoba.g = texture(uTexPoba, warpedUv + offG).g;
+                    texPoba.b = texture(uTexPoba, warpedUv + offB).b;
+                    texPoba.a = texture(uTexPoba, warpedUv).a;
                 }
                 
                 vec4 avatarCol = mix(texDev, texPoba, sweepVal);
                 
-                // 3. SCAN-DASHES
+                // Mix in the provided magic color logic for holo-feel
+                float magic = (avatarCol.r + avatarCol.g + avatarCol.b) * 0.333;
+                vec3 holoCol = avatarCol.rgb + (digitalNoise(vUv + cos(uTime * 0.1)) - 0.5) * 0.12;
+                avatarCol.rgb = mix(avatarCol.rgb, vec3(magic) * holoCol * 1.5, 0.4);
+                
+                // 3. GLITCH SCAN-DASHES
                 vec3 glitchCoreCol = vec3(0.0, 0.55, 0.7); 
-                float scanLine = smoothstep(0.03, 0.0, abs(sweepX - threshold)) * step(0.4, digitalNoise(vec2(floor(vUv.y * 200.0), uT)));
-                vec3 materialGlow = glitchCoreCol * scanLine * (digitalNoise(vec2(uT, uT)) * 0.3 + 0.75) * 1.8;
+                float glitchScanLine = smoothstep(0.03, 0.0, abs(sweepX - threshold)) * step(0.4, digitalNoise(vec2(floor(vUv.y * 200.0), uT)));
+                vec3 materialGlow = glitchCoreCol * glitchScanLine * (digitalNoise(vec2(uT, uT)) * 0.3 + 0.75) * 1.8;
                 
                 if (glitchZone > 0.01) {
                     float scanRel = abs(vUv.x + jitter*0.5 - threshold);
@@ -305,8 +332,9 @@ class AvatarShaderEngine {
     }
 
     onMouseMove(e) {
-        this.mouse.x = e.clientX / window.innerWidth;
-        this.mouse.y = 1.0 - (e.clientY / window.innerHeight);
+        const rect = this.canvas.getBoundingClientRect();
+        this.mouse.x = (e.clientX - rect.left) / rect.width;
+        this.mouse.y = 1.0 - (e.clientY - rect.top) / rect.height;
     }
 
     onResize() {

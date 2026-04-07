@@ -24,6 +24,7 @@ const fragmentShaderSource = `
     uniform vec2 iMouse;
     uniform float uLoadProgress;
     uniform float uQuality; 
+    uniform float uImpactX;
     varying vec2 vUv;
 
     #define PI 3.14159265359
@@ -128,8 +129,8 @@ const fragmentShaderSource = `
         float breathe = (1. - pow(1. - min(globalT * 1.85, 1.0), 24.0)) * (1. - pow(min(globalT * 1.85, 1.0), 2.5));
         float violentPeak = pow(breathe, 0.5);
 
-        // --- INTERACTIVE MOUSE TARGETING ---
-        float targetX = clamp((iMouse.x * 2.0 - 1.0) * aspect, -0.6, 0.6);
+        // --- INTERACTIVE MOUSE TARGETING (LOCKED PER CYCLE) ---
+        float targetX = clamp((uImpactX * 2.0 - 1.0) * aspect, -0.6, 0.6);
         float barY_uv = -0.84; 
 
         // --- 1. THE DROpleT PHYSICS ---
@@ -148,34 +149,25 @@ const fragmentShaderSource = `
         float dCore = smoothstep(0.035, 0.0, dShape) * dVis;
         float dGlow = exp(-length(dPos_uv) * 85.0) * dVis; 
         
-        // --- 1b. Impact Splashes & Shards ---
+        // --- 1b. Impact Splashes & Data Pulse ---
         float impactFade = saturate((globalT - 0.28) * 4.0);
         float splash = (impactFade > 0.0) ? exp(-impactFade * 6.0) : 0.0;
         vec2 impactPos = uv - vec2(targetX, barY_uv);
-        float impactAngle = atan(impactPos.y, impactPos.x);
         float distCol = length(impactPos);
         
-        float shards = 0.0;
-        if (impactFade > 0.01 && impactFade < 1.0) {
-            float shardPath = distCol - (impactFade * (0.6 + rand(vec2(cycleID, 1.0)) * 0.4));
-            float shardW = 0.008 + impactFade * 0.05;
-            float rSeed = cycleID + floor(targetX * 100.0);
-            float r1 = rand(vec2(rSeed, 11.0)) * 0.6 - 0.3;
-            float r2 = rand(vec2(rSeed, 12.0)) * 0.6 - 0.3;
-            float r3 = rand(vec2(rSeed, 13.0)) * 0.6 - 0.3;
-            float r4 = rand(vec2(rSeed, 14.0)) * 0.6 - 0.3;
-
-            shards = smoothstep(shardW, 0.0, abs(impactAngle - (PI*0.35 + r1))) + 
-                     smoothstep(shardW, 0.0, abs(impactAngle - (PI*0.48 + r2))) + 
-                     smoothstep(shardW, 0.0, abs(impactAngle - (PI*0.52 + r3))) +
-                     smoothstep(shardW, 0.0, abs(impactAngle - (PI*0.65 + r4)));
-            shards *= smoothstep(0.08, 0.0, abs(shardPath)) * splash;
-        }
+        // Option A: Quantum Ripple (Radial Shockwave) - Refined: Ultra-subtle, Upwards only
+        float rippleSpeed = 1.6;
+        float rippleRadius = impactFade * rippleSpeed;
+        float rippleWidth = 0.005 + impactFade * 0.005;
+        float rippleIntensity = smoothstep(rippleRadius + rippleWidth, rippleRadius, distCol) * 
+                               smoothstep(rippleRadius - rippleWidth, rippleRadius, distCol) * 
+                               smoothstep(-0.02, 0.0, uv.y - barY_uv) * // Only show above impact point
+                               exp(-impactFade * 30.0);
 
         // --- 2. THE CORE & SCENE ---
         vec2 sceneUv = (uv - vec2(0.0, 0.4)) * 1.25; // Shifted to 0.4
         vec3 col = mix(vec3(0.0, 0.95, 1.0), vec3(1.6), dCore) * (dGlow * 1.0 + dCore * 9.0); 
-        col += vec3(0.0, 0.95, 1.0) * (shards * 4.5 + exp(-distCol * 35.0) * splash * 2.5); 
+        col += vec3(0.0, 0.95, 1.0) * (rippleIntensity * 1.2 + exp(-distCol * 35.0) * splash * 2.5); 
         
         bool isBuckyZone = length(sceneUv) < 1.2;
         if (isBuckyZone) {
@@ -281,18 +273,27 @@ function initGL(canvas) {
     uniforms.iMouse = gl.getUniformLocation(program, 'iMouse');
     uniforms.uLoadProgress = gl.getUniformLocation(program, 'uLoadProgress');
     uniforms.uQuality = gl.getUniformLocation(program, 'uQuality');
+    uniforms.uImpactX = gl.getUniformLocation(program, 'uImpactX');
     startTime = performance.now();
     requestAnimationFrame(render);
 }
 
 let currentProgress = 0, targetProgress = 0, mouse = { x: 0.5, y: 0.5 }, smoothedMouse = { x: 0.5, y: 0.5 }, res = { w: 0, h: 0 };
-let currentQuality = 1.0, targetQuality = 1.0, lastTime = 0;
+let currentQuality = 1.0, targetQuality = 1.0, lastTime = 0, lastCycleID = -1, lockedX = 0.5;
 
 function render(now) {
     if (!gl) return;
     const time = (now - startTime) / 1000;
     const delta = (now - lastTime) / 1000;
     lastTime = now;
+
+    const cycleDur = 3.0; // Matches shader line 125
+    const cycleID = Math.floor(time / cycleDur);
+    if (cycleID !== lastCycleID) {
+        lastCycleID = cycleID;
+        lockedX = smoothedMouse.x;
+    }
+
     currentProgress += (targetProgress - currentProgress) * 0.05;
     if (delta > 0.018) targetQuality = Math.max(0.1, targetQuality - 0.25);
     else targetQuality = Math.min(1.0, targetQuality + 0.01);
@@ -304,6 +305,7 @@ function render(now) {
     gl.uniform2f(uniforms.iMouse, smoothedMouse.x, smoothedMouse.y);
     gl.uniform1f(uniforms.uLoadProgress, currentProgress);
     gl.uniform1f(uniforms.uQuality, currentQuality);
+    gl.uniform1f(uniforms.uImpactX, lockedX);
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     requestAnimationFrame(render);
 }

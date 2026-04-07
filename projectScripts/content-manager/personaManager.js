@@ -232,11 +232,21 @@ class PersonaManager {
             return;
         }
 
-        // Helper log (Removed)
-        // const roleName = mode === PERSONA_IDS.POBA ? 'Reviewing Product Strategy...' : 'Loading Interactive Experiments...';
-        // this.logMessage(roleName);
-
         this.applyMode(mode, false, options.skipPointsSync);
+
+        // --- NEW LOGIC: AUTOMATIC MORPH FROM CHAOS ---
+        // If the user switches persona while in the 'Chaos' state of the Points scenario,
+        // we automatically trigger the morph to Step 1 (the first root state).
+        if (this.pointsApp && !options.skipMorph) {
+            const scene = window.scene;
+            const isPointsScenario = scene && scene.scenarioState?.name === 'points';
+            const currentStep = (typeof this.pointsApp.getCurrentStep === 'function') ? this.pointsApp.getCurrentStep() : null;
+            
+            if (isPointsScenario && currentStep === 0) {
+                // Trigger the 'Wave + Assemble' sequence (Step 1)
+                this.pointsApp.triggerStep(1);
+            }
+        }
 
         // Save "Don't ask again" state
         if (this.elements.dontAskCheckbox) {
